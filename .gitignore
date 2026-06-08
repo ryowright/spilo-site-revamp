@@ -1,0 +1,8 @@
+# Editor preview assets — large screenshots from the Claude Design export.
+# Kept in the working tree as reference, excluded from version control.
+Coach Spilo Site Revamp/uploads/
+Coach Spilo Site Revamp/screenshots/
+Coach Spilo Site Revamp/.image-slots.state.json
+
+# OS
+.DS_Store
