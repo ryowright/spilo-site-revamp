@@ -6,16 +6,23 @@ const SITE_TITLE = "Spilo — Overwatch Coaching";
 const SITE_DESCRIPTION =
   "Professional-grade Overwatch coaching, for players serious about improving. Ex-Overwatch League | London Spitfire.";
 
-// Resolves to:
-//   - NEXT_PUBLIC_SITE_URL if set (use this once a custom domain is live)
-//   - The Vercel-assigned URL for any preview / production deploy
+// Resolves to (in priority order):
+//   - NEXT_PUBLIC_SITE_URL — manual override; set once a custom domain is live
+//   - VERCEL_PROJECT_PRODUCTION_URL — Vercel's stable project alias (e.g.
+//     spilo-site-revamp.vercel.app), present on production deploys
+//   - VERCEL_URL — the immutable per-deploy URL (hash subdomain), present on
+//     every Vercel deploy; used as a fallback for preview branches
 //   - localhost in dev
 // metadataBase lets Next.js turn relative image paths into absolute URLs in
 // the rendered og:image / twitter:image meta tags — required by most social
 // platforms for previews to actually render.
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
