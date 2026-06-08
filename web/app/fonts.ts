@@ -34,3 +34,5 @@ export const bebas = Bebas_Neue({
   variable: '--font-bebas',
   display: 'swap',
 });
+
+// Adding this comment as part of a no-op commit
