@@ -344,34 +344,8 @@ html[data-display="oswald"] .tier h3 { font-weight: 600; }
   border-left: 1.5px solid var(--text-faint); border-bottom: 1.5px solid var(--text-faint); transform: rotate(-45deg);
 }
 .tier.featured .tier-list li::before { border-color: var(--red-bright); }
-.tier-prices { margin-top: auto; border-top: 1px solid var(--line-soft); padding-top: 16px; display: flex; flex-direction: column; gap: 6px; }
-.price-row { display: flex; align-items: baseline; justify-content: space-between; padding: 6px 0; }
-
-/* Tiers with a Format choice render each price row as a <label> wrapping a
-   hidden radio. Selected row gets a subtle background + brightened price. */
-.tier-prices label.price-row {
-  cursor: pointer;
-  padding: 8px 12px;
-  margin: 0 -12px;
-  border-radius: 4px;
-  position: relative;
-  transition: background 150ms ease;
-}
-.tier-prices label.price-row input[type="radio"] {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-.tier-prices label.price-row:has(input:checked) {
-  background: oklch(0.26 0.012 264 / 0.55);
-}
-.tier-prices label.price-row:has(input:checked) .v {
-  color: var(--red-bright);
-}
-.tier-prices label.price-row:focus-within {
-  outline: 2px solid var(--red);
-  outline-offset: 2px;
-}
+.tier-prices { margin-top: auto; border-top: 1px solid var(--line-soft); padding-top: 16px; display: flex; flex-direction: column; gap: 10px; }
+.price-row { display: flex; align-items: baseline; justify-content: space-between; }
 .price-row .k { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
 .price-row .v { font-family: var(--font-display); font-size: 26px; letter-spacing: 0.01em; }
 html[data-display="oswald"] .price-row .v { font-weight: 600; }
@@ -649,6 +623,232 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   margin: 0;
   font-style: italic;
 }
+
+/* ============================================================
+   BOOKING MODAL
+   ============================================================ */
+
+/* The <dialog> itself — scoped to [open] so the closed dialog falls back to
+   the user-agent display:none and doesn't capture clicks (the same lesson
+   the testimonial lightbox taught us). */
+.booking-modal { border: 0; padding: 0; background: transparent; color: var(--text); }
+.booking-modal[open] {
+  width: 100vw;
+  height: 100vh;
+  max-width: 100vw;
+  max-height: 100vh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+.booking-modal::backdrop { background: oklch(0.1 0.005 264 / 0.82); backdrop-filter: blur(4px); }
+.booking-modal[open]::backdrop { animation: lightbox-backdrop-in 180ms ease-out; }
+
+.booking-modal-inner {
+  position: relative;
+  width: min(960px, 94vw);
+  max-height: 92vh;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 30px 80px -32px oklch(0 0 0 / 0.6);
+}
+
+.booking-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 28px 16px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.booking-modal-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  margin-bottom: 6px;
+}
+.booking-modal-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: clamp(20px, 2.4vw, 28px);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+.booking-modal-close {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 22px;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  flex: none;
+  transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+.booking-modal-close:hover { color: var(--text); border-color: var(--text-dim); background: var(--bg); }
+
+.booking-modal-body {
+  padding: 24px 28px 28px;
+  overflow-y: auto;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ─── Step shells ─── */
+.booking-step { display: flex; flex-direction: column; gap: 24px; }
+.booking-step-intro {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 60ch;
+}
+.booking-step-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+.booking-step-actions-tight { margin-top: 0; }
+.arrow-back { display: inline-block; transition: transform 160ms ease; }
+.btn:hover .arrow-back { transform: translateX(-3px); }
+
+/* ─── Format step ─── */
+.booking-format-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+.booking-format-card {
+  position: relative;
+  border: 1px solid var(--line);
+  background: oklch(0.18 0.008 264 / 0.5);
+  border-radius: 4px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.booking-format-card:hover { border-color: var(--text-faint); }
+.booking-format-card.is-selected {
+  border-color: var(--red);
+  background: oklch(0.22 0.012 264 / 0.7);
+  box-shadow: 0 14px 44px -28px var(--red-glow);
+}
+.booking-format-card input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+.booking-format-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.booking-format-card-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.booking-format-card-price {
+  font-family: var(--font-display);
+  font-size: 24px;
+  letter-spacing: 0.01em;
+}
+.booking-format-card-desc {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ─── Discount step ─── */
+.booking-discount-options { display: flex; flex-direction: column; gap: 12px; }
+.booking-discount-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  background: oklch(0.18 0.008 264 / 0.5);
+  border-radius: 4px;
+  color: var(--text);
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.booking-discount-card:hover { border-color: var(--text-faint); background: oklch(0.22 0.012 264 / 0.6); }
+.booking-discount-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.booking-discount-card-title {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.booking-discount-card-cta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.booking-discount-card:hover .booking-discount-card-cta { color: var(--text); }
+.booking-discount-card-cta .arrow { transition: transform 160ms ease; }
+.booking-discount-card:hover .booking-discount-card-cta .arrow { transform: translateX(3px); }
+.booking-discount-card-desc { margin: 0; color: var(--text-dim); font-size: 14px; line-height: 1.5; }
+
+.booking-discount-applied {
+  border: 1px solid var(--red);
+  background: oklch(0.22 0.012 264 / 0.7);
+  border-radius: 4px;
+  padding: 18px 20px;
+  box-shadow: 0 14px 44px -28px var(--red-glow);
+}
+.booking-discount-applied-head { display: flex; flex-direction: column; gap: 4px; }
+.booking-discount-applied-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red-bright);
+}
+.booking-discount-applied-label { color: var(--text); font-size: 15px; }
+
+/* ─── Schedule step (Calendly inline embed) ─── */
+.booking-schedule { gap: 16px; height: 100%; }
+.booking-schedule-banner {
+  background: oklch(0.22 0.012 264 / 0.7);
+  border: 1px solid var(--red);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--text-dim);
+}
+.booking-schedule-banner strong { color: var(--text); }
+.booking-calendly-frame {
+  width: 100%;
+  height: clamp(520px, 60vh, 720px);
+  border: 1px solid var(--line-soft);
+  border-radius: 4px;
+  overflow: hidden;
+  background: white; /* Calendly's iframe paints light */
+}
+.booking-calendly-frame > div { height: 100% !important; }
 
 /* Social icons take on each brand's color on hover. Selectors target the
    existing aria-label values so no markup changes are needed. */

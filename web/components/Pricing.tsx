@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { motion, Variants } from "framer-motion";
 import { Reveal } from "./motion/Reveal";
 import { Stagger, staggerItem } from "./motion/Stagger";
@@ -10,7 +9,6 @@ import {
   REVEAL_DURATION,
   REVEAL_EASE,
 } from "./motion/transitions";
-import { CALENDLY_EVENTS } from "./booking/CalendlyEvents";
 import { SchedulingButton } from "./booking/SchedulingButton";
 
 // Featured tier rests at scale 1.02 so it visually leads.
@@ -28,21 +26,7 @@ const hoverLift = { y: -6, scale: 1.012 };
 // Same +0.012 lift, applied to the featured tier's resting 1.02 scale.
 const hoverLiftFeatured = { y: -6, scale: 1.032 };
 
-type Format = "youtube" | "private";
-
 export function Pricing() {
-  const [inDepthFormat, setInDepthFormat] = useState<Format>("youtube");
-  const [teamFormat, setTeamFormat] = useState<Format>("youtube");
-
-  const inDepthUrl =
-    inDepthFormat === "youtube"
-      ? CALENDLY_EVENTS.inDepthYouTube
-      : CALENDLY_EVENTS.inDepthPrivate;
-  const teamUrl =
-    teamFormat === "youtube"
-      ? CALENDLY_EVENTS.teamYouTube
-      : CALENDLY_EVENTS.teamPrivate;
-
   return (
     <section
       className="section pricing"
@@ -82,10 +66,7 @@ export function Pricing() {
                 <span className="v">$43</span>
               </div>
             </div>
-            <SchedulingButton
-              url={CALENDLY_EVENTS.thirtyMinReview}
-              variant="ghost"
-            >
+            <SchedulingButton tier="thirtyMin" variant="ghost">
               Schedule a call
             </SchedulingButton>
             <div className="tier-sub">Discount for Patreon / Twitch subs</div>
@@ -114,28 +95,16 @@ export function Pricing() {
               <li>Answers to any &amp; all questions</li>
             </ul>
             <div className="tier-prices">
-              <label className="price-row">
-                <input
-                  type="radio"
-                  name="indepth-format"
-                  checked={inDepthFormat === "youtube"}
-                  onChange={() => setInDepthFormat("youtube")}
-                />
+              <div className="price-row">
                 <span className="k">Posted to YouTube</span>
                 <span className="v">$80</span>
-              </label>
-              <label className="price-row">
-                <input
-                  type="radio"
-                  name="indepth-format"
-                  checked={inDepthFormat === "private"}
-                  onChange={() => setInDepthFormat("private")}
-                />
+              </div>
+              <div className="price-row">
                 <span className="k">Private</span>
                 <span className="v">$90</span>
-              </label>
+              </div>
             </div>
-            <SchedulingButton url={inDepthUrl} variant="red">
+            <SchedulingButton tier="inDepth" variant="red">
               Schedule a call
             </SchedulingButton>
             <div className="tier-sub">Discount for Patreon / Twitch subs</div>
@@ -164,31 +133,19 @@ export function Pricing() {
               <li>Answers to any &amp; all questions</li>
             </ul>
             <div className="tier-prices">
-              <label className="price-row">
-                <input
-                  type="radio"
-                  name="team-format"
-                  checked={teamFormat === "youtube"}
-                  onChange={() => setTeamFormat("youtube")}
-                />
+              <div className="price-row">
                 <span className="k">Posted to YouTube</span>
                 <span className="v">$90</span>
-              </label>
-              <label className="price-row">
-                <input
-                  type="radio"
-                  name="team-format"
-                  checked={teamFormat === "private"}
-                  onChange={() => setTeamFormat("private")}
-                />
+              </div>
+              <div className="price-row">
                 <span className="k">Private</span>
                 <span className="v">$100</span>
-              </label>
+              </div>
             </div>
-            <SchedulingButton url={teamUrl} variant="ghost">
+            <SchedulingButton tier="team" variant="ghost">
               Schedule a call
             </SchedulingButton>
-            <div className="tier-sub">Discount for Patreon / Twitch subs</div>
+            <div className="tier-sub">Sessions billed at the listed price</div>
           </motion.div>
         </Stagger>
 
