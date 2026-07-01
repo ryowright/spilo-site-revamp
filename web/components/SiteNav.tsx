@@ -12,6 +12,7 @@ import {
 
 const SECTIONS = [
   { id: "testimonials", label: "Results" },
+  { id: "session", label: "The Session" },
   { id: "pricing", label: "Coaching" },
   { id: "about", label: "About" },
   { id: "faq", label: "FAQ" },
