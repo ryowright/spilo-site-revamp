@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Reveal } from "./motion/Reveal";
 import { Stagger, staggerItem } from "./motion/Stagger";
-import { STAGGER_TIGHT } from "./motion/transitions";
+import { REVEAL_EASE, STAGGER_TIGHT } from "./motion/transitions";
 
 type FaqItem = { q: string; a: React.ReactNode; open?: boolean };
 
@@ -86,7 +87,7 @@ const ITEMS: FaqItem[] = [
     ),
   },
   {
-    q: "When should I get a follow-up?",
+    q: "When should I get a follow-up session?",
     a: (
       <>
         <p>
@@ -125,6 +126,59 @@ const ITEMS: FaqItem[] = [
   },
 ];
 
+function FaqRow({
+  item,
+  num,
+  index,
+}: {
+  item: FaqItem;
+  num: string;
+  index: number;
+}) {
+  const [open, setOpen] = useState(!!item.open);
+  const panelId = `faq-panel-${index}`;
+  const triggerId = `faq-trigger-${index}`;
+
+  return (
+    <motion.div
+      className={`faq-item${open ? " is-open" : ""}`}
+      variants={staggerItem}
+    >
+      <button
+        type="button"
+        className="faq-summary"
+        id={triggerId}
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <div className="faq-q-wrap">
+          <span className="faq-num">{num}</span>
+          <span className="faq-q">{item.q}</span>
+        </div>
+        <span className="faq-ico" aria-hidden />
+      </button>
+      {/* Panel stays mounted (all answers in the HTML → crawlable for SEO)
+          and animates its height between 0 and auto. initial={false} sets the
+          starting height with no mount animation; only user toggles animate.
+          aria-hidden keeps collapsed answers out of the a11y tree — safe here
+          because the answers contain no focusable elements. */}
+      <motion.div
+        id={panelId}
+        role="region"
+        aria-labelledby={triggerId}
+        aria-hidden={!open}
+        className="faq-a-wrap"
+        initial={false}
+        animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
+        transition={{ duration: 0.32, ease: REVEAL_EASE }}
+      >
+        <div className="faq-a">{item.a}</div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export function Faq() {
   return (
     <section
@@ -138,26 +192,14 @@ export function Faq() {
           <h2 style={{ width: "760px" }}>FREQUENTLY ASKED QUESTIONS</h2>
         </Reveal>
         <Stagger className="faq-grid" gap={STAGGER_TIGHT}>
-          {ITEMS.map((item, i) => {
-            const num = String(i + 1).padStart(2, "0");
-            return (
-              <motion.details
-                key={i}
-                className="faq-item"
-                variants={staggerItem}
-                {...(item.open ? { open: true } : {})}
-              >
-                <summary>
-                  <div className="faq-q-wrap">
-                    <span className="faq-num">{num}</span>
-                    <span className="faq-q">{item.q}</span>
-                  </div>
-                  <span className="faq-ico"></span>
-                </summary>
-                <div className="faq-a">{item.a}</div>
-              </motion.details>
-            );
-          })}
+          {ITEMS.map((item, i) => (
+            <FaqRow
+              key={i}
+              item={item}
+              num={String(i + 1).padStart(2, "0")}
+              index={i}
+            />
+          ))}
         </Stagger>
         <div className="faq-fallback">
           Still have questions?{" "}

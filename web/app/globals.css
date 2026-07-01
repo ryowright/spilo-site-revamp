@@ -154,7 +154,7 @@ html[data-display="oswald"] .section-head h2 { font-weight: 600; }
 
 .nav-right { margin-left: auto; display: flex; align-items: center; gap: 18px; }
 .socials { display: flex; gap: 14px; }
-.socials a { color: var(--text-faint); display: grid; place-items: center; transition: color 150ms ease, transform 150ms ease; }
+.socials a { color: var(--text-faint); display: grid; place-items: center; transition: color 250ms ease, transform 250ms ease; }
 .socials a:hover { color: var(--text); transform: translateY(-1px); }
 .socials svg { width: 17px; height: 17px; display: block; }
 
@@ -374,26 +374,31 @@ html[data-display="oswald"] .pricing-free .tag { font-weight: 600; }
    ============================================================ */
 .faq-grid { margin-top: clamp(36px, 4vw, 52px); display: grid; grid-template-columns: 1fr; gap: 0; border-top: 1px solid var(--line); }
 .faq-item { border-bottom: 1px solid var(--line); }
-.faq-item summary {
-  list-style: none; cursor: pointer; padding: 22px 8px 22px 0;
+/* Accordion trigger — a real <button> (reset to look like the old <summary>). */
+.faq-summary {
+  cursor: pointer; padding: 22px 8px 22px 0;
   display: flex; align-items: center; gap: 22px;
+  width: 100%; background: none; border: 0; text-align: left; color: inherit; font: inherit;
 }
-.faq-item summary::-webkit-details-marker { display: none; }
+.faq-summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 .faq-q {
   font-family: var(--font-display); font-weight: 400; text-transform: uppercase;
   font-size: clamp(18px, 2.2vw, 26px); line-height: 1.05; letter-spacing: 0.01em; flex: 1;
   transition: color 150ms ease;
 }
 html[data-display="oswald"] .faq-q { font-weight: 600; }
-.faq-item summary:hover .faq-q { color: var(--text); }
+.faq-summary:hover .faq-q { color: var(--text); }
 .faq-num { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); letter-spacing: 0.1em; width: 30px; }
 .faq-ico { position: relative; width: 20px; height: 20px; flex: none; }
 .faq-ico::before, .faq-ico::after { content: ""; position: absolute; background: var(--text-dim); transition: transform 220ms ease, opacity 220ms ease; }
 .faq-ico::before { left: 0; right: 0; top: 50%; height: 2px; transform: translateY(-50%); }
 .faq-ico::after  { top: 0; bottom: 0; left: 50%; width: 2px; transform: translateX(-50%); }
-.faq-item[open] .faq-ico::after { transform: translateX(-50%) scaleY(0); opacity: 0; }
-.faq-item[open] .faq-q { color: var(--text); }
-.faq-a { overflow: hidden; color: var(--text-dim); font-size: 16px; line-height: 1.65; max-width: 64ch; padding: 0 0 28px 52px; }
+.faq-item.is-open .faq-ico::after { transform: translateX(-50%) scaleY(0); opacity: 0; }
+.faq-item.is-open .faq-q { color: var(--text); }
+/* Wrapper that framer-motion animates (height 0 ↔ auto); clips content during
+   the transition so the panel slides open/closed instead of snapping. */
+.faq-a-wrap { overflow: hidden; }
+.faq-a { color: var(--text-dim); font-size: 16px; line-height: 1.65; max-width: 64ch; padding: 0 0 28px 52px; }
 .faq-a p, .faq-a ol, .faq-a ul { margin: 0; }
 .faq-a > * + * { margin-top: 14px; }
 .faq-a ol, .faq-a ul { padding-left: 24px; }
@@ -436,7 +441,7 @@ html[data-display="oswald"] .faq-q { font-weight: 600; }
   color: var(--text-faint);
   display: grid;
   place-items: center;
-  transition: color 150ms ease, transform 150ms ease;
+  transition: color 250ms ease, transform 250ms ease;
 }
 .footer-socials a:hover { color: var(--text); transform: translateY(-1px); }
 .footer-socials svg { width: 20px; height: 20px; display: block; }
