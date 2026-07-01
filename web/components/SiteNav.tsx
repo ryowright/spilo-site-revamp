@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import {
   XIcon,
   DiscordIcon,
@@ -7,7 +10,51 @@ import {
   YouTubeIcon,
 } from "./icons/SocialIcons";
 
+const SECTIONS = [
+  { id: "testimonials", label: "Results" },
+  { id: "pricing", label: "Coaching" },
+  { id: "about", label: "About" },
+  { id: "faq", label: "FAQ" },
+] as const;
+
 export function SiteNav() {
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const targets = SECTIONS.map((s) => document.getElementById(s.id)).filter(
+      (el): el is HTMLElement => el !== null,
+    );
+    if (targets.length === 0) return;
+
+    // Track which sections currently intersect the detection band. As the
+    // user scrolls, we pick the last (DOM-order) intersecting section as
+    // the active one — matches intuition when scrolling down and self-
+    // corrects quickly when scrolling up.
+    const visible = new Set<string>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) visible.add(entry.target.id);
+          else visible.delete(entry.target.id);
+        }
+        const active =
+          SECTIONS.map((s) => s.id).filter((id) => visible.has(id)).pop() ??
+          null;
+        setActiveId(active);
+      },
+      {
+        // Thin band ~30% from the top of the viewport. Sections cross it
+        // as the user scrolls; the crossed section is "current".
+        rootMargin: "-30% 0px -65% 0px",
+        threshold: 0,
+      },
+    );
+
+    targets.forEach((t) => observer.observe(t));
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <nav className="site-nav">
       <div className="nav-inner">
@@ -16,10 +63,19 @@ export function SiteNav() {
           <span className="dot"></span>
         </a>
         <div className="nav-links">
-          <a href="#testimonials">Results</a>
-          <a href="#pricing">Coaching</a>
-          <a href="#about">About</a>
-          <a href="#faq">FAQ</a>
+          {SECTIONS.map(({ id, label }) => {
+            const isActive = activeId === id;
+            return (
+              <a
+                key={id}
+                href={`#${id}`}
+                className={isActive ? "is-active" : undefined}
+                aria-current={isActive ? "location" : undefined}
+              >
+                {label}
+              </a>
+            );
+          })}
         </div>
         <div className="nav-right">
           <div className="socials">

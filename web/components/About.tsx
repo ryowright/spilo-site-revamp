@@ -26,12 +26,6 @@ export function About() {
           </div>
         </Reveal>
         <Reveal axis="x" distance={30}>
-          <span
-            className="eyebrow"
-            style={{ display: "block", marginBottom: "18px" }}
-          >
-            Who you&apos;re working with
-          </span>
           <h2
             style={{
               fontFamily: "var(--font-display)",
@@ -43,7 +37,7 @@ export function About() {
               letterSpacing: "0.01em",
             }}
           >
-            HI, MY NAME IS SPILO.
+            Greetings, my name is Spilo.
           </h2>
           <p
             style={{
@@ -53,10 +47,12 @@ export function About() {
               maxWidth: "54ch",
             }}
           >
-            I have over <b style={{ color: "var(--text)" }}>6,000 hours</b> of
-            live VOD review experience—all heroes, all ranks. That&apos;s how
-            I&apos;m able to pinpoint exactly what&apos;s holding a player
-            back, and what they need to work on.
+            I&apos;m a retired Mixed Martial Arts Instructor turned{" "}
+            <b style={{ color: "var(--text)" }}>Pro Overwatch Coach</b>. I am
+            the previous assistant coach for the{" "}
+            <b style={{ color: "var(--text)" }}>London Spitfire</b> (Overwatch
+            League) with an additional three years of experience Head Coaching
+            in <b style={{ color: "var(--text)" }}>Overwatch Contenders</b>.
           </p>
           <p
             style={{
@@ -67,11 +63,13 @@ export function About() {
               marginTop: "18px",
             }}
           >
-            I spent three years as a head coach in{" "}
-            <b style={{ color: "var(--text)" }}>Overwatch Contenders</b>, and I
-            was the assistant coach for the{" "}
-            <b style={{ color: "var(--text)" }}>London Spitfire</b> in the
-            Overwatch League. Before all that, I was an MMA instructor.
+            I&apos;m also a VOD review expert with over{" "}
+            <b style={{ color: "var(--text)" }}>8,000 hours</b> in Live VOD
+            review experience—all heroes, all ranks. Additionally, I have
+            served as a{" "}
+            <b style={{ color: "var(--text)" }}>playtester</b> for many of the
+            new Overwatch heroes and systems, providing additional insight
+            into the secrets of what makes Overwatch work.
           </p>
           <div style={{ marginTop: "34px" }}>
             <a href="#pricing" className="btn btn-red">
@@ -79,10 +77,8 @@ export function About() {
             </a>
           </div>
           <div className="about-mission">
-            <span className="eyebrow">The Mission</span>
             <p>
-              Whether you&apos;re Bronze or T500, every player can improve. My
-              job is to show you how.
+              Whether Bronze or Champion, my mission is to educate players on how to improve their game.
             </p>
           </div>
         </Reveal>

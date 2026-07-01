@@ -35,7 +35,6 @@ export function Pricing() {
     >
       <div className="wrap wrap-wide">
         <Reveal className="section-head">
-          <span className="eyebrow">Coaching · All heroes, all ranks</span>
           <h2>Book the review.</h2>
           <p style={{ maxWidth: "none", whiteSpace: "nowrap" }}>
             Get actionable and targeted feedback on what you can do to improve.

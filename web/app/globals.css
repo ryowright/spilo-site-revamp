@@ -146,6 +146,11 @@ html[data-display="oswald"] .section-head h2 { font-weight: 600; }
 }
 .nav-links a:hover { color: var(--text); }
 .nav-links a:hover::after { right: 0; }
+/* Active-section state — same underline as :hover, driven by scroll-spy
+   IntersectionObserver in SiteNav.tsx. Transitions animate the underline
+   in/out as the user scrolls between sections. */
+.nav-links a.is-active { color: var(--text); }
+.nav-links a.is-active::after { right: 0; }
 
 .nav-right { margin-left: auto; display: flex; align-items: center; gap: 18px; }
 .socials { display: flex; gap: 14px; }
@@ -370,7 +375,7 @@ html[data-display="oswald"] .pricing-free .tag { font-weight: 600; }
 .faq-grid { margin-top: clamp(36px, 4vw, 52px); display: grid; grid-template-columns: 1fr; gap: 0; border-top: 1px solid var(--line); }
 .faq-item { border-bottom: 1px solid var(--line); }
 .faq-item summary {
-  list-style: none; cursor: pointer; padding: 26px 8px 26px 0;
+  list-style: none; cursor: pointer; padding: 22px 8px 22px 0;
   display: flex; align-items: center; gap: 22px;
 }
 .faq-item summary::-webkit-details-marker { display: none; }
@@ -607,7 +612,7 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 /* About section — mission pull-quote sitting below the CTA. Red left rule
    echoes the hero's .hero-lead treatment so the page feels coherent. */
 .about-mission {
-  margin-top: clamp(48px, 6vw, 72px);
+  margin-top: clamp(24px, 3vw, 36px);
   padding-left: clamp(18px, 1.6vw, 24px);
   border-left: 2px solid var(--red);
   max-width: 54ch;

@@ -7,6 +7,8 @@ import { STAGGER_TIGHT } from "./motion/transitions";
 
 type FaqItem = { q: string; a: React.ReactNode; open?: boolean };
 
+// Ordered by decision journey:
+//   Booking basics (1–4) → About Spilo & his coaches (5–6) → After-session (7–8)
 const ITEMS: FaqItem[] = [
   {
     q: "What's the difference between YouTube and private coaching?",
@@ -60,9 +62,26 @@ const ITEMS: FaqItem[] = [
     q: "What if no timeslot works — or I need coaching ASAP?",
     a: (
       <p>
-        Generally my schedule flexibility is extremely limited. Unfortunately,
-        if the soonest session available doesn&apos;t work for you, it&apos;s
-        likely that you&apos;ll need to go elsewhere for coaching.
+        Generally my schedule flexibility is extremely limited. If the soonest
+        session available doesn&apos;t work for you, check out Coach Stephano
+        — his slots are often sooner. If neither of us has an opening that
+        works, it&apos;s likely you&apos;ll need to go elsewhere for coaching.
+      </p>
+    ),
+  },
+  {
+    q: "Who is Coach Stephano?",
+    a: (
+      <p>
+        Coach Stephano is a Spilo-approved Overwatch coach. A therapist turned game-strategist, with hundreds of hours of team and solo coaching experience. He&apos;s a great option for someone looking for a more affordable (and often sooner available) session!
+      </p>
+    ),
+  },
+  {
+    q: "Do you coach Coaches?",
+    a: (
+      <p>
+        Yes! If you&apos;re looking to improve your Overwatch analysis/communication game, I&apos;ve spent hundreds of hours teaching others how to analyze and teach the game better. Book a session by selecting the standard coaching session, and ignore/adjust any questions in the form that may or may not have relevance.
       </p>
     ),
   },
@@ -116,7 +135,6 @@ export function Faq() {
     >
       <div className="wrap">
         <Reveal className="section-head">
-          <span className="eyebrow">Before you book</span>
           <h2 style={{ width: "760px" }}>FREQUENTLY ASKED QUESTIONS</h2>
         </Reveal>
         <Stagger className="faq-grid" gap={STAGGER_TIGHT}>
