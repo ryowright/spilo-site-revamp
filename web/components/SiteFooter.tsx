@@ -82,7 +82,6 @@ export function SiteFooter() {
       <div className="footer-bar">
         <a className="brand" href="#top">
           <span className="mark">SPILO</span>
-          <span className="dot"></span>
         </a>
         <div className="footer-contact">
           <a

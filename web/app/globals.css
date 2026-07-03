@@ -83,6 +83,10 @@ html[data-display="oswald"] .display { font-weight: 600; line-height: 0.98; lett
 .wrap-wide { max-width: 1840px; padding-inline: clamp(20px, 3.5vw, 52px); }
 .section { padding-block: clamp(72px, 10vw, 140px); }
 .section-head { max-width: 720px; }
+/* Testimonials headline ("REAL STUDENTS, REAL RESULTS.") needs more room to
+   sit on one line; the subtitle keeps its own 56ch cap so only the h2 widens.
+   Wraps naturally on narrow screens where the text no longer fits. */
+#testimonials .section-head { max-width: none; }
 .section-head .eyebrow { display: block; margin-bottom: 18px; }
 .section-head h2 {
   font-family: var(--font-display); font-weight: 400; text-transform: uppercase;
@@ -125,15 +129,25 @@ html[data-display="oswald"] .section-head h2 { font-weight: 600; }
   border-bottom: 1px solid var(--line-soft);
 }
 .nav-inner {
-  max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gut);
+  max-width: 1520px; margin: 0 auto; padding: 0 var(--gut);
   height: 70px; display: flex; align-items: center; gap: 28px;
 }
 .brand { display: inline-flex; align-items: baseline; gap: 2px; }
 .brand .mark {
+  position: relative;
   font-family: var(--font-display); font-size: 27px; letter-spacing: 0.04em;
   text-transform: uppercase; line-height: 1;
 }
-.brand .dot { width: 7px; height: 7px; background: var(--red); display: inline-block; margin-left: 4px; transform: translateY(-2px); }
+/* Bold red underline under the wordmark — the brand accent. em-sized so it
+   scales with the mark's font-size (nav 27px, footer 20px) automatically. */
+.brand .mark::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -0.18em;
+  height: 0.13em;
+  background: var(--red);
+}
 
 .nav-links { display: flex; gap: 30px; margin-left: 14px; }
 .nav-links a {
@@ -163,7 +177,57 @@ html[data-display="oswald"] .section-head h2 { font-weight: 600; }
 /* ============================================================
    HERO
    ============================================================ */
-.hero { padding-top: clamp(48px, 7vw, 96px); padding-bottom: 0; }
+.hero { padding: clamp(32px, 4.5vw, 64px) 0 0; }
+
+/* ---- Full-bleed hero: copy left, coach cutout fading in from the right ---- */
+.hero-stage {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(460px, 54vw, 660px);
+  display: flex;
+  align-items: center;
+}
+.hero-figure {
+  position: absolute;
+  bottom: 0;
+  /* `right` is the horizontal-position lever — raise it to move the coach
+     further toward the center, lower it to push him toward the edge. */
+  right: 27%;
+  height: 100%;
+  width: auto;
+  max-width: none; /* override the global `img { max-width: 100% }` */
+  object-fit: contain;
+  object-position: bottom right;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+/* Scrim: solid bg on the left (hosts the copy at full contrast) fading to
+   transparent so the coach emerges on the right; plus a soft bottom fade so
+   his torso melts into the page rather than hard-cutting. Transparent stops
+   use the bg color at 0 alpha to avoid a grey fringe. */
+.hero-stage::after {
+  content: "";
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to right, var(--bg) 18%, oklch(0.165 0.008 264 / 0) 58%),
+    linear-gradient(to bottom, oklch(0.165 0.008 264 / 0) 74%, var(--bg));
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-stage-inner {
+  position: relative; z-index: 2;
+  width: 100%; max-width: var(--maxw);
+  margin: 0 auto; padding-inline: var(--gut);
+}
+.hero-stage .hero-copy { max-width: 560px; }
+
+@media (max-width: 940px) {
+  .hero-stage { min-height: 0; display: block; }
+  .hero-figure, .hero-stage::after { display: none; }
+  .hero-stage-inner { padding-block: clamp(40px, 9vw, 72px); }
+}
+
 .hero-grid {
   max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gut);
   display: grid; gap: clamp(36px, 5vw, 72px); align-items: center;
@@ -216,12 +280,6 @@ html[data-hero="stacked"] .hero-welcome { margin-inline: auto; }
 .media-frame::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
 .media-frame::after  { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
 .media-frame image-slot { width: 100%; display: block; }
-.media-tag {
-  position: absolute; left: 18px; bottom: 18px; z-index: 3;
-  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--text-dim); background: oklch(0.14 0.008 264 / 0.82);
-  border: 1px solid var(--line-soft); padding: 6px 10px; backdrop-filter: blur(6px);
-}
 
 /* ---- hero variant: SPLIT (default) — media left, copy right ---- */
 html[data-hero="split"] .hero-grid { grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); }
@@ -253,10 +311,8 @@ html[data-hero="stacked"] .media-frame image-slot { height: clamp(300px, 40vw, 4
   background: oklch(0.185 0.009 264 / 0.6);
   margin-top: clamp(56px, 8vw, 110px);
 }
-.stats-grid {
-  max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gut);
-  display: grid; grid-template-columns: repeat(4, 1fr);
-}
+.stats-inner { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gut); }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
 .stat { padding: clamp(28px, 4vw, 46px) clamp(8px, 2.4vw, 36px); position: relative; }
 .stat + .stat::before {
   content: ""; position: absolute; left: 0; top: 22%; bottom: 22%; width: 1px; background: var(--line-soft);
@@ -264,7 +320,9 @@ html[data-hero="stacked"] .media-frame image-slot { height: clamp(300px, 40vw, 4
 .stat .num {
   font-family: var(--font-display); font-weight: 400; text-transform: uppercase;
   font-size: clamp(30px, 4.2vw, 52px); line-height: 0.92; letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
 }
+.stat .num-plus { color: var(--red-bright); }
 html[data-display="oswald"] .stat .num { font-weight: 600; }
 .stat .lbl {
   font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.13em;
@@ -701,7 +759,6 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 
 /* Aside — outline + CTA. */
 .session-aside { display: flex; flex-direction: column; }
-.session-aside .eyebrow { display: block; margin-bottom: 22px; }
 .session-outline {
   list-style: none;
   counter-reset: outline;

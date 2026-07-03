@@ -60,10 +60,6 @@ export function SessionSection() {
           </Reveal>
 
           <div className="session-aside">
-            <Reveal>
-              <span className="eyebrow">Outline of session</span>
-            </Reveal>
-
             <motion.ol
               className="session-outline"
               initial="hidden"

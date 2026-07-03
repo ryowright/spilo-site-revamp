@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, type ReactNode } from "react";
+import { MotionConfig } from "framer-motion";
 import { BookingProvider } from "./store";
 import { BookingModal } from "./BookingModal";
 import { useReopenOnReturn } from "./hooks/useReopenOnReturn";
@@ -23,12 +24,17 @@ function ReopenHandler() {
  */
 export function BookingRoot({ children }: { children: ReactNode }) {
   return (
-    <BookingProvider>
-      {children}
-      <BookingModal />
-      <Suspense fallback={null}>
-        <ReopenHandler />
-      </Suspense>
-    </BookingProvider>
+    // reducedMotion="user" makes Framer Motion honor the OS "reduce motion"
+    // setting for every animation on the page: transform/layout animations are
+    // skipped, opacity fades still play (the accessible-safe default).
+    <MotionConfig reducedMotion="user">
+      <BookingProvider>
+        {children}
+        <BookingModal />
+        <Suspense fallback={null}>
+          <ReopenHandler />
+        </Suspense>
+      </BookingProvider>
+    </MotionConfig>
   );
 }

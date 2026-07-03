@@ -22,7 +22,6 @@ export function About() {
               src="/coach-about.png"
               alt="Jacob &quot;Spilo&quot; Clifton"
             />
-            <div className="media-tag">Jacob &quot;Spilo&quot; Clifton</div>
           </div>
         </Reveal>
         <Reveal axis="x" distance={30}>

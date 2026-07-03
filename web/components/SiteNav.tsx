@@ -61,7 +61,6 @@ export function SiteNav() {
       <div className="nav-inner">
         <a className="brand" href="#top" aria-label="Spilo home">
           <span className="mark">SPILO</span>
-          <span className="dot"></span>
         </a>
         <div className="nav-links">
           {SECTIONS.map(({ id, label }) => {
