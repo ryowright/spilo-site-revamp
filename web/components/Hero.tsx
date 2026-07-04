@@ -13,7 +13,7 @@ type Stat = {
 };
 
 const STATS: Stat[] = [
-  { target: 6000, unit: "", tail: "", label: ["Hours live", "VOD review"] },
+  { target: 8000, unit: "", tail: "", label: ["Hours live", "VOD review"] },
   { target: 1000, unit: "", tail: "", label: ["Players", "coached"] },
   { target: 3, unit: "", tail: " YRS", label: ["Contenders", "head coach"] },
   { target: 120, unit: "K", tail: "", label: ["Followers across", "YouTube & Twitch"] },
