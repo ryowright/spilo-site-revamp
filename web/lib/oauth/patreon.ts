@@ -3,7 +3,10 @@
 // In production this hits real Patreon APIs. When PATREON_CLIENT_ID is unset
 // we skip the round-trip and treat the user as verified (mock mode).
 
+// Patreon quirk: the authorize page lives at /oauth2/authorize, but the token
+// exchange endpoint is under /api/oauth2/token (different base path).
 const PATREON_AUTH_BASE = "https://www.patreon.com/oauth2";
+const PATREON_TOKEN_URL = "https://www.patreon.com/api/oauth2/token";
 const PATREON_API_BASE = "https://www.patreon.com/api/oauth2/v2";
 
 export function isMockMode(): boolean {
@@ -27,7 +30,7 @@ export async function exchangeCodeForToken(
   code: string,
   redirectUri: string,
 ): Promise<TokenResponse> {
-  const res = await fetch(`${PATREON_AUTH_BASE}/token`, {
+  const res = await fetch(PATREON_TOKEN_URL, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
@@ -49,7 +52,12 @@ type PatreonIdentityResponse = {
   included?: Array<{
     id: string;
     type: "member" | "campaign";
-    attributes?: { patron_status?: string };
+    attributes?: {
+      patron_status?: string;
+      // Cents the member is currently entitled to (their active paid pledge).
+      // > 0 means a paying patron right now; free members are 0.
+      currently_entitled_amount_cents?: number;
+    };
     relationships?: {
       campaign?: { data?: { id: string; type: "campaign" } };
     };
@@ -57,10 +65,10 @@ type PatreonIdentityResponse = {
 };
 
 /**
- * Returns true if the authenticated Patreon user is an active patron of the
- * configured campaign. Membership is determined by API v2's `included`
- * resources: any `member` whose campaign relationship matches our campaign
- * and whose patron_status === "active_patron" counts.
+ * Returns true if the authenticated Patreon user is a *paying* patron of the
+ * configured campaign. We require both patron_status === "active_patron" AND a
+ * positive currently_entitled_amount_cents so that free members (who join a
+ * free tier or just follow) do NOT qualify for the discount.
  */
 export async function isActiveMember(accessToken: string): Promise<boolean> {
   const campaignId = process.env.PATREON_CAMPAIGN_ID;
@@ -70,7 +78,7 @@ export async function isActiveMember(accessToken: string): Promise<boolean> {
     `${PATREON_API_BASE}/identity?` +
     new URLSearchParams({
       include: "memberships,memberships.campaign",
-      "fields[member]": "patron_status",
+      "fields[member]": "patron_status,currently_entitled_amount_cents",
     });
 
   const res = await fetch(url, {
@@ -84,7 +92,8 @@ export async function isActiveMember(accessToken: string): Promise<boolean> {
   return (json.included ?? []).some(
     (entry) =>
       entry.type === "member" &&
+      entry.relationships?.campaign?.data?.id === campaignId &&
       entry.attributes?.patron_status === "active_patron" &&
-      entry.relationships?.campaign?.data?.id === campaignId,
+      (entry.attributes?.currently_entitled_amount_cents ?? 0) > 0,
   );
 }

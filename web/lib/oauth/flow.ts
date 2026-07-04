@@ -97,6 +97,10 @@ export async function handleOAuthCallback(
   session.returnTo = undefined;
 
   const redirectUrl = new URL(returnTo, getSiteUrl());
+  // Tag every return with which provider was attempted so the client can show
+  // a provider-specific message on failure (ignored by the client on success,
+  // which reads `verified`).
+  redirectUrl.searchParams.set("provider", options.provider);
 
   // User declined on the provider's consent screen, or the provider returned
   // an error. Don't fail — just send them back with verified=none.
