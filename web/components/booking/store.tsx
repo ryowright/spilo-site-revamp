@@ -7,7 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { Format, Tier } from "./CalendlyEvents";
+import type { Format, Tier } from "./SchedulingEvents";
 import type { DiscountKind } from "@/lib/session";
 
 export type VerifyError = { provider: DiscountKind; reason: string };

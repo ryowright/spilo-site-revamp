@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useBooking } from "./store";
-import { TIER_META, type Discount, type Format } from "./CalendlyEvents";
+import { TIER_META, type Discount, type Format } from "./SchedulingEvents";
 import { useBookingSession } from "./hooks/useBookingSession";
 import { OptionsStep } from "./steps/OptionsStep";
 import { ScheduleStep } from "./steps/ScheduleStep";
@@ -73,9 +73,6 @@ export function BookingModal() {
           >
             <header className="booking-modal-head">
               <div>
-                {step === "schedule" && (
-                  <div className="booking-modal-eyebrow">{stepLabel(step)}</div>
-                )}
                 <h2 className="booking-modal-title">{meta.label}</h2>
               </div>
               <button
@@ -117,8 +114,4 @@ export function BookingModal() {
       </AnimatePresence>
     </dialog>
   );
-}
-
-function stepLabel(step: Step): string {
-  return step === "options" ? "Session details" : "Pick a time";
 }

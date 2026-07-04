@@ -1,4 +1,4 @@
-import type { Tier } from "./CalendlyEvents";
+import type { Tier } from "./SchedulingEvents";
 
 // A second coach (Stephano) is offered alongside Spilo. The coaching section
 // renders one coach's cards at a time via a toggle. Spilo's cards book through

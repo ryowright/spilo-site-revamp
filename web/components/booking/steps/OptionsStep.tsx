@@ -3,7 +3,7 @@
 import { encodeReopenKey } from "@/lib/booking/resolve-url";
 import type { DiscountKind } from "@/lib/session";
 import type { VerifyError } from "../store";
-import { TIER_META, type Format, type Tier } from "../CalendlyEvents";
+import { TIER_META, type Format, type Tier } from "../SchedulingEvents";
 
 // Display prices per (tier × format). Mirrors the Spilo tier cards in
 // coaches.ts / Pricing.tsx — keep in sync until pricing lives in one place.

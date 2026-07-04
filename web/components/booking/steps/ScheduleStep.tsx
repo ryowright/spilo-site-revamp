@@ -1,8 +1,7 @@
 "use client";
 
-import { InlineWidget } from "react-calendly";
-import { resolveCalendlyUrl } from "@/lib/booking/resolve-url";
-import type { Discount, Format, Tier } from "../CalendlyEvents";
+import { resolveAcuityUrl } from "@/lib/booking/resolve-url";
+import type { Discount, Format, Tier } from "../SchedulingEvents";
 
 type Props = {
   tier: Tier;
@@ -12,7 +11,7 @@ type Props = {
 };
 
 export function ScheduleStep({ tier, format, discount, onBack }: Props) {
-  const url = resolveCalendlyUrl(tier, format, discount);
+  const url = resolveAcuityUrl(tier, format, discount);
 
   if (!url) {
     return (
@@ -37,16 +36,20 @@ export function ScheduleStep({ tier, format, discount, onBack }: Props) {
           {discount === "patreon"
             ? "Patreon patron discount applied."
             : "Twitch subscriber discount applied."}{" "}
-          Pricing in Calendly reflects the discount.
+          Pricing in Acuity reflects the discount.
         </div>
       )}
 
-      <div className="booking-calendly-frame">
-        <InlineWidget
-          url={url}
-          styles={{ height: "100%", minWidth: "100%" }}
-          // Match the dark page treatment without bleeding the wrong tone
-          // through the Calendly iframe.
+      <div className="booking-scheduler-frame">
+        <iframe
+          src={url}
+          title="Schedule your session"
+          width="100%"
+          height="100%"
+          frameBorder={0}
+          // Acuity collects payment in a nested Stripe frame — delegate the
+          // Payment Request API so Apple Pay / Google Pay work.
+          allow="payment"
         />
       </div>
 

@@ -942,14 +942,6 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   padding: 24px 28px 16px;
   border-bottom: 1px solid var(--line-soft);
 }
-.booking-modal-eyebrow {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--text-faint);
-  margin-bottom: 6px;
-}
 .booking-modal-title {
   font-family: var(--font-display);
   font-weight: 400;
@@ -1165,7 +1157,7 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 }
 .booking-discount-applied-label { color: var(--text); font-size: 15px; }
 
-/* ─── Schedule step (Calendly inline embed) ─── */
+/* ─── Schedule step (Acuity inline embed) ─── */
 .booking-schedule { gap: 16px; height: 100%; }
 .booking-schedule-banner {
   background: oklch(0.22 0.012 264 / 0.7);
@@ -1176,15 +1168,20 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   color: var(--text-dim);
 }
 .booking-schedule-banner strong { color: var(--text); }
-.booking-calendly-frame {
+.booking-scheduler-frame {
   width: 100%;
   height: clamp(520px, 60vh, 720px);
   border: 1px solid var(--line-soft);
   border-radius: 4px;
   overflow: hidden;
-  background: white; /* Calendly's iframe paints light */
+  background: white; /* Acuity's iframe paints light */
 }
-.booking-calendly-frame > div { height: 100% !important; }
+.booking-scheduler-frame iframe {
+  display: block;
+  border: 0;
+  width: 100%;
+  height: 100%;
+}
 
 /* Social icons take on each brand's color on hover. Selectors target the
    existing aria-label values so no markup changes are needed. */

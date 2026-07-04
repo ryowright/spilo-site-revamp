@@ -1,10 +1,10 @@
 import {
-  CALENDLY_EVENTS,
+  ACUITY_EVENTS,
   TIER_META,
   type Discount,
   type Format,
   type Tier,
-} from "@/components/booking/CalendlyEvents";
+} from "@/components/booking/SchedulingEvents";
 
 const VALID_FORMATS: ReadonlySet<Format> = new Set<Format>([
   "default",
@@ -13,18 +13,18 @@ const VALID_FORMATS: ReadonlySet<Format> = new Set<Format>([
 ]);
 
 /**
- * Resolve the Calendly event URL for a given (tier, format, discount).
+ * Resolve the Acuity appointment-type URL for a given (tier, format, discount).
  *
  * Falls back to the `full` (non-discounted) URL if the tier doesn't support
  * the requested discount — i.e. Team Analysis ignores Patreon / Twitch
  * because Spilo doesn't offer those discounts on team sessions.
  */
-export function resolveCalendlyUrl(
+export function resolveAcuityUrl(
   tier: Tier,
   format: Format,
   discount: Discount,
 ): string | null {
-  const tierEvents = CALENDLY_EVENTS[tier];
+  const tierEvents = ACUITY_EVENTS[tier];
   if (!tierEvents) return null;
 
   const formatEvents = tierEvents[format];
@@ -52,7 +52,7 @@ export function decodeReopenKey(
 ): { tier: Tier; format: Format } | null {
   const [tier, format] = key.split(":");
   if (!tier || !format) return null;
-  if (!(tier in CALENDLY_EVENTS)) return null;
+  if (!(tier in ACUITY_EVENTS)) return null;
   if (!VALID_FORMATS.has(format as Format)) return null;
   // And ensure this specific tier supports this format (e.g. inDepth does
   // not have "default", thirtyMin does not have "youtube"/"private").
