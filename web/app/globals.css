@@ -366,10 +366,81 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
    PRICING
    ============================================================ */
 .pricing .wrap { display: block; max-width: 1436px; padding-inline: clamp(20px, 3vw, 30px); }
+
+/* Coach selector — segmented control + context line above the pricing cards. */
+.coach-switch {
+  margin-top: clamp(28px, 3.5vw, 44px);
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.coach-toggle {
+  display: inline-flex;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: oklch(0.18 0.008 264 / 0.5);
+}
+.coach-toggle-btn {
+  position: relative;
+  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-dim);
+  background: none; border: 0; border-radius: 2px;
+  padding: 10px 20px; cursor: pointer;
+  transition: color 180ms ease, background 180ms ease;
+}
+.coach-toggle-btn:hover { color: var(--text); }
+.coach-toggle-btn.is-active { background: var(--red); color: var(--red-ink); }
+.coach-toggle-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+
+/* On-hover / focus tooltip below a coach button (used for Stephano's context
+   line). Sentence-case + body font so it reads as a sentence, not a label. */
+.coach-tip {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  white-space: nowrap;
+  background: var(--bg-1);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-family: var(--font-body); font-size: 13.5px; font-weight: 400;
+  letter-spacing: normal; text-transform: none;
+  color: var(--text-dim);
+  box-shadow: 0 14px 34px -14px oklch(0 0 0 / 0.6);
+  opacity: 0; pointer-events: none;
+  transition: opacity 120ms ease, transform 120ms ease;
+  z-index: 20;
+}
+/* caret pointing down to the button */
+.coach-tip::before {
+  content: "";
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--bg-1);
+}
+.coach-toggle-btn:hover .coach-tip,
+.coach-toggle-btn:focus-visible .coach-tip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .tiers {
   margin-top: clamp(40px, 5vw, 60px);
   display: grid; grid-template-columns: repeat(3, minmax(0, 440px));
   justify-content: center; gap: 28px; align-items: stretch;
+}
+/* A 2-card set (Coach Stephano) uses 2 tracks so it stays centered instead of
+   filling the left two of three. Single-class selector so the 940px media
+   query below still collapses it to one column on mobile. */
+.tiers-2 { grid-template-columns: repeat(2, minmax(0, 440px)); }
+/* Match Stephano's (lighter) cards to Spilo's card height so toggling between
+   coaches doesn't shrink the section. `--card-min` is measured from Spilo's
+   rendered cards in Pricing.tsx and set on the grid wrapper. Desktop only —
+   mobile cards stack and size to content. */
+@media (min-width: 941px) {
+  .tiers-2 .tier { min-height: var(--card-min, 660px); }
 }
 .tier {
   display: flex; flex-direction: column;
@@ -590,6 +661,12 @@ html[data-display="oswald"] .footer-cta h2 { font-weight: 600; }
    scroll-behavior: smooth animates anchor jumps; the browser disables this
    automatically when the user has prefers-reduced-motion set. */
 html { scroll-padding-top: 80px; scroll-behavior: smooth; }
+
+/* The pricing section is tall and its own top padding pushes the heading well
+   below center on anchor scroll. A negative scroll-margin makes "Coaching"
+   (and the Schedule-a-call anchors) land a bit further down so the section
+   sits with more even top/bottom spacing. Tune this one value. */
+#pricing { scroll-margin-top: -80px; }
 
 /* <image-slot> behaves as a styled container that may or may not hold a real <img>.
    Background acts as a placeholder color while images load (or if a slot is empty). */

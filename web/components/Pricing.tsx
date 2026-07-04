@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { Fragment, useCallback, useRef, useState } from "react";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import { Reveal } from "./motion/Reveal";
 import { Stagger, staggerItem } from "./motion/Stagger";
 import {
@@ -10,6 +11,7 @@ import {
   REVEAL_EASE,
 } from "./motion/transitions";
 import { SchedulingButton } from "./booking/SchedulingButton";
+import { COACHES, type Coach, type PackageCard } from "./booking/coaches";
 
 // Featured tier rests at scale 1.02 so it visually leads.
 const featuredItem: Variants = {
@@ -26,7 +28,85 @@ const hoverLift = { y: -6, scale: 1.012 };
 // Same +0.012 lift, applied to the featured tier's resting 1.02 scale.
 const hoverLiftFeatured = { y: -6, scale: 1.032 };
 
+function TierCard({ card }: { card: PackageCard }) {
+  return (
+    <motion.div
+      className={`tier${card.featured ? " featured" : ""}`}
+      variants={card.featured ? featuredItem : staggerItem}
+      whileHover={card.featured ? hoverLiftFeatured : hoverLift}
+      transition={HOVER_SPRING}
+    >
+      {card.featured && <span className="tier-flag">Most popular</span>}
+      <span className="tier-len">{card.len}</span>
+      <h3>
+        {card.title.split("\n").map((line, i) => (
+          <Fragment key={i}>
+            {i > 0 && <br />}
+            {line}
+          </Fragment>
+        ))}
+      </h3>
+      <p className="tier-desc">{card.desc}</p>
+      <ul className="tier-list">
+        {card.bullets.map((b, i) => (
+          <li key={i}>{b}</li>
+        ))}
+      </ul>
+      <div className="tier-prices">
+        {card.prices.map((p, i) => (
+          <div className="price-row" key={i}>
+            <span className="k">{p.label}</span>
+            <span className="v">${p.amount}</span>
+          </div>
+        ))}
+      </div>
+      <SchedulingButton
+        booking={card.booking}
+        variant={card.featured ? "red" : "ghost"}
+      >
+        Schedule a call
+      </SchedulingButton>
+      {card.sub && <div className="tier-sub">{card.sub}</div>}
+    </motion.div>
+  );
+}
+
+const COACH_IDS = Object.keys(COACHES) as Coach[];
+
 export function Pricing() {
+  const [coach, setCoach] = useState<Coach>("spilo");
+  const active = COACHES[coach];
+
+  // Measure Spilo's (taller) card height and pin Stephano's lighter cards to
+  // match, so toggling coaches never shrinks the section. Spilo is the
+  // reference and is never given a min-height. A ResizeObserver keeps it
+  // accurate across viewport widths and font loads.
+  const [cardMin, setCardMin] = useState<number | null>(null);
+  const observerRef = useRef<ResizeObserver | null>(null);
+
+  const measureRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      observerRef.current?.disconnect();
+      observerRef.current = null;
+      // Only the Spilo set establishes the reference height.
+      if (!node || coach !== "spilo") return;
+      const measure = () => {
+        let max = 0;
+        node
+          .querySelectorAll<HTMLElement>(".tier")
+          .forEach((c) => (max = Math.max(max, c.offsetHeight)));
+        if (max) setCardMin(max);
+      };
+      measure();
+      if (typeof ResizeObserver !== "undefined") {
+        const ro = new ResizeObserver(measure);
+        ro.observe(node);
+        observerRef.current = ro;
+      }
+    },
+    [coach],
+  );
+
   return (
     <section
       className="section pricing"
@@ -41,112 +121,60 @@ export function Pricing() {
           </p>
         </Reveal>
 
-        <Stagger className="tiers">
-          {/* 30-minute Gameplay Review — left, single format */}
-          <motion.div
-            className="tier"
-            variants={staggerItem}
-            whileHover={hoverLift}
-            transition={HOVER_SPRING}
+        <Reveal className="coach-switch">
+          <div
+            className="coach-toggle"
+            role="radiogroup"
+            aria-label="Choose your coach"
           >
-            <span className="tier-len">30 min · Individual</span>
-            <h3>30 MINUTE GAMEPLAY REVIEW</h3>
-            <p className="tier-desc">
-              A thorough gameplay review, recorded and sent to you. Request to
-              be in-call if you&apos;d like — not required.
-            </p>
-            <ul className="tier-list">
-              <li>A list of practice goals for your hero</li>
-              <li>Answers to any &amp; all questions</li>
-            </ul>
-            <div className="tier-prices">
-              <div className="price-row">
-                <span className="k">30-minute review</span>
-                <span className="v">$43</span>
-              </div>
-            </div>
-            <SchedulingButton tier="thirtyMin" variant="ghost">
-              Schedule a call
-            </SchedulingButton>
-            <div className="tier-sub">Discount for Patreon / Twitch subs</div>
-          </motion.div>
+            {COACH_IDS.map((c) => {
+              const isActive = coach === c;
+              const note = COACHES[c].note;
+              const tipId = `coach-tip-${c}`;
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  role="radio"
+                  aria-checked={isActive}
+                  aria-label={COACHES[c].label}
+                  aria-describedby={note ? tipId : undefined}
+                  className={`coach-toggle-btn${isActive ? " is-active" : ""}`}
+                  onClick={() => setCoach(c)}
+                >
+                  {COACHES[c].label}
+                  {note && (
+                    <span id={tipId} role="tooltip" className="coach-tip">
+                      {note}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </Reveal>
 
-          {/* In-Depth Coaching Call — center, featured, 2 formats */}
+        <AnimatePresence mode="wait" initial={false}>
           <motion.div
-            className="tier featured"
-            variants={featuredItem}
-            whileHover={hoverLiftFeatured}
-            transition={HOVER_SPRING}
+            key={coach}
+            ref={measureRef}
+            style={
+              coach === "stephano" && cardMin
+                ? ({ "--card-min": `${cardMin}px` } as React.CSSProperties)
+                : undefined
+            }
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
           >
-            <span className="tier-flag">Most popular</span>
-            <span className="tier-len">1 hour · Individual</span>
-            <h3>
-              In-Depth<br />Coaching Call
-            </h3>
-            <p className="tier-desc">
-              Solve exactly what you need to succeed in Overwatch — inside and
-              outside the game.
-            </p>
-            <ul className="tier-list">
-              <li>Maximize your training efficiency</li>
-              <li>Improve your gameplay mentality</li>
-              <li>A list of practice goals for your hero</li>
-              <li>Answers to any &amp; all questions</li>
-            </ul>
-            <div className="tier-prices">
-              <div className="price-row">
-                <span className="k">Posted to YouTube</span>
-                <span className="v">$80</span>
-              </div>
-              <div className="price-row">
-                <span className="k">Private</span>
-                <span className="v">$90</span>
-              </div>
-            </div>
-            <SchedulingButton tier="inDepth" variant="red">
-              Schedule a call
-            </SchedulingButton>
-            <div className="tier-sub">Discount for Patreon / Twitch subs</div>
+            <Stagger className={`tiers tiers-${active.cards.length}`}>
+              {active.cards.map((card) => (
+                <TierCard card={card} key={card.key} />
+              ))}
+            </Stagger>
           </motion.div>
-
-          {/* Complete Team Analysis Call — right, 2 formats */}
-          <motion.div
-            className="tier"
-            variants={staggerItem}
-            whileHover={hoverLift}
-            transition={HOVER_SPRING}
-          >
-            <span className="tier-len">70 min · Team</span>
-            <h3>COMPLETE TEAM ANALYSIS CALL</h3>
-            <p className="tier-desc">
-              Solve exactly what your team needs to succeed in Overwatch —
-              inside and outside the game.
-            </p>
-            <ul className="tier-list">
-              <li>Address your team&apos;s concerns &amp; weakpoints</li>
-              <li>Improve your team&apos;s communication &amp; planning</li>
-              <li>
-                Grow your understanding and execution of compositional Macro
-              </li>
-              <li>A list of practice goals for your team</li>
-              <li>Answers to any &amp; all questions</li>
-            </ul>
-            <div className="tier-prices">
-              <div className="price-row">
-                <span className="k">Posted to YouTube</span>
-                <span className="v">$90</span>
-              </div>
-              <div className="price-row">
-                <span className="k">Private</span>
-                <span className="v">$100</span>
-              </div>
-            </div>
-            <SchedulingButton tier="team" variant="ghost">
-              Schedule a call
-            </SchedulingButton>
-            <div className="tier-sub">Sessions billed at the listed price</div>
-          </motion.div>
-        </Stagger>
+        </AnimatePresence>
 
         <div className="pricing-free">
           <span className="tag">FREE!</span>

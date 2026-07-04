@@ -1,33 +1,41 @@
 "use client";
 
 import { useBooking } from "./store";
-import type { Format, Tier } from "./CalendlyEvents";
+import type { Booking } from "./coaches";
 
 type Props = {
-  tier: Tier;
-  format?: Format;
+  booking: Booking;
   variant?: "red" | "ghost";
   children: React.ReactNode;
 };
 
 /**
- * Replaces the old react-calendly PopupModal. Each "Schedule a call" button
- * dispatches an open action to the shared BookingProvider; a single
- * BookingModal mounted at the page root reads that state and runs the flow.
+ * "Schedule a call" CTA. Two booking modes:
+ *   - modal: dispatch to the shared BookingProvider, which runs the
+ *     format → discount → schedule flow (Spilo).
+ *   - link:  a plain external link straight to the coach's Calendly (Stephano).
  */
-export function SchedulingButton({
-  tier,
-  format,
-  variant = "red",
-  children,
-}: Props) {
+export function SchedulingButton({ booking, variant = "red", children }: Props) {
   const { open } = useBooking();
+
+  if (booking.kind === "link") {
+    return (
+      <a
+        className={`btn btn-${variant}`}
+        href={booking.url}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {children} <span className="arrow">→</span>
+      </a>
+    );
+  }
 
   return (
     <button
       type="button"
       className={`btn btn-${variant}`}
-      onClick={() => open({ tier, format })}
+      onClick={() => open({ tier: booking.tier })}
     >
       {children} <span className="arrow">→</span>
     </button>
