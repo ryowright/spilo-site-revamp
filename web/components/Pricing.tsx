@@ -157,7 +157,6 @@ export function Pricing() {
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={coach}
-            ref={measureRef}
             style={
               coach === "stephano" && cardMin
                 ? ({ "--card-min": `${cardMin}px` } as React.CSSProperties)
@@ -168,11 +167,16 @@ export function Pricing() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.18, ease: "easeOut" }}
           >
-            <Stagger className={`tiers tiers-${active.cards.length}`}>
-              {active.cards.map((card) => (
-                <TierCard card={card} key={card.key} />
-              ))}
-            </Stagger>
+            {/* Measure the tier cards on a plain wrapper — not the motion.div
+                itself: a ref on an AnimatePresence child trips framer-motion's
+                React 18.3 `props.ref` access warning in PopChild. */}
+            <div ref={measureRef}>
+              <Stagger className={`tiers tiers-${active.cards.length}`}>
+                {active.cards.map((card) => (
+                  <TierCard card={card} key={card.key} />
+                ))}
+              </Stagger>
+            </div>
           </motion.div>
         </AnimatePresence>
 
