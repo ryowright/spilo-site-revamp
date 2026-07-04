@@ -3,16 +3,18 @@
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { decodeReopenKey } from "@/lib/booking/resolve-url";
+import type { DiscountKind } from "@/lib/session";
 import { useBooking } from "../store";
 
 /**
- * On the first mount after an OAuth round-trip, the URL contains
- * `?reopen=<tier>:<format>&verified=<patreon|twitch|none>`. This hook reads
- * those params and reopens the booking modal at the schedule step so the
- * user lands back in the Calendly embed with the verified discount applied.
+ * On the first mount after an OAuth round-trip, the URL carries
+ * `?reopen=<tier>:<format>&verified=<patreon|twitch|none>&verifyError=...&provider=...`.
+ * Every return reopens the combined options step (with the format preserved):
+ *   - success / cancel → the modal reflects `session.discount` (applied or not)
+ *   - real failure      → also surface a "couldn't verify" message
  *
- * Cleans the URL params after reading (so a back-button / reload doesn't
- * trigger the same flow twice).
+ * Cleans the OAuth params off the URL afterward so a reload / back-button
+ * doesn't re-trigger the flow.
  */
 export function useReopenOnReturn() {
   const { open } = useBooking();
@@ -25,15 +27,34 @@ export function useReopenOnReturn() {
     const decoded = decodeReopenKey(reopenKey);
     if (!decoded) return;
 
-    open({ tier: decoded.tier, format: decoded.format, jumpToSchedule: true });
+    const verified = params.get("verified");
+    const verifyError = params.get("verifyError");
+    const provider = params.get("provider");
+    const { tier, format } = decoded;
 
-    // Strip the OAuth-return query params from the URL so the modal doesn't
-    // reopen on every navigation. We keep the path/hash, just clean the search.
+    // Show the failure banner only for a genuine failed verification — not on
+    // success, and not when the user backed out of the consent screen.
+    const isRealFailure =
+      verified === "none" &&
+      verifyError !== null &&
+      verifyError !== "access_denied";
+
+    open({
+      tier,
+      format,
+      verifyError:
+        isRealFailure && (provider === "patreon" || provider === "twitch")
+          ? { provider: provider as DiscountKind, reason: verifyError ?? "unknown" }
+          : null,
+    });
+
+    // Strip the OAuth-return query params so the modal doesn't reopen on every
+    // navigation. Keep the path/hash, just clean the search.
     if (typeof window !== "undefined") {
       const url = new URL(window.location.href);
-      url.searchParams.delete("reopen");
-      url.searchParams.delete("verified");
-      url.searchParams.delete("verifyError");
+      ["reopen", "verified", "verifyError", "provider"].forEach((p) =>
+        url.searchParams.delete(p),
+      );
       window.history.replaceState(null, "", url.toString());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

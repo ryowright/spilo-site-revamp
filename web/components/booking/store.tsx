@@ -8,20 +8,23 @@ import {
   type ReactNode,
 } from "react";
 import type { Format, Tier } from "./CalendlyEvents";
+import type { DiscountKind } from "@/lib/session";
+
+export type VerifyError = { provider: DiscountKind; reason: string };
 
 type OpenArgs = {
   tier: Tier;
+  // Preselected format (restored from the reopen key after an OAuth round-trip).
   format?: Format;
-  // If true, jump straight to the schedule step (used by the reopen-on-return
-  // hook so the user lands back in the Calendly embed after OAuth).
-  jumpToSchedule?: boolean;
+  // A failed verification to surface on the combined options step.
+  verifyError?: VerifyError | null;
 };
 
 type BookingState = {
   isOpen: boolean;
   tier: Tier | null;
   format: Format | null;
-  jumpToSchedule: boolean;
+  verifyError: VerifyError | null;
   open: (args: OpenArgs) => void;
   close: () => void;
 };
@@ -36,26 +39,26 @@ const Ctx = createContext<BookingState | null>(null);
 export function BookingProvider({ children }: { children: ReactNode }) {
   const [tier, setTier] = useState<Tier | null>(null);
   const [format, setFormat] = useState<Format | null>(null);
-  const [jumpToSchedule, setJumpToSchedule] = useState(false);
+  const [verifyError, setVerifyError] = useState<VerifyError | null>(null);
 
   const value = useMemo<BookingState>(
     () => ({
       isOpen: tier !== null,
       tier,
       format,
-      jumpToSchedule,
-      open: ({ tier, format, jumpToSchedule }) => {
+      verifyError,
+      open: ({ tier, format, verifyError }) => {
         setTier(tier);
         setFormat(format ?? null);
-        setJumpToSchedule(!!jumpToSchedule);
+        setVerifyError(verifyError ?? null);
       },
       close: () => {
         setTier(null);
         setFormat(null);
-        setJumpToSchedule(false);
+        setVerifyError(null);
       },
     }),
-    [tier, format, jumpToSchedule],
+    [tier, format, verifyError],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

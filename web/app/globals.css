@@ -1046,50 +1046,93 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   font-size: 24px;
   letter-spacing: 0.01em;
 }
-.booking-format-card-desc {
-  margin: 0;
-  color: var(--text-dim);
-  font-size: 14px;
-  line-height: 1.5;
+/* Original price shown struck-through when a discount is applied. */
+.booking-format-card-price-was {
+  margin-right: 8px;
+  color: var(--text-faint);
+  text-decoration: line-through;
+  font-size: 17px;
 }
 
-/* ─── Discount step ─── */
-.booking-discount-options { display: flex; flex-direction: column; gap: 12px; }
-.booking-discount-card {
+/* Single-format tiers (30-min) show a plain price row instead of format cards. */
+.booking-price-line {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 18px 20px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
   border: 1px solid var(--line);
-  background: oklch(0.18 0.008 264 / 0.5);
   border-radius: 4px;
-  color: var(--text);
-  transition: border-color 150ms ease, background 150ms ease;
+  background: oklch(0.18 0.008 264 / 0.5);
 }
-.booking-discount-card:hover { border-color: var(--text-faint); background: oklch(0.22 0.012 264 / 0.6); }
-.booking-discount-card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.booking-discount-card-title {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.booking-discount-card-cta {
+.booking-price-line-label {
   font-family: var(--font-mono);
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--text-dim);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  color: var(--text);
 }
-.booking-discount-card:hover .booking-discount-card-cta { color: var(--text); }
-.booking-discount-card-cta .arrow { transition: transform 160ms ease; }
-.booking-discount-card:hover .booking-discount-card-cta .arrow { transform: translateX(3px); }
-.booking-discount-card-desc { margin: 0; color: var(--text-dim); font-size: 14px; line-height: 1.5; }
+
+/* ─── Discount step ─── */
+/* Failure banner shown when a Twitch/Patreon verification comes back negative. */
+.booking-discount-error {
+  border: 1px solid var(--red);
+  background: oklch(0.585 0.205 25 / 0.12);
+  border-radius: 4px;
+  padding: 12px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+}
+/* ─── Combined options step: sections ─── */
+/* The options step stacks a "Discounts" section over a "Format" section, each
+   with a heading + intro, echoing the original site's sectioned layout. */
+.booking-section { display: flex; flex-direction: column; gap: 14px; }
+.booking-section-head { display: flex; flex-direction: column; gap: 6px; }
+.booking-section-title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--red-bright);
+}
+.booking-section-sub { margin: 0; color: var(--text-dim); font-size: 14px; line-height: 1.55; }
+
+/* Discount rows: label/desc on the left, sign-in control on the right, split
+   by hairline dividers. */
+.booking-discount-rows {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: oklch(0.18 0.008 264 / 0.5);
+}
+.booking-discount-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+}
+.booking-discount-row + .booking-discount-row { border-top: 1px solid var(--line); }
+.booking-discount-row-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.booking-discount-row-label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+.booking-discount-row-desc { color: var(--text-dim); font-size: 13.5px; line-height: 1.5; }
+.booking-discount-row .btn { flex-shrink: 0; }
 
 .booking-discount-applied {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
   border: 1px solid var(--red);
   background: oklch(0.22 0.012 264 / 0.7);
   border-radius: 4px;
@@ -1097,6 +1140,22 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   box-shadow: 0 14px 44px -28px var(--red-glow);
 }
 .booking-discount-applied-head { display: flex; flex-direction: column; gap: 4px; }
+.booking-discount-remove {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 150ms ease;
+}
+.booking-discount-remove:hover { color: var(--text); }
 .booking-discount-applied-eyebrow {
   font-family: var(--font-mono);
   font-size: 11px;

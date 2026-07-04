@@ -5,51 +5,36 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useBooking } from "./store";
 import { TIER_META, type Discount, type Format } from "./CalendlyEvents";
 import { useBookingSession } from "./hooks/useBookingSession";
-import { FormatStep } from "./steps/FormatStep";
-import { DiscountStep } from "./steps/DiscountStep";
+import { OptionsStep } from "./steps/OptionsStep";
 import { ScheduleStep } from "./steps/ScheduleStep";
 
-type Step = "format" | "discount" | "schedule";
+type Step = "options" | "schedule";
 
 export function BookingModal() {
-  const { isOpen, tier, format: initialFormat, jumpToSchedule, close } = useBooking();
+  const { isOpen, tier, format: initialFormat, verifyError, close } =
+    useBooking();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const { session, clear } = useBookingSession();
 
   // Per-flow state (resets each time a modal opens).
-  const [step, setStep] = useState<Step>("format");
+  const [step, setStep] = useState<Step>("options");
   const [format, setFormat] = useState<Format>("youtube");
   const [discount, setDiscount] = useState<Discount>("full");
 
-  // When the modal opens, sync local state from the open() args and decide
-  // which step to start on based on tier shape.
+  // When the modal opens, sync the format from the open() args and always land
+  // on the combined options step.
   useEffect(() => {
     if (!isOpen || !tier) return;
-
     const meta = TIER_META[tier];
-    const startFormat = initialFormat ?? meta.formats[0];
-    setFormat(startFormat);
+    setFormat(initialFormat ?? meta.formats[0]);
+    setStep("options");
+  }, [isOpen, tier, initialFormat]);
 
-    if (jumpToSchedule) {
-      // Returning from OAuth — discount was set server-side and is read
-      // from the session payload below.
-      setStep("schedule");
-    } else if (meta.formats.length > 1) {
-      setStep("format");
-    } else if (meta.discountsApply) {
-      setStep("discount");
-    } else {
-      setStep("schedule");
-    }
-  }, [isOpen, tier, initialFormat, jumpToSchedule]);
-
-  // Mirror session.discount → local discount when we resume from OAuth.
+  // Mirror the verified discount from the session cookie into local state.
   useEffect(() => {
     if (!isOpen) return;
-    if (jumpToSchedule && session?.discount) {
-      setDiscount(session.discount);
-    }
-  }, [isOpen, jumpToSchedule, session]);
+    setDiscount(session?.discount ?? "full");
+  }, [isOpen, session]);
 
   // Drive the native <dialog>'s open state from our store.
   useEffect(() => {
@@ -65,23 +50,6 @@ export function BookingModal() {
   if (!tier) return null;
 
   const meta = TIER_META[tier];
-
-  function advance() {
-    if (step === "format") {
-      // Skip discount step entirely for tiers that don't offer them (Team).
-      setStep(meta.discountsApply ? "discount" : "schedule");
-    } else if (step === "discount") {
-      setStep("schedule");
-    }
-  }
-
-  function back() {
-    if (step === "discount" && meta.formats.length > 1) setStep("format");
-    else if (step === "schedule") {
-      if (meta.discountsApply) setStep("discount");
-      else if (meta.formats.length > 1) setStep("format");
-    }
-  }
 
   return (
     <dialog
@@ -105,7 +73,9 @@ export function BookingModal() {
           >
             <header className="booking-modal-head">
               <div>
-                <div className="booking-modal-eyebrow">{stepLabel(step)}</div>
+                {step === "schedule" && (
+                  <div className="booking-modal-eyebrow">{stepLabel(step)}</div>
+                )}
                 <h2 className="booking-modal-title">{meta.label}</h2>
               </div>
               <button
@@ -119,29 +89,18 @@ export function BookingModal() {
             </header>
 
             <div className="booking-modal-body">
-              {step === "format" && (
-                <FormatStep
+              {step === "options" && (
+                <OptionsStep
                   tier={tier}
-                  selected={format}
-                  onSelect={setFormat}
-                  onContinue={advance}
-                />
-              )}
-              {step === "discount" && (
-                <DiscountStep
-                  tier={tier}
-                  format={format}
+                  selectedFormat={format}
+                  onSelectFormat={setFormat}
                   appliedDiscount={session?.discount ?? null}
-                  onSkip={() => {
-                    setDiscount("full");
-                    advance();
-                  }}
-                  onUseApplied={() => {
-                    if (session?.discount) setDiscount(session.discount);
-                    advance();
-                  }}
+                  verifyError={verifyError}
                   onClearApplied={clear}
-                  onBack={meta.formats.length > 1 ? back : undefined}
+                  onContinue={() => {
+                    setDiscount(session?.discount ?? "full");
+                    setStep("schedule");
+                  }}
                 />
               )}
               {step === "schedule" && (
@@ -149,7 +108,7 @@ export function BookingModal() {
                   tier={tier}
                   format={format}
                   discount={discount}
-                  onBack={back}
+                  onBack={() => setStep("options")}
                 />
               )}
             </div>
@@ -161,12 +120,5 @@ export function BookingModal() {
 }
 
 function stepLabel(step: Step): string {
-  switch (step) {
-    case "format":
-      return "Step 1 · Format";
-    case "discount":
-      return "Discount";
-    case "schedule":
-      return "Pick a time";
-  }
+  return step === "options" ? "Session details" : "Pick a time";
 }
