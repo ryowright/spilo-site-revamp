@@ -28,7 +28,13 @@ const hoverLift = { y: -6, scale: 1.012 };
 // Same +0.012 lift, applied to the featured tier's resting 1.02 scale.
 const hoverLiftFeatured = { y: -6, scale: 1.032 };
 
-function TierCard({ card }: { card: PackageCard }) {
+function TierCard({
+  card,
+  coachName,
+}: {
+  card: PackageCard;
+  coachName: string;
+}) {
   return (
     <motion.div
       className={`tier${card.featured ? " featured" : ""}`}
@@ -64,7 +70,7 @@ function TierCard({ card }: { card: PackageCard }) {
         booking={card.booking}
         variant={card.featured ? "red" : "ghost"}
       >
-        Schedule a call
+        Schedule with {coachName}
       </SchedulingButton>
       {card.sub && <div className="tier-sub">{card.sub}</div>}
     </motion.div>
@@ -76,6 +82,8 @@ const COACH_IDS = Object.keys(COACHES) as Coach[];
 export function Pricing() {
   const [coach, setCoach] = useState<Coach>("spilo");
   const active = COACHES[coach];
+  // "spilo" → "Spilo" — used in each card's "Schedule with {name}" button.
+  const coachName = active.id.charAt(0).toUpperCase() + active.id.slice(1);
 
   // Measure Spilo's (taller) card height and pin Stephano's lighter cards to
   // match, so toggling coaches never shrinks the section. Spilo is the
@@ -173,7 +181,7 @@ export function Pricing() {
             <div ref={measureRef}>
               <Stagger className={`tiers tiers-${active.cards.length}`}>
                 {active.cards.map((card) => (
-                  <TierCard card={card} key={card.key} />
+                  <TierCard card={card} coachName={coachName} key={card.key} />
                 ))}
               </Stagger>
             </div>
