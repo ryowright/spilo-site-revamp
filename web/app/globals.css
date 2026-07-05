@@ -351,7 +351,9 @@ html[data-hero="stacked"] .media-frame image-slot { height: clamp(300px, 40vw, 4
    STATS STRIP
    ============================================================ */
 .stats {
-  border-top: 1px solid var(--line-soft); border-bottom: 1px solid var(--line-soft);
+  /* No top border — it would sit right where the .page-reveal panel's own top
+     edge slides past during the parallax scroll, reading as a doubled line. */
+  border-bottom: 1px solid var(--line-soft);
   background: oklch(0.185 0.009 264 / 0.6);
   margin-top: clamp(32px, 4vw, 56px);
 }
