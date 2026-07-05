@@ -95,6 +95,8 @@ html[data-display="oswald"] .display { font-weight: 600; line-height: 0.98; lett
 /* Center the Coaching headline onto the same axis as the (centered) coach
    toggle + cards, so the title stops fighting the toggle for attention. */
 #pricing .section-head { text-align: center; }
+/* FAQ headline is large enough to read better centered over the list. */
+#faq .section-head { text-align: center; }
 #session .section-head p { max-width: none; font-size: clamp(17px, 1.7vw, 21px); }
 .section-head .eyebrow { display: block; margin-bottom: 18px; }
 .section-head h2 {
@@ -842,13 +844,31 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 }
 .lightbox-close:hover { background: var(--bg-1); border-color: var(--text-dim); }
 
+/* About — enlarged + widened to match the expanded sections above. The grid
+   width/gap and copy sizes are bumped inline in About.tsx; these cover the photo
+   frame, the CTA, and the pull-quote. */
+/* Fill the viewport (minus the sticky-nav scroll offset) so jumping to #about
+   via the nav doesn't reveal the FAQ headline peeking below; the content stays
+   vertically centered. Content taller than this just grows the section. */
+#about {
+  min-height: calc(100svh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* Pin the grid to full width — as a flex item with `margin: 0 auto`, it could
+   otherwise shrink to content width and collapse the fr columns. */
+#about .hero-grid { width: 100%; }
+#about .media-frame image-slot { height: clamp(440px, 50vw, 700px); }
+#about .btn { font-size: 14px; padding: 18px 34px; }
+
 /* About section — mission pull-quote sitting below the CTA. Red left rule
    echoes the hero's .hero-lead treatment so the page feels coherent. */
 .about-mission {
-  margin-top: clamp(24px, 3vw, 36px);
-  padding-left: clamp(18px, 1.6vw, 24px);
+  margin-top: clamp(28px, 3.2vw, 40px);
+  padding-left: clamp(18px, 1.6vw, 26px);
   border-left: 2px solid var(--red);
-  max-width: 54ch;
+  max-width: 56ch;
 }
 .about-mission .eyebrow {
   display: block;
@@ -856,7 +876,7 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 }
 .about-mission p {
   color: var(--text-dim);
-  font-size: clamp(18px, 1.8vw, 20px);
+  font-size: clamp(19px, 1.9vw, 23px);
   line-height: 1.55;
   margin: 0;
   font-style: italic;

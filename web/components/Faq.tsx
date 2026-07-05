@@ -185,7 +185,6 @@ export function Faq() {
       className="section"
       id="faq"
       data-screen-label="FAQ"
-      style={{ paddingTop: "clamp(40px,6vw,80px)" }}
     >
       <div className="wrap">
         <Reveal className="section-head">

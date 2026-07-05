@@ -11,6 +11,8 @@ export function About() {
         style={{
           gridTemplateColumns: "0.85fr 1.15fr",
           alignItems: "center",
+          maxWidth: "1520px",
+          gap: "clamp(40px, 5.5vw, 84px)",
         }}
       >
         <Reveal className="hero-media" axis="x" distance={-30}>
@@ -30,9 +32,9 @@ export function About() {
               fontFamily: "var(--font-display)",
               fontWeight: 400,
               textTransform: "uppercase",
-              fontSize: "clamp(36px,5.2vw,68px)",
+              fontSize: "clamp(40px,5.6vw,80px)",
               lineHeight: 0.95,
-              margin: "0 0 26px",
+              margin: "0 0 30px",
               letterSpacing: "0.01em",
             }}
           >
@@ -41,7 +43,7 @@ export function About() {
           <p
             style={{
               color: "var(--text-dim)",
-              fontSize: "18px",
+              fontSize: "20px",
               lineHeight: 1.6,
               maxWidth: "54ch",
             }}
@@ -56,10 +58,10 @@ export function About() {
           <p
             style={{
               color: "var(--text-dim)",
-              fontSize: "18px",
+              fontSize: "20px",
               lineHeight: 1.6,
               maxWidth: "54ch",
-              marginTop: "18px",
+              marginTop: "22px",
             }}
           >
             I&apos;m also a VOD review expert with over{" "}
@@ -70,7 +72,7 @@ export function About() {
             new Overwatch heroes and systems, providing additional insight
             into the secrets of what makes Overwatch work.
           </p>
-          <div style={{ marginTop: "34px" }}>
+          <div style={{ marginTop: "40px" }}>
             <a href="#pricing" className="btn btn-red">
               Schedule a call <span className="arrow">→</span>
             </a>
