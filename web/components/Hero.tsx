@@ -70,10 +70,6 @@ export function Hero() {
         />
         <div className="hero-stage-inner">
           <Stagger className="hero-copy">
-            <motion.div className="badge" variants={staggerItem}>
-              <span className="pip"></span>
-              <span>EX-OVERWATCH LEAGUE | LONDON SPITFIRE</span>
-            </motion.div>
             <motion.h1 variants={staggerItem}>
               Improving<br />shouldn&apos;t be<br /><em>guesswork.</em>
             </motion.h1>

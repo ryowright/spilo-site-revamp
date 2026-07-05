@@ -14,11 +14,15 @@ export default function Home() {
       <SiteNav />
       <main id="top">
         <Hero />
-        <Testimonials />
-        <SessionSection />
-        <Pricing />
-        <About />
-        <Faq />
+        {/* Sits above the pinned hero and scrolls up over it (see .hero /
+            .page-reveal in globals.css). */}
+        <div className="page-reveal">
+          <Testimonials />
+          <SessionSection />
+          <Pricing />
+          <About />
+          <Faq />
+        </div>
       </main>
       <SiteFooter />
     </BookingRoot>
