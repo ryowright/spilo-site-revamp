@@ -84,23 +84,22 @@ html[data-display="oswald"] .display { font-weight: 600; line-height: 0.98; lett
 .wrap { max-width: var(--maxw); margin: 0 auto; padding-inline: var(--gut); }
 .wrap-wide { max-width: 1840px; padding-inline: clamp(20px, 3.5vw, 52px); }
 .section { padding-block: clamp(72px, 10vw, 140px); }
-.section-head { max-width: 720px; }
-/* Testimonials headline ("REAL PLAYERS, REAL RESULTS.") — no subtitle, enlarged,
-   and centered so it sits balanced over the full-bleed reviews wall below.
-   max-width:none lets it sit on one line; wraps naturally on narrow screens. */
-#testimonials .section-head { max-width: none; text-align: center; }
+/* Section headlines run at one enlarged "expanded" scale across the page (to
+   match the hero); max-width:none lets them sit on one line (subtitles keep
+   their own 56ch cap below). Per-section tweaks: testimonials is a touch bigger
+   and centered as the full-bleed wall header; the session subtitle drops its cap
+   so its one sentence stays on a single line. */
+.section-head { max-width: none; }
+#testimonials .section-head { text-align: center; }
 #testimonials .section-head h2 { font-size: clamp(44px, 6.8vw, 92px); }
-/* Session subtitle is one sentence meant to sit on a single line — drop the
-   head + subtitle width caps so it doesn't wrap (still wraps on screens too
-   narrow to fit it). Headline + subtitle enlarged to match the hero/testimonials
-   "expanded" scale (left-aligned, so a touch under testimonials' 92). */
-#session .section-head, #session .section-head p { max-width: none; }
-#session .section-head h2 { font-size: clamp(40px, 6vw, 84px); }
-#session .section-head p { font-size: clamp(17px, 1.7vw, 21px); }
+/* Center the Coaching headline onto the same axis as the (centered) coach
+   toggle + cards, so the title stops fighting the toggle for attention. */
+#pricing .section-head { text-align: center; }
+#session .section-head p { max-width: none; font-size: clamp(17px, 1.7vw, 21px); }
 .section-head .eyebrow { display: block; margin-bottom: 18px; }
 .section-head h2 {
   font-family: var(--font-display); font-weight: 400; text-transform: uppercase;
-  font-size: clamp(34px, 5.5vw, 64px); line-height: 0.95; margin: 0;
+  font-size: clamp(40px, 6vw, 84px); line-height: 0.95; margin: 0;
   letter-spacing: 0.01em;
 }
 html[data-display="oswald"] .section-head h2 { font-weight: 600; }
@@ -431,11 +430,27 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 /* ============================================================
    PRICING
    ============================================================ */
-.pricing .wrap { display: block; max-width: 1436px; padding-inline: clamp(20px, 3vw, 30px); }
+.pricing { position: relative; }
+/* The booking section breaks the uniform dark of the content sections with a
+   soft red ambient glow — strongest behind the featured "Most Popular" card —
+   to draw the eye at the conversion point. On its own layer (behind .wrap) so
+   its opacity can be animated from 0 → full when the section scrolls into view
+   (framer whileInView in Pricing.tsx). Fades to transparent before the edges so
+   it blends into the neighbouring sections. Tune the alpha/size. */
+.pricing-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(64% 60% at 50% 46%, oklch(0.55 0.21 27 / 0.32), transparent 72%);
+}
+.pricing .wrap { position: relative; z-index: 1; display: block; max-width: 1436px; padding-inline: clamp(20px, 3vw, 30px); }
 
 /* Coach selector — segmented control + context line above the pricing cards. */
 .coach-switch {
-  margin-top: clamp(28px, 3.5vw, 44px);
+  /* Extra top room so the (now centered) headline has breathing space above
+     the toggle rather than crowding it. */
+  margin-top: clamp(36px, 4.5vw, 60px);
   display: flex; flex-direction: column; align-items: center; gap: 14px;
 }
 .coach-toggle {
@@ -448,17 +463,26 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 .coach-toggle-btn {
   position: relative;
   font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text-dim);
+  text-transform: uppercase; color: var(--text);
   background: none; border: 0; border-radius: 2px;
   padding: 10px 20px; cursor: pointer;
   transition: color 180ms ease, background 180ms ease;
 }
-.coach-toggle-btn:hover { color: var(--text); }
+/* Unselected option stays full-contrast (reads as a live choice, not disabled);
+   a subtle bg tint on hover gives clickable feedback. Selected = red pill. */
+.coach-toggle-btn:not(.is-active):hover { background: oklch(0.26 0.012 264 / 0.6); }
 .coach-toggle-btn.is-active { background: var(--red); color: var(--red-ink); }
 .coach-toggle-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
-/* On-hover / focus tooltip below a coach button (used for Stephano's context
-   line). Sentence-case + body font so it reads as a sentence, not a label. */
+/* "Choose your coach" prompt above the toggle so the two-coach choice reads as
+   a decision. */
+.coach-switch-label {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+
+/* On-hover / focus tooltip above a coach button (Stephano's context line).
+   Sentence-case + body font so it reads as a sentence, not a label. */
 .coach-tip {
   position: absolute;
   bottom: calc(100% + 12px);

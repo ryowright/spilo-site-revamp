@@ -189,7 +189,7 @@ export function Faq() {
     >
       <div className="wrap">
         <Reveal className="section-head">
-          <h2 style={{ width: "760px" }}>FREQUENTLY ASKED QUESTIONS</h2>
+          <h2>FREQUENTLY ASKED QUESTIONS</h2>
         </Reveal>
         <Stagger className="faq-grid" gap={STAGGER_TIGHT}>
           {ITEMS.map((item, i) => (

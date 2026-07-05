@@ -121,15 +121,23 @@ export function Pricing() {
       id="pricing"
       data-screen-label="Pricing"
     >
+      {/* Ambient red glow — fades from 0 to full the first time the booking
+          section scrolls into view. */}
+      <motion.div
+        className="pricing-glow"
+        aria-hidden
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 2.0, ease: "easeOut" }}
+      />
       <div className="wrap wrap-wide">
         <Reveal className="section-head">
           <h2>Book the review.</h2>
-          <p style={{ maxWidth: "none", whiteSpace: "nowrap" }}>
-            Get actionable and targeted feedback on what you can do to improve.
-          </p>
         </Reveal>
 
         <Reveal className="coach-switch">
+          <span className="coach-switch-label">Choose your coach</span>
           <div
             className="coach-toggle"
             role="radiogroup"

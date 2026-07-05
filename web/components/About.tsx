@@ -30,7 +30,7 @@ export function About() {
               fontFamily: "var(--font-display)",
               fontWeight: 400,
               textTransform: "uppercase",
-              fontSize: "clamp(32px,5vw,58px)",
+              fontSize: "clamp(36px,5.2vw,68px)",
               lineHeight: 0.95,
               margin: "0 0 26px",
               letterSpacing: "0.01em",
