@@ -85,10 +85,11 @@ html[data-display="oswald"] .display { font-weight: 600; line-height: 0.98; lett
 .wrap-wide { max-width: 1840px; padding-inline: clamp(20px, 3.5vw, 52px); }
 .section { padding-block: clamp(72px, 10vw, 140px); }
 .section-head { max-width: 720px; }
-/* Testimonials headline ("REAL STUDENTS, REAL RESULTS.") needs more room to
-   sit on one line; the subtitle keeps its own 56ch cap so only the h2 widens.
-   Wraps naturally on narrow screens where the text no longer fits. */
-#testimonials .section-head { max-width: none; }
+/* Testimonials headline ("REAL PLAYERS, REAL RESULTS.") — no subtitle, enlarged,
+   and centered so it sits balanced over the full-bleed reviews wall below.
+   max-width:none lets it sit on one line; wraps naturally on narrow screens. */
+#testimonials .section-head { max-width: none; text-align: center; }
+#testimonials .section-head h2 { font-size: clamp(44px, 6.8vw, 92px); }
 .section-head .eyebrow { display: block; margin-bottom: 18px; }
 .section-head h2 {
   font-family: var(--font-display); font-weight: 400; text-transform: uppercase;
@@ -371,10 +372,29 @@ html[data-display="oswald"] .stat .num { font-weight: 600; }
 /* ============================================================
    TESTIMONIALS — uniform Discord-review screenshot wall
    ============================================================ */
+/* Full-bleed "overflowing reviews wall": a 5-column grid pulled out to the full
+   viewport and centered, so the middle 3 columns line up with the section head
+   while an extra card on each side bleeds off the page edge (deliberately cut
+   off — see .tcard-edge). --tcard-w matches the old 3-col card width (wrap-wide
+   content ÷ 3) so the center columns stay aligned at every width. The mask
+   softens the hard clip at the viewport edges. body{overflow-x:clip} contains
+   the bleed with no horizontal scrollbar. Reverts to a plain grid on mobile. */
 .tcards {
   margin-top: clamp(40px, 5vw, 64px);
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px;
+  --tcard-w: calc((min(100vw, 1840px) - 2 * clamp(20px, 3.5vw, 52px) - 44px) / 3);
+  display: grid;
+  grid-template-columns: repeat(5, var(--tcard-w));
+  justify-content: center;
+  gap: 22px;
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
 }
+/* The bleeding side cards: dimmed to de-emphasize, but still clickable (they
+   open the same lightbox). Un-dim on hover/focus so they read as interactive. */
+.tcard-edge { opacity: 0.5; transition: opacity 180ms ease, border-color 180ms ease, transform 180ms ease; }
+.tcard-edge:hover, .tcard-edge:focus-visible { opacity: 1; }
 .tcard {
   position: relative; border: 1px solid var(--line); background: var(--bg-1);
   border-radius: 3px; overflow: hidden; padding: 10px;
@@ -672,7 +692,14 @@ html[data-display="oswald"] .footer-cta h2 { font-weight: 600; }
   .stat:nth-child(even)::before { display: block; }
   .stats .stat { border-top: 1px solid var(--line-soft); }
   .stats .stat:nth-child(-n+2) { border-top: 0; }
-  .tcards { grid-template-columns: 1fr 1fr; }
+  /* Below desktop there's no margin to bleed into: drop the full-bleed 5-col
+     wall back to a normal in-flow grid and hide the cut-off side cards. */
+  .tcards {
+    grid-template-columns: 1fr 1fr;
+    width: auto; margin-inline: 0;
+    -webkit-mask-image: none; mask-image: none;
+  }
+  .tcard-edge { display: none; }
   .tiers { grid-template-columns: minmax(0, 440px); }
   html[data-hero="stacked"] .hero-grid, html[data-hero="stacked"] .hero-lead, html[data-hero="stacked"] .hero-cta { text-align: left; justify-items: start; justify-content: flex-start; margin-inline: 0; }
 }
