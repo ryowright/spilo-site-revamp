@@ -183,7 +183,29 @@ html[data-display="oswald"] .section-head h2 { font-weight: 600; }
 .socials a:hover { color: var(--text); transform: translateY(-1px); }
 .socials svg { width: 17px; height: 17px; display: block; }
 
-.nav-toggle { display: none; }
+/* Mobile hamburger — hidden on desktop, revealed at ≤940px (responsive block).
+   The three bars morph into an X via [aria-expanded="true"]. */
+.nav-toggle {
+  display: none;
+  background: none; border: 0; padding: 8px; margin-right: -8px;
+  color: var(--text); cursor: pointer;
+}
+.nav-toggle-box { position: relative; display: block; width: 22px; height: 16px; }
+.nav-toggle-bar {
+  position: absolute; left: 0; right: 0; height: 2px; border-radius: 2px;
+  background: currentColor;
+  transition: top 200ms ease, transform 200ms ease, opacity 150ms ease;
+}
+.nav-toggle-bar:nth-child(1) { top: 0; }
+.nav-toggle-bar:nth-child(2) { top: 7px; }
+.nav-toggle-bar:nth-child(3) { top: 14px; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(1) { top: 7px; transform: rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bar:nth-child(3) { top: 7px; transform: rotate(-45deg); }
+
+/* Mobile dropdown of the section links — hidden on desktop; on mobile it drops
+   below the sticky bar (styles in the responsive block). */
+.nav-mobile { display: none; }
 
 /* ============================================================
    HERO
@@ -396,8 +418,15 @@ html[data-display="oswald"] .stat .num { font-weight: 600; }
   grid-template-columns: repeat(5, var(--tcard-w));
   justify-content: center;
   gap: 22px;
-  width: 100vw;
-  margin-inline: calc(50% - 50vw);
+  /* Cap the full-bleed width so the bleeding edge cards never show more than a
+     tasteful sliver on ultrawide displays. At ≤1960px this behaves exactly like
+     a 100vw full-bleed (edge peek grows with the viewport, as designed); past
+     1960px the box stops widening — staying centered on the viewport — so the
+     peek maxes out around ~90px instead of creeping toward half a card at 2560+. */
+  width: min(100vw, 1960px);
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
   -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
 }
@@ -719,6 +748,45 @@ html[data-display="oswald"] .footer-cta h2 { font-weight: 600; }
    ============================================================ */
 @media (max-width: 940px) {
   .nav-links, .nav-right .socials { display: none; }
+  .nav-toggle { display: block; }
+  /* The section links, dropped below the sticky bar. Absolute so it overlays
+     the page rather than pushing it down; anchored to the positioned .site-nav.
+     Closed = invisible + not focusable; .is-open reveals it. */
+  .nav-mobile {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: oklch(0.15 0.008 264 / 0.98);
+    backdrop-filter: blur(14px) saturate(1.1);
+    border-bottom: 1px solid var(--line-soft);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity 200ms ease, transform 200ms ease, visibility 200ms;
+  }
+  .nav-mobile.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .nav-mobile a {
+    display: block;
+    padding: 15px var(--gut);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border-top: 1px solid var(--line-soft);
+    transition: color 150ms ease, background 150ms ease;
+  }
+  .nav-mobile a:first-child { border-top: 0; }
+  .nav-mobile a:hover,
+  .nav-mobile a.is-active { color: var(--text); background: oklch(0.2 0.01 264 / 0.5); }
   html[data-hero] .hero-grid { grid-template-columns: 1fr !important; text-align: left; }
   html[data-hero] .hero-media { order: 0 !important; }
   html[data-hero] .media-frame image-slot { height: clamp(320px, 70vw, 460px) !important; }
@@ -732,6 +800,7 @@ html[data-display="oswald"] .footer-cta h2 { font-weight: 600; }
   .tcards {
     grid-template-columns: 1fr 1fr;
     width: auto; margin-inline: 0;
+    position: static; left: auto; transform: none;
     -webkit-mask-image: none; mask-image: none;
   }
   .tcard-edge { display: none; }
@@ -895,8 +964,9 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   align-items: start;
 }
 
-/* Video — click-to-load facade + iframe share the same 16:9 frame. */
-.session-video { width: 100%; }
+/* Video — click-to-load facade + iframe share the same 16:9 frame. Top of the
+   left column; the plug sits in row 2 beneath it. */
+.session-video { width: 100%; grid-column: 1; grid-row: 1; }
 .yt-facade,
 .yt-frame {
   position: relative;
@@ -948,8 +1018,9 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 .yt-facade:hover .yt-play { transform: translate(-50%, -50%) scale(1.06); background: var(--red-bright); }
 .yt-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
 
-/* Aside — outline + CTA. */
-.session-aside { display: flex; flex-direction: column; }
+/* Aside — outline + CTA. Spans both rows of the left column (video + plug) so
+   it defines the section's full height and the plug can tuck under the video. */
+.session-aside { display: flex; flex-direction: column; grid-column: 2; grid-row: 1 / 3; }
 .session-outline {
   /* Shared so the numeral, the timeline line, and the row inset stay in sync. */
   --num-size: clamp(28px, 3vw, 44px);
@@ -1034,13 +1105,12 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   padding: 18px 34px;
 }
 
-/* Playlist plug — subtle outbound link box. Constrained to the width of the
-   video column (the 1.8fr of the 1.8fr:1fr grid), so its left edge sits on the
-   video's left and its right edge on the video's right. Derived from the
-   shared --session-gap so it tracks the grid exactly. */
+/* Playlist plug — subtle outbound link box. Occupies row 2 of the video's
+   column, so it sits directly beneath the video and shares its exact width.
+   Vertical spacing from the video comes from the grid's row gap. */
 .session-plug {
-  margin-top: clamp(28px, 4vw, 48px);
-  width: calc((100% - var(--session-gap)) * 1.8 / 2.8);
+  grid-column: 1;
+  grid-row: 2;
   border: 1px dashed var(--line);
   border-radius: 4px;
   padding: 18px 24px;
@@ -1054,8 +1124,9 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 @media (max-width: 940px) {
   .session-grid { grid-template-columns: 1fr; }
   .session-aside { margin-top: 8px; }
-  /* Grid collapses to one column — plug spans full width again. */
-  .session-plug { width: 100%; }
+  /* Single column — drop the explicit row/column placement so the items flow
+     in source order (video → outline → plug), each full width. */
+  .session-video, .session-aside, .session-plug { grid-column: auto; grid-row: auto; }
 }
 
 /* ============================================================

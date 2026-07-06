@@ -81,22 +81,25 @@ export function SessionSection() {
               </a>
             </Reveal>
           </div>
-        </div>
 
-        <div className="session-plug">
-          <p>
-            Want to see more coaching VODs like this one? Check out the full set of playlists
-            on{" "}
-            <a
-              className="lk"
-              href={PLAYLISTS_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Spilo Coaching
-            </a>{" "}
-            — one for every hero!
-          </p>
+          {/* Sits in the video's column, directly beneath it — the aside spans
+              both rows so this fills the space under the shorter video rather
+              than being pushed below the taller outline. */}
+          <div className="session-plug">
+            <p>
+              Want to see more coaching VODs like this one? Check out the full set of playlists
+              on{" "}
+              <a
+                className="lk"
+                href={PLAYLISTS_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Spilo Coaching
+              </a>{" "}
+              — one for every hero!
+            </p>
+          </div>
         </div>
       </div>
     </section>

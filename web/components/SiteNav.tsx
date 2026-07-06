@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   XIcon,
   DiscordIcon,
@@ -20,6 +20,29 @@ const SECTIONS = [
 
 export function SiteNav() {
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef<HTMLElement>(null);
+
+  // While the mobile menu is open, close it on Escape or on any pointer press
+  // outside the nav (tap-outside-to-close). Presses on the hamburger or a link
+  // land inside the nav, so those are left to their own handlers.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    const onPointerDown = (e: PointerEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     const targets = SECTIONS.map((s) => document.getElementById(s.id)).filter(
@@ -57,7 +80,7 @@ export function SiteNav() {
   }, []);
 
   return (
-    <nav className="site-nav">
+    <nav className="site-nav" ref={navRef}>
       <div className="nav-inner">
         <a className="brand" href="#top" aria-label="Spilo home">
           <span className="mark">SPILO</span>
@@ -131,7 +154,39 @@ export function SiteNav() {
           <a href="#pricing" className="btn btn-red btn-sm">
             Schedule a call
           </a>
+          <button
+            type="button"
+            className="nav-toggle"
+            aria-expanded={menuOpen}
+            aria-controls="nav-mobile-menu"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            <span className="nav-toggle-box" aria-hidden="true">
+              <span className="nav-toggle-bar" />
+              <span className="nav-toggle-bar" />
+              <span className="nav-toggle-bar" />
+            </span>
+          </button>
         </div>
+      </div>
+      {/* Mobile-only dropdown — the section links that are hidden from the top
+          bar below 940px. */}
+      <div
+        id="nav-mobile-menu"
+        className={`nav-mobile${menuOpen ? " is-open" : ""}`}
+      >
+        {SECTIONS.map(({ id, label }) => (
+          <a
+            key={id}
+            href={`#${id}`}
+            className={activeId === id ? "is-active" : undefined}
+            aria-current={activeId === id ? "location" : undefined}
+            onClick={() => setMenuOpen(false)}
+          >
+            {label}
+          </a>
+        ))}
       </div>
     </nav>
   );
