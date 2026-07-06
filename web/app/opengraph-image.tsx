@@ -2,9 +2,8 @@ import { ImageResponse } from "next/og";
 
 // File-based Open Graph image. Next.js auto-adds the og:image meta tag
 // pointing to this route, and Twitter cards inherit it via twitter:card
-// fallback. Rendered on the edge at request time, cached per deployment.
-
-export const runtime = "edge";
+// fallback. No request-time data, so it's statically generated at build time
+// and served as a cached build asset (no runtime = "edge" → no cold starts).
 
 export const alt = "Spilo — Overwatch Coaching";
 export const size = { width: 1200, height: 630 };
