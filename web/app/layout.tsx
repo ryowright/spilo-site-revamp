@@ -4,7 +4,7 @@ import "./globals.css";
 
 const SITE_TITLE = "Spilo — Overwatch Coaching";
 const SITE_DESCRIPTION =
-  "Professional-grade Overwatch coaching, for players serious about improving. Ex-Overwatch League | London Spitfire.";
+  "Professional-grade Overwatch coaching, for players serious about improving.";
 
 // Resolves to (in priority order):
 //   - NEXT_PUBLIC_SITE_URL — manual override; set once a custom domain is live

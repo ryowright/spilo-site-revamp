@@ -34,8 +34,17 @@ export default async function Image() {
           fontFamily: "Arial, Helvetica, sans-serif",
         }}
       >
-        {/* Brand mark */}
-        <div style={{ display: "flex", alignItems: "baseline" }}>
+        {/* Brand mark — wordmark with the red underline accent (mirrors the
+            nav's .mark::after). alignSelf: stretch makes the bar span the
+            wordmark's width. */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-start",
+            alignSelf: "flex-start",
+          }}
+        >
           <span
             style={{
               fontSize: 44,
@@ -49,11 +58,10 @@ export default async function Image() {
           </span>
           <div
             style={{
-              width: 12,
-              height: 12,
+              height: 6,
+              marginTop: 8,
               background: RED,
-              marginLeft: 8,
-              transform: "translateY(-3px)",
+              alignSelf: "stretch",
             }}
           />
         </div>
@@ -91,19 +99,6 @@ export default async function Image() {
             Professional-grade Overwatch coaching, for players serious about
             improving.
           </div>
-        </div>
-
-        {/* Credibility */}
-        <div
-          style={{
-            display: "flex",
-            fontSize: 14,
-            color: TEXT_FAINT,
-            letterSpacing: "0.18em",
-            textTransform: "uppercase",
-          }}
-        >
-          Ex-Overwatch League · London Spitfire
         </div>
       </div>
     ),
