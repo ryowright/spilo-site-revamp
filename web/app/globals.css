@@ -782,6 +782,16 @@ html[data-display="oswald"] .footer-cta h2 { font-weight: 600; }
    the @ and lowercase letters render naturally. */
 .footer-contact a[href^="mailto:"] { text-transform: none; }
 
+/* Below desktop the footer bar stacks — center it so the copyright and contact
+   sit tidily on top of one another instead of split left/right. Scoped to ≤940
+   (above the natural wrap point) so there's no awkward half-wrapped in-between. */
+@media (max-width: 940px) {
+  .footer-bar { flex-direction: column; align-items: center; text-align: center; }
+  /* Cap the contact to the column width and center it, so on narrow phones the
+     Discord + email wrap onto two centered lines instead of overflowing. */
+  .footer-contact { margin-left: 0; justify-content: center; max-width: 100%; }
+}
+
 /* ============================================================
    RESPONSIVE
    ============================================================ */
@@ -874,7 +884,6 @@ html[data-display="oswald"] .footer-cta h2 { font-weight: 600; }
      Twitch") fits its two authored lines in the narrow 2-column cells instead
      of wrapping to four. */
   .stat .lbl { font-size: 12px; letter-spacing: 0.06em; }
-  .footer-contact { margin-left: 0; }
   /* Full-width section CTAs on phones — a big thumb target that reads as
      intentional under the left-aligned copy (no floating half-width button). */
   .hero-cta { width: 100%; }
@@ -1424,9 +1433,15 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   justify-content: space-between;
   gap: 16px;
   padding: 16px 20px;
+  /* On a narrow modal (≈≤450px) the fixed-width button can't sit beside the
+     label — let it wrap onto its own line below instead of overlapping. */
+  flex-wrap: wrap;
 }
 .booking-discount-row + .booking-discount-row { border-top: 1px solid var(--line); }
-.booking-discount-row-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+/* min-width: auto (not 0) so the label keeps its content width and the button
+   wraps below when space runs out, rather than the label collapsing + spilling
+   its longest word under the button. */
+.booking-discount-row-info { display: flex; flex-direction: column; gap: 4px; min-width: auto; }
 .booking-discount-row-label {
   font-family: var(--font-mono);
   font-size: 13px;
