@@ -444,6 +444,11 @@ html[data-display="oswald"] .stat .num { font-weight: 600; }
   display: block; width: 100%; height: auto; aspect-ratio: 3 / 2;
 }
 
+/* Phone-only collapsible review list (≤560) — the desktop/tablet wall is hidden
+   there and this compact, expandable list shows instead. See the ≤560 block. */
+.tcards-phone { display: none; }
+.tcards-more .tcards-more-ico { font-size: 0.9em; }
+
 /* Dim the bleeding outer columns. Positional (first/last column) and scoped per
    layout so it follows the responsive column count and never fires at ≤940
    (where the grid stacks and the extra cards are hidden). Un-dim on hover/focus
@@ -838,16 +843,54 @@ html[data-display="oswald"] .footer-cta h2 { font-weight: 600; }
   }
   .tcard-edge { display: none; }
   .tiers { grid-template-columns: minmax(0, 440px); }
+  /* Once the tiers stack, the "featured in the middle" desktop rationale is gone,
+     so lead with the most-popular card (Spilo's 1-hour In-Depth) → then 30-min,
+     then team. Only the featured card is reordered; the rest keep source order. */
+  .tier.featured { order: -1; }
   html[data-hero="stacked"] .hero-grid, html[data-hero="stacked"] .hero-lead, html[data-hero="stacked"] .hero-cta { text-align: left; justify-items: start; justify-content: flex-start; margin-inline: 0; }
 }
 @media (max-width: 560px) {
   body { font-size: 16px; }
-  .tcards { grid-template-columns: 1fr; }
-  .stats-grid { grid-template-columns: 1fr; }
-  .stat::before { display: none !important; }
-  .stats .stat { border-top: 1px solid var(--line-soft); }
-  .stats .stat:first-child { border-top: 0; }
+  /* Swap the desktop/tablet review wall for a compact, collapsible phone list.
+     Carry over the wall's top gap so it clears the section heading. */
+  .tcards { display: none; }
+  .tcards-phone { display: block; margin-top: clamp(40px, 5vw, 64px); }
+  .tcards-phone .tcard { margin-bottom: 22px; }
+  /* Reviews 4–9 expand/collapse by animating the grid row from 0fr → 1fr, which
+     interpolates to the real content height (no max-height guess needed). */
+  .tcards-phone-more { display: grid; grid-template-rows: 0fr; }
+  .tcards-phone-more.is-open { grid-template-rows: 1fr; }
+  /* Inner clips during the animation and, when collapsed, drops the hidden cards
+     out of the a11y tree + tab order (reveal instantly on open, hide after the
+     collapse finishes). */
+  .tcards-phone-more-inner { overflow: hidden; visibility: hidden; }
+  .tcards-phone-more.is-open .tcards-phone-more-inner { visibility: visible; }
+  .tcards-more { display: flex; width: fit-content; margin: 10px auto 0; }
+  /* Tighten the stat labels so the longest one ("Followers across / YouTube &
+     Twitch") fits its two authored lines in the narrow 2-column cells instead
+     of wrapping to four. */
+  .stat .lbl { font-size: 12px; letter-spacing: 0.06em; }
   .footer-contact { margin-left: 0; }
+  /* Full-width section CTAs on phones — a big thumb target that reads as
+     intentional under the left-aligned copy (no floating half-width button). */
+  .hero-cta { width: 100%; }
+  .hero-cta .btn,
+  .session-cta,
+  #about .btn,
+  .footer-cta .btn {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Animate the phone review panel's expand/collapse only when motion is welcome;
+   reduced-motion users get an instant show/hide. The visibility delay keeps the
+   cards on screen through the collapse, then removes them from the a11y tree. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 560px) {
+  .tcards-phone-more { transition: grid-template-rows 340ms ease; }
+  .tcards-phone-more-inner { transition: visibility 0s linear 340ms; }
+  .tcards-phone-more.is-open .tcards-phone-more-inner { transition-delay: 0s; }
 }
 
 /* ============================================================
@@ -864,6 +907,11 @@ html { scroll-padding-top: 80px; scroll-behavior: smooth; }
    (and the Schedule-a-call anchors) land a bit further down so the section
    sits with more even top/bottom spacing. Tune this one value. */
 #pricing { scroll-margin-top: -80px; }
+/* On mobile the tiers stack, so that desktop-only negative offset overshoots and
+   tucks "Book the review." under the nav. Land it like any other section. */
+@media (max-width: 940px) {
+  #pricing { scroll-margin-top: 0; }
+}
 
 /* Testimonials is the first section under .page-reveal, whose 1px top border
    would otherwise sit just below the nav when you jump to "Results". Scroll a

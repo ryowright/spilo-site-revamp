@@ -24,6 +24,9 @@ const MAIN = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const EDGE_LEFT = [10, 11, 12];
 const EDGE_RIGHT = [13, 14, 15];
 
+// How many reviews the phone list shows before the "Show more" toggle.
+const INITIAL_MOBILE = 3;
+
 // Source order tuned so the 5-across layout keeps reviews 1–9 in the center and
 // 10–15 on the edges: [edgeL, main, main, main, edgeR] per row, then the 16th.
 type Card = { n: number; edge: boolean };
@@ -43,6 +46,8 @@ type Active = { src: string; alt: string };
 export function Testimonials() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [active, setActive] = useState<Active | null>(null);
+  // Phone-only: collapse to the first INITIAL_MOBILE reviews until "Show more".
+  const [showAll, setShowAll] = useState(false);
 
   function open(src: string, alt: string) {
     setActive({ src, alt });
@@ -54,6 +59,31 @@ export function Testimonials() {
   function close() {
     setActive(null);
   }
+
+  // A review card for the phone-only list. Uses a distinct image id (`-m`) so it
+  // doesn't collide with the desktop wall's copy of the same review.
+  const phoneCard = (n: number) => {
+    const src = `/reviews/review-${n}.png`;
+    const alt = `Player review ${n}`;
+    return (
+      <button
+        key={n}
+        type="button"
+        className="tcard"
+        onClick={() => open(src, alt)}
+        aria-label={`Open ${alt} in full size`}
+      >
+        <ImagePlaceholder
+          id={`review-${n}-m`}
+          shape="rect"
+          fit="cover"
+          placeholder={REVIEW_PLACEHOLDER}
+          src={src}
+          alt={alt}
+        />
+      </button>
+    );
+  };
 
   return (
     <section
@@ -91,6 +121,33 @@ export function Testimonials() {
             );
           })}
         </Stagger>
+
+        {/* Phones (≤560) hide the wall above and show this compact list instead:
+            the first few reviews, then reviews 4–9 in a panel that expands and
+            collapses smoothly via the "Show more" toggle. */}
+        <div className="tcards-phone">
+          {MAIN.slice(0, INITIAL_MOBILE).map((n) => phoneCard(n))}
+          <div
+            id="reviews-more"
+            className={`tcards-phone-more${showAll ? " is-open" : ""}`}
+          >
+            <div className="tcards-phone-more-inner">
+              {MAIN.slice(INITIAL_MOBILE).map((n) => phoneCard(n))}
+            </div>
+          </div>
+          <button
+            type="button"
+            className="tcards-more btn btn-ghost btn-sm"
+            aria-expanded={showAll}
+            aria-controls="reviews-more"
+            onClick={() => setShowAll((v) => !v)}
+          >
+            {showAll ? "Show less" : "Show more reviews"}
+            <span className="tcards-more-ico" aria-hidden>
+              {showAll ? "↑" : "↓"}
+            </span>
+          </button>
+        </div>
       </div>
 
       <dialog
