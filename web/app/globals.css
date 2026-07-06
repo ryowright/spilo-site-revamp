@@ -842,6 +842,10 @@ html[data-display="oswald"] .footer-cta h2 { font-weight: 600; }
     -webkit-mask-image: none; mask-image: none;
   }
   .tcard-edge { display: none; }
+  /* Reveal one edge review as a 10th card so the 2-col tablet grid fills evenly
+     (9 mains leave a gap on the last row). Wins over the rule above via the
+     extra class; the ≤560 block hides the whole wall so it's tablet-only. */
+  .tcard-edge.tcard-tablet { display: block; }
   .tiers { grid-template-columns: minmax(0, 440px); }
   /* Once the tiers stack, the "featured in the middle" desktop rationale is gone,
      so lead with the most-popular card (Spilo's 1-hour In-Depth) → then 30-min,

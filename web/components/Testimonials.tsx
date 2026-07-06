@@ -27,6 +27,11 @@ const EDGE_RIGHT = [13, 14, 15];
 // How many reviews the phone list shows before the "Show more" toggle.
 const INITIAL_MOBILE = 3;
 
+// The tablet layout (561–940px) is a 2-column grid of the 9 main reviews, which
+// leaves an empty cell on the last row. This edge review is revealed there as a
+// 10th card to fill it — it's last in DOM order, so it lands after review 9.
+const TABLET_EXTRA = 16;
+
 // Source order tuned so the 5-across layout keeps reviews 1–9 in the center and
 // 10–15 on the edges: [edgeL, main, main, main, edgeR] per row, then the 16th.
 type Card = { n: number; edge: boolean };
@@ -103,7 +108,13 @@ export function Testimonials() {
             return (
               <motion.button
                 type="button"
-                className={edge ? "tcard tcard-edge" : "tcard"}
+                className={[
+                  "tcard",
+                  edge && "tcard-edge",
+                  n === TABLET_EXTRA && "tcard-tablet",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
                 key={n}
                 variants={staggerItem}
                 onClick={() => open(src, alt)}
