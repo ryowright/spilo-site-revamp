@@ -418,15 +418,8 @@ html[data-display="oswald"] .stat .num { font-weight: 600; }
   grid-template-columns: repeat(5, var(--tcard-w));
   justify-content: center;
   gap: 22px;
-  /* Cap the full-bleed width so the bleeding edge cards never show more than a
-     tasteful sliver on ultrawide displays. At ≤1960px this behaves exactly like
-     a 100vw full-bleed (edge peek grows with the viewport, as designed); past
-     1960px the box stops widening — staying centered on the viewport — so the
-     peek maxes out around ~90px instead of creeping toward half a card at 2560+. */
-  width: min(100vw, 1960px);
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
   -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
 }
@@ -800,7 +793,6 @@ html[data-display="oswald"] .footer-cta h2 { font-weight: 600; }
   .tcards {
     grid-template-columns: 1fr 1fr;
     width: auto; margin-inline: 0;
-    position: static; left: auto; transform: none;
     -webkit-mask-image: none; mask-image: none;
   }
   .tcard-edge { display: none; }
