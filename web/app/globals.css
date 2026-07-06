@@ -741,7 +741,7 @@ html[data-display="oswald"] .faq-q { font-weight: 600; }
 
 /* Brand-color hover for footer socials — same palette as the nav. */
 .footer-socials a[aria-label="Discord"]:hover     { color: #5865F2; }
-.footer-socials a[aria-label="Patreon"]:hover     { color: #FF424D; }
+.footer-socials a[aria-label="Patreon"]:hover     { color: #ffffff; } /* Patreon's secondary brand color; its red blends into the dark bar */
 .footer-socials a[aria-label="YouTube"]:hover     { color: #FF0000; }
 .footer-socials a[aria-label="Twitch"]:hover      { color: #9146FF; }
 .footer-socials a[aria-label="X / Twitter"]:hover { color: #1DA1F2; }
@@ -1519,7 +1519,7 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 /* Social icons take on each brand's color on hover. Selectors target the
    existing aria-label values so no markup changes are needed. */
 .socials a[aria-label="Discord"]:hover     { color: #5865F2; }
-.socials a[aria-label="Patreon"]:hover     { color: #FF424D; }
+.socials a[aria-label="Patreon"]:hover     { color: #ffffff; } /* Patreon's secondary brand color; its red blends into the dark bar */
 .socials a[aria-label="YouTube"]:hover     { color: #FF0000; }
 .socials a[aria-label="Twitch"]:hover      { color: #9146FF; }
 .socials a[aria-label="X / Twitter"]:hover { color: #1DA1F2; }
