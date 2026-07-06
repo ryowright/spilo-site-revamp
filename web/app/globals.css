@@ -242,6 +242,13 @@ html[data-display="oswald"] .section-head h2 { font-weight: 600; }
   /* Soft spotlight behind the coach — gives the hero a luminous focal point so
      the flat page panel has something to contrast against as it covers it. */
   background: radial-gradient(52% 62% at 70% 44%, oklch(0.28 0.016 264 / 0.6), transparent 72%);
+  /* Promote to its own compositing layer. The sticky hero sits under the
+     .page-reveal sheet as it scrolls over it; without a dedicated layer the
+     browser can fail to fully repaint the coach cutout on the way back up,
+     leaving a ghosted sliver of the image (most visible at widths where the
+     stage height lands on a fractional pixel, e.g. 1366). */
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 .hero-figure {
   position: absolute;
@@ -404,18 +411,22 @@ html[data-display="oswald"] .stat .num { font-weight: 600; }
 /* ============================================================
    TESTIMONIALS — uniform Discord-review screenshot wall
    ============================================================ */
-/* Full-bleed "overflowing reviews wall": a 5-column grid pulled out to the full
-   viewport and centered, so the middle 3 columns line up with the section head
-   while an extra card on each side bleeds off the page edge (deliberately cut
-   off — see .tcard-edge). --tcard-w matches the old 3-col card width (wrap-wide
-   content ÷ 3) so the center columns stay aligned at every width. The mask
-   softens the hard clip at the viewport edges. body{overflow-x:clip} contains
-   the bleed with no horizontal scrollbar. Reverts to a plain grid on mobile. */
+/* Full-bleed "overflowing reviews wall": a grid pulled out to the full viewport
+   and centered, so the middle columns line up with the section head while the
+   outermost card on each side bleeds off the page edge (deliberately cut off).
+   Column count is responsive: 4 across by default (1920/1366), 5 across on
+   ultrawide (≥2200px) — see the breakpoint blocks below. --tcard-w is fixed at
+   the old 3-col card width (wrap-wide content ÷ 3) regardless of column count,
+   so dropping 5→4 columns just narrows the grid and lets the edges show more.
+   The mask softens the hard clip at the viewport edges; body{overflow-x:clip}
+   contains the bleed with no horizontal scrollbar. Plain grid on mobile.
+   The bleeding cards are dimmed *positionally* (first/last column) in the
+   breakpoint blocks, not via a class — so the dimming follows the column count. */
 .tcards {
   margin-top: clamp(40px, 5vw, 64px);
   --tcard-w: calc((min(100vw, 1840px) - 2 * clamp(20px, 3.5vw, 52px) - 44px) / 3);
   display: grid;
-  grid-template-columns: repeat(5, var(--tcard-w));
+  grid-template-columns: repeat(4, var(--tcard-w));
   justify-content: center;
   gap: 22px;
   width: 100vw;
@@ -423,10 +434,6 @@ html[data-display="oswald"] .stat .num { font-weight: 600; }
   -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
 }
-/* The bleeding side cards: dimmed to de-emphasize, but still clickable (they
-   open the same lightbox). Un-dim on hover/focus so they read as interactive. */
-.tcard-edge { opacity: 0.5; transition: opacity 180ms ease, border-color 180ms ease, transform 180ms ease; }
-.tcard-edge:hover, .tcard-edge:focus-visible { opacity: 1; }
 .tcard {
   position: relative; border: 1px solid var(--line); background: var(--bg-1);
   border-radius: 3px; overflow: hidden; padding: 10px;
@@ -435,6 +442,42 @@ html[data-display="oswald"] .stat .num { font-weight: 600; }
 .tcard:hover { border-color: oklch(0.4 0.012 264); transform: translateY(-3px); }
 .tcard image-slot {
   display: block; width: 100%; height: auto; aspect-ratio: 3 / 2;
+}
+
+/* Dim the bleeding outer columns. Positional (first/last column) and scoped per
+   layout so it follows the responsive column count and never fires at ≤940
+   (where the grid stacks and the extra cards are hidden). Un-dim on hover/focus
+   so the cut-off cards still read as clickable. */
+@media (min-width: 941px) and (max-width: 2199.98px) {
+  /* 4 across (1920 / 1366) — 4×4 grid, every row [dim, full, full, dim]. */
+  .tcards > .tcard:nth-child(4n + 1),
+  .tcards > .tcard:nth-child(4n) {
+    opacity: 0.5;
+    transition: opacity 180ms ease, border-color 180ms ease, transform 180ms ease;
+  }
+  .tcards > .tcard:nth-child(4n + 1):hover,
+  .tcards > .tcard:nth-child(4n + 1):focus-visible,
+  .tcards > .tcard:nth-child(4n):hover,
+  .tcards > .tcard:nth-child(4n):focus-visible {
+    opacity: 1;
+  }
+}
+@media (min-width: 2200px) {
+  /* 5 across — the fuller "wall" for ultrawide. Hide the 16th card so the
+     layout stays a clean 5-5-5 with reviews 10–15 on the edges. */
+  .tcards { grid-template-columns: repeat(5, var(--tcard-w)); }
+  .tcards > .tcard:nth-child(16) { display: none; }
+  .tcards > .tcard:nth-child(5n + 1),
+  .tcards > .tcard:nth-child(5n) {
+    opacity: 0.5;
+    transition: opacity 180ms ease, border-color 180ms ease, transform 180ms ease;
+  }
+  .tcards > .tcard:nth-child(5n + 1):hover,
+  .tcards > .tcard:nth-child(5n + 1):focus-visible,
+  .tcards > .tcard:nth-child(5n):hover,
+  .tcards > .tcard:nth-child(5n):focus-visible {
+    opacity: 1;
+  }
 }
 
 /* ---- card style: FRAMED (default) — defined panel + corner ticks ---- */
@@ -699,15 +742,14 @@ html[data-display="oswald"] .faq-q { font-weight: 600; }
 .footer-socials a[aria-label="X / Twitter"]:hover { color: #1DA1F2; }
 .footer-socials a[aria-label="Instagram"]:hover   { color: #E4405F; }
 
-/* Copyright line sitting below the footer bar. */
+/* Copyright — quiet legal line on the left of the footer bar; the contact
+   links sit opposite it on the right. */
 .footer-copyright {
-  text-align: center;
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-faint);
-  padding: 20px var(--gut) 28px;
 }
 
 /* ============================================================
@@ -725,7 +767,6 @@ html[data-display="oswald"] .footer-cta h2 { font-weight: 600; }
   border-top: 1px solid var(--line-soft); padding: 26px var(--gut);
   max-width: var(--maxw); margin: 0 auto; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
 }
-.footer-bar .brand .mark { font-size: 24px; }
 .footer-contact { display: flex; gap: 26px; flex-wrap: wrap; margin-left: auto; }
 .footer-contact span,
 .footer-contact a { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; color: var(--text-faint); text-transform: uppercase; transition: color 150ms ease; }
@@ -823,6 +864,11 @@ html { scroll-padding-top: 80px; scroll-behavior: smooth; }
    (and the Schedule-a-call anchors) land a bit further down so the section
    sits with more even top/bottom spacing. Tune this one value. */
 #pricing { scroll-margin-top: -80px; }
+
+/* Testimonials is the first section under .page-reveal, whose 1px top border
+   would otherwise sit just below the nav when you jump to "Results". Scroll a
+   touch further so that border tucks up under the sticky nav. */
+#testimonials { scroll-margin-top: -24px; }
 
 /* <image-slot> behaves as a styled container that may or may not hold a real <img>.
    Background acts as a placeholder color while images load (or if a slot is empty). */

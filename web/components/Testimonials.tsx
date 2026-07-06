@@ -9,25 +9,34 @@ import { LIGHTBOX_DURATION, STAGGER_TIGHT } from "./motion/transitions";
 
 const REVIEW_PLACEHOLDER = "Discord review · 3:2 (≈1200×800px)";
 
-// The 9 featured reviews fill the center 3 columns; 6 extra reviews bleed off
-// the page edges (3 per side), deliberately cut off + dimmed to imply there are
-// far more reviews than fit on the page. Edge cards are still clickable — they
-// open the same full-size lightbox so the cut-off ones can be read.
+// A full-bleed "wall" of reviews whose outermost columns bleed off the screen
+// edges (dimmed + mask-faded) to imply there are far more than fit. The column
+// count is responsive (see .tcards in globals.css): 5 across on ultrawide
+// (≥2200px), 4 across on 1920/1366. Which cards land in the bleeding columns is
+// decided *positionally* in CSS (:nth-child), not here — so this array only
+// fixes the source order and which cards are "extras" (hidden on mobile).
+//
+// The `edge` flag now means only "extra card, hidden below 940px"; on desktop
+// every card is identical markup and the CSS dims whatever falls in the first/
+// last column. The 16th card completes a clean 4×4 grid at 4-across and is
+// hidden again at ≥2200px so the 5-across layout stays a clean 5-5-5.
 const MAIN = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const EDGE_LEFT = [10, 11, 12];
 const EDGE_RIGHT = [13, 14, 15];
 
-// Row-major order for the full-bleed 5-column grid — [edgeL, main, main, main,
-// edgeR] per row — so the featured reviews land in the center columns and the
-// extras in the bleeding edge columns.
+// Source order tuned so the 5-across layout keeps reviews 1–9 in the center and
+// 10–15 on the edges: [edgeL, main, main, main, edgeR] per row, then the 16th.
 type Card = { n: number; edge: boolean };
-const CARDS: Card[] = [0, 1, 2].flatMap((r) => [
-  { n: EDGE_LEFT[r], edge: true },
-  { n: MAIN[r * 3], edge: false },
-  { n: MAIN[r * 3 + 1], edge: false },
-  { n: MAIN[r * 3 + 2], edge: false },
-  { n: EDGE_RIGHT[r], edge: true },
-]);
+const CARDS: Card[] = [
+  ...[0, 1, 2].flatMap((r) => [
+    { n: EDGE_LEFT[r], edge: true },
+    { n: MAIN[r * 3], edge: false },
+    { n: MAIN[r * 3 + 1], edge: false },
+    { n: MAIN[r * 3 + 2], edge: false },
+    { n: EDGE_RIGHT[r], edge: true },
+  ]),
+  { n: 16, edge: true },
+];
 
 type Active = { src: string; alt: string };
 

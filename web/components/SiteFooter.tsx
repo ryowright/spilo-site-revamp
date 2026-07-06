@@ -80,9 +80,9 @@ export function SiteFooter() {
       </div>
 
       <div className="footer-bar">
-        <a className="brand" href="#top">
-          <span className="mark">SPILO</span>
-        </a>
+        <span className="footer-copyright">
+          © 2026 Coach Spilo. All rights reserved.
+        </span>
         <div className="footer-contact">
           <a
             href="https://discord.gg/tv2SR9yPMJ"
@@ -95,10 +95,6 @@ export function SiteFooter() {
             <b>jacobclifton@protonmail.com</b>
           </a>
         </div>
-      </div>
-
-      <div className="footer-copyright">
-        © 2026 Coach Spilo. All rights reserved.
       </div>
     </footer>
   );
