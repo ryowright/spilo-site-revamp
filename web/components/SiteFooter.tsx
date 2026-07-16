@@ -17,12 +17,12 @@ export function SiteFooter() {
         <div className="wrap">
           <Reveal>
             <h2>
-              STOP GUESSING.<br />START PROGRESSING.
+              STOP GUESSING<br />START PROGRESSING
             </h2>
           </Reveal>
           <Reveal delay={0.08}>
             <a href="#pricing" className="btn btn-red">
-              Schedule a call <span className="arrow">→</span>
+              Schedule a call <span className="arrow-up">↑</span>
             </a>
           </Reveal>
         </div>
