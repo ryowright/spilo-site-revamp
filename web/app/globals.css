@@ -410,80 +410,54 @@ html[data-hero="stacked"] .media-frame image-slot { height: clamp(300px, 40vw, 4
 }
 
 /* ============================================================
-   TESTIMONIALS — uniform Discord-review screenshot wall
+   TESTIMONIALS — 3-row horizontal auto-scrolling marquee
    ============================================================ */
-/* Full-bleed "overflowing reviews wall": a grid pulled out to the full viewport
-   and centered, so the middle columns line up with the section head while the
-   outermost card on each side bleeds off the page edge (deliberately cut off).
-   Column count is responsive: 4 across by default (1920/1366), 5 across on
-   ultrawide (≥2200px) — see the breakpoint blocks below. --tcard-w is fixed at
-   the old 3-col card width (wrap-wide content ÷ 3) regardless of column count,
-   so dropping 5→4 columns just narrows the grid and lets the edges show more.
-   The mask softens the hard clip at the viewport edges; body{overflow-x:clip}
-   contains the bleed with no horizontal scrollbar. Plain grid on mobile.
-   The bleeding cards are dimmed *positionally* (first/last column) in the
-   breakpoint blocks, not via a class — so the dimming follows the column count. */
-.tcards {
-  margin-top: clamp(40px, 5vw, 64px);
-  --tcard-w: calc((min(100vw, 1840px) - 2 * clamp(20px, 3.5vw, 52px) - 44px) / 3);
-  display: grid;
-  grid-template-columns: repeat(4, var(--tcard-w));
-  justify-content: center;
-  gap: 22px;
-  width: 100vw;
-  margin-inline: calc(50% - 50vw);
+/* Three rows of review screenshots scrolling left→right inside a centered,
+   max-width container (whitespace on the sides — not full-bleed). Each row's
+   5-review block is repeated (LOOP_COPIES in Testimonials.tsx) and the track
+   animates by one block (-50% ↔ 0) so the loop is seamless; the block is wider
+   than the container so no review shows twice. The mask fades each row's edges;
+   auto-scroll is gated behind prefers-reduced-motion. */
+.tmarquee { width: min(92vw, 1500px); margin: clamp(32px, 4vw, 56px) auto 0; }
+.marquee-row {
+  /* clip the horizontal scroll but let the hover glow escape vertically */
+  overflow-x: clip;
+  overflow-y: visible;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
   mask-image: linear-gradient(to right, transparent, #000 5%, #000 95%, transparent);
+}
+.marquee-row + .marquee-row { margin-top: clamp(14px, 1.6vw, 24px); }
+.marquee-track { display: flex; width: max-content; gap: clamp(14px, 1.4vw, 24px); }
+/* Sized so the 5-review block (~19vw × 5 ≈ 95vw) is wider than the 92vw/1500px
+   container → no review is on screen twice. Base 10px padding + 12px corners. */
+.marquee-track .tcard { flex: 0 0 auto; width: clamp(200px, 19vw, 340px); }
+
+/* Left→right scroll. Keep the -50% in sync with LOOP_COPIES = 2 (one block = 100/COPIES %). */
+@keyframes tmarquee-scroll {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track { animation: tmarquee-scroll var(--marq-dur, 40s) linear infinite; }
+}
+/* Reduced motion: no auto-scroll; let the user pan each row by hand instead. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee-row { overflow-x: auto; }
 }
 .tcard {
   position: relative; border: 1px solid var(--line); background: var(--bg-1);
   border-radius: 3px; overflow: hidden; padding: 10px;
-  transition: border-color 180ms ease, transform 180ms ease;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
 }
-.tcard:hover { border-color: oklch(0.4 0.012 264); transform: translateY(-3px); }
+/* Red glowing border on hover/focus — signals the card is clickable (opens the
+   full-size review in the lightbox). */
+.tcard:hover,
+.tcard:focus-visible {
+  border-color: var(--red);
+  box-shadow: 0 0 0 1.5px var(--red), 0 0 24px -2px oklch(0.585 0.205 25 / 0.5);
+}
 .tcard image-slot {
   display: block; width: 100%; height: auto; aspect-ratio: 3 / 2;
-}
-
-/* Phone-only collapsible review list (≤560) — the desktop/tablet wall is hidden
-   there and this compact, expandable list shows instead. See the ≤560 block. */
-.tcards-phone { display: none; }
-.tcards-more .tcards-more-ico { font-size: 0.9em; }
-
-/* Dim the bleeding outer columns. Positional (first/last column) and scoped per
-   layout so it follows the responsive column count and never fires at ≤940
-   (where the grid stacks and the extra cards are hidden). Un-dim on hover/focus
-   so the cut-off cards still read as clickable. */
-@media (min-width: 941px) and (max-width: 2199.98px) {
-  /* 4 across (1920 / 1366) — 4×4 grid, every row [dim, full, full, dim]. */
-  .tcards > .tcard:nth-child(4n + 1),
-  .tcards > .tcard:nth-child(4n) {
-    opacity: 0.5;
-    transition: opacity 180ms ease, border-color 180ms ease, transform 180ms ease;
-  }
-  .tcards > .tcard:nth-child(4n + 1):hover,
-  .tcards > .tcard:nth-child(4n + 1):focus-visible,
-  .tcards > .tcard:nth-child(4n):hover,
-  .tcards > .tcard:nth-child(4n):focus-visible {
-    opacity: 1;
-  }
-}
-@media (min-width: 2200px) {
-  /* 5 across — the fuller "wall" for ultrawide. Hide the 16th card so the
-     layout stays a clean 5-5-5 with reviews 10–15 on the edges. */
-  .tcards { grid-template-columns: repeat(5, var(--tcard-w)); }
-  .tcards > .tcard:nth-child(16) { display: none; }
-  .tcards > .tcard:nth-child(5n + 1),
-  .tcards > .tcard:nth-child(5n) {
-    opacity: 0.5;
-    transition: opacity 180ms ease, border-color 180ms ease, transform 180ms ease;
-  }
-  .tcards > .tcard:nth-child(5n + 1):hover,
-  .tcards > .tcard:nth-child(5n + 1):focus-visible,
-  .tcards > .tcard:nth-child(5n):hover,
-  .tcards > .tcard:nth-child(5n):focus-visible {
-    opacity: 1;
-  }
 }
 
 /* ---- card style: FRAMED (default) — defined panel + corner ticks ---- */
@@ -840,18 +814,6 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
   .stat:nth-child(even)::before { display: block; }
   .stats .stat { border-top: 1px solid var(--line-soft); }
   .stats .stat:nth-child(-n+2) { border-top: 0; }
-  /* Below desktop there's no margin to bleed into: drop the full-bleed 5-col
-     wall back to a normal in-flow grid and hide the cut-off side cards. */
-  .tcards {
-    grid-template-columns: 1fr 1fr;
-    width: auto; margin-inline: 0;
-    -webkit-mask-image: none; mask-image: none;
-  }
-  .tcard-edge { display: none; }
-  /* Reveal one edge review as a 10th card so the 2-col tablet grid fills evenly
-     (9 mains leave a gap on the last row). Wins over the rule above via the
-     extra class; the ≤560 block hides the whole wall so it's tablet-only. */
-  .tcard-edge.tcard-tablet { display: block; }
   .tiers { grid-template-columns: minmax(0, 440px); }
   /* Once the tiers stack, the "featured in the middle" desktop rationale is gone,
      so lead with the most-popular card (Spilo's 1-hour In-Depth) → then 30-min,
@@ -861,21 +823,6 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 }
 @media (max-width: 560px) {
   body { font-size: 16px; }
-  /* Swap the desktop/tablet review wall for a compact, collapsible phone list.
-     Carry over the wall's top gap so it clears the section heading. */
-  .tcards { display: none; }
-  .tcards-phone { display: block; margin-top: clamp(40px, 5vw, 64px); }
-  .tcards-phone .tcard { margin-bottom: 22px; }
-  /* Reviews 4–9 expand/collapse by animating the grid row from 0fr → 1fr, which
-     interpolates to the real content height (no max-height guess needed). */
-  .tcards-phone-more { display: grid; grid-template-rows: 0fr; }
-  .tcards-phone-more.is-open { grid-template-rows: 1fr; }
-  /* Inner clips during the animation and, when collapsed, drops the hidden cards
-     out of the a11y tree + tab order (reveal instantly on open, hide after the
-     collapse finishes). */
-  .tcards-phone-more-inner { overflow: hidden; visibility: hidden; }
-  .tcards-phone-more.is-open .tcards-phone-more-inner { visibility: visible; }
-  .tcards-more { display: flex; width: fit-content; margin: 10px auto 0; }
   /* Tighten the stat labels so the longest one ("Followers across / YouTube &
      Twitch") fits its two authored lines in the narrow 2-column cells instead
      of wrapping to four. */
@@ -891,15 +838,6 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
     width: 100%;
     justify-content: center;
   }
-}
-
-/* Animate the phone review panel's expand/collapse only when motion is welcome;
-   reduced-motion users get an instant show/hide. The visibility delay keeps the
-   cards on screen through the collapse, then removes them from the a11y tree. */
-@media (prefers-reduced-motion: no-preference) and (max-width: 560px) {
-  .tcards-phone-more { transition: grid-template-rows 340ms ease; }
-  .tcards-phone-more-inner { transition: visibility 0s linear 340ms; }
-  .tcards-phone-more.is-open .tcards-phone-more-inner { transition-delay: 0s; }
 }
 
 /* ============================================================

@@ -1,58 +1,34 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, type CSSProperties } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ImagePlaceholder } from "./ImagePlaceholder";
 import { Reveal } from "./motion/Reveal";
-import { Stagger, staggerItem } from "./motion/Stagger";
-import { LIGHTBOX_DURATION, STAGGER_TIGHT } from "./motion/transitions";
+import { LIGHTBOX_DURATION } from "./motion/transitions";
 
 const REVIEW_PLACEHOLDER = "Discord review · 3:2 (≈1200×800px)";
 
-// A full-bleed "wall" of reviews whose outermost columns bleed off the screen
-// edges (dimmed + mask-faded) to imply there are far more than fit. The column
-// count is responsive (see .tcards in globals.css): 5 across on ultrawide
-// (≥2200px), 4 across on 1920/1366. Which cards land in the bleeding columns is
-// decided *positionally* in CSS (:nth-child), not here — so this array only
-// fixes the source order and which cards are "extras" (hidden on mobile).
-//
-// The `edge` flag now means only "extra card, hidden below 940px"; on desktop
-// every card is identical markup and the CSS dims whatever falls in the first/
-// last column. The 16th card completes a clean 4×4 grid at 4-across and is
-// hidden again at ≥2200px so the 5-across layout stays a clean 5-5-5.
-const MAIN = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-const EDGE_LEFT = [10, 11, 12];
-const EDGE_RIGHT = [13, 14, 15];
-
-// How many reviews the phone list shows before the "Show more" toggle.
-const INITIAL_MOBILE = 3;
-
-// The tablet layout (561–940px) is a 2-column grid of the 9 main reviews, which
-// leaves an empty cell on the last row. This edge review is revealed there as a
-// 10th card to fill it — it's last in DOM order, so it lands after review 9.
-const TABLET_EXTRA = 16;
-
-// Source order tuned so the 5-across layout keeps reviews 1–9 in the center and
-// 10–15 on the edges: [edgeL, main, main, main, edgeR] per row, then the 16th.
-type Card = { n: number; edge: boolean };
-const CARDS: Card[] = [
-  ...[0, 1, 2].flatMap((r) => [
-    { n: EDGE_LEFT[r], edge: true },
-    { n: MAIN[r * 3], edge: false },
-    { n: MAIN[r * 3 + 1], edge: false },
-    { n: MAIN[r * 3 + 2], edge: false },
-    { n: EDGE_RIGHT[r], edge: true },
-  ]),
-  { n: 16, edge: true },
+// A calm, non-overwhelming social-proof display: three rows of small review
+// screenshots that continuously scroll left→right. Reviews 1–15 split 5 per row
+// (review-16.png still exists on disk but is intentionally unused now).
+const ROWS = [
+  [1, 2, 3, 4, 5],
+  [6, 7, 8, 9, 10],
+  [11, 12, 13, 14, 15],
 ];
+// Cards are sized (CSS) so the 5-review block spans more than the viewport — so a
+// review never shows twice on screen — which means ONE duplicate block is enough
+// for a seamless loop. The CSS animates by one block = 100/COPIES %; keep in sync
+// with the -50% in the tmarquee-scroll keyframe.
+const LOOP_COPIES = 2;
+// Slightly different speeds per row so they don't move in lockstep (seconds).
+const ROW_DURATION = [38, 46, 42];
 
 type Active = { src: string; alt: string };
 
 export function Testimonials() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [active, setActive] = useState<Active | null>(null);
-  // Phone-only: collapse to the first INITIAL_MOBILE reviews until "Show more".
-  const [showAll, setShowAll] = useState(false);
 
   function open(src: string, alt: string) {
     setActive({ src, alt });
@@ -65,26 +41,30 @@ export function Testimonials() {
     setActive(null);
   }
 
-  // A review card for the phone-only list. Uses a distinct image id (`-m`) so it
-  // doesn't collide with the desktop wall's copy of the same review.
-  const phoneCard = (n: number) => {
+  // One review card. Only the first copy of each review (copy 0) is exposed to
+  // assistive tech / the tab order; the looped copies are visual clones
+  // (aria-hidden, not focusable) but still mouse-clickable so any card opens the
+  // lightbox. No `id` on the image slot — the loop would duplicate it otherwise.
+  const reviewCard = (n: number, ri: number, copy: number) => {
     const src = `/reviews/review-${n}.png`;
     const alt = `Player review ${n}`;
+    const primary = copy === 0;
     return (
       <button
-        key={n}
+        key={`${ri}-${copy}-${n}`}
         type="button"
         className="tcard"
         onClick={() => open(src, alt)}
-        aria-label={`Open ${alt} in full size`}
+        aria-label={primary ? `Open ${alt} in full size` : undefined}
+        aria-hidden={primary ? undefined : true}
+        tabIndex={primary ? undefined : -1}
       >
         <ImagePlaceholder
-          id={`review-${n}-m`}
           shape="rect"
           fit="cover"
           placeholder={REVIEW_PLACEHOLDER}
           src={src}
-          alt={alt}
+          alt={primary ? alt : ""}
         />
       </button>
     );
@@ -100,65 +80,23 @@ export function Testimonials() {
         <Reveal className="section-head">
           <h2>REAL PLAYERS, REAL RESULTS</h2>
         </Reveal>
+      </div>
 
-        <Stagger className="tcards" gap={STAGGER_TIGHT}>
-          {CARDS.map(({ n, edge }) => {
-            const src = `/reviews/review-${n}.png`;
-            const alt = `Player review ${n}`;
-            return (
-              <motion.button
-                type="button"
-                className={[
-                  "tcard",
-                  edge && "tcard-edge",
-                  n === TABLET_EXTRA && "tcard-tablet",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                key={n}
-                variants={staggerItem}
-                onClick={() => open(src, alt)}
-                aria-label={`Open ${alt} in full size`}
-              >
-                <ImagePlaceholder
-                  id={`review-${n}`}
-                  shape="rect"
-                  fit="cover"
-                  placeholder={REVIEW_PLACEHOLDER}
-                  src={src}
-                  alt={alt}
-                />
-              </motion.button>
-            );
-          })}
-        </Stagger>
-
-        {/* Phones (≤560) hide the wall above and show this compact list instead:
-            the first few reviews, then reviews 4–9 in a panel that expands and
-            collapses smoothly via the "Show more" toggle. */}
-        <div className="tcards-phone">
-          {MAIN.slice(0, INITIAL_MOBILE).map((n) => phoneCard(n))}
-          <div
-            id="reviews-more"
-            className={`tcards-phone-more${showAll ? " is-open" : ""}`}
-          >
-            <div className="tcards-phone-more-inner">
-              {MAIN.slice(INITIAL_MOBILE).map((n) => phoneCard(n))}
+      {/* Three rows scrolling left→right continuously (see .tmarquee in
+          globals.css). Cards open the review in a lightbox on click. */}
+      <div className="tmarquee" aria-label="Player reviews">
+        {ROWS.map((row, ri) => (
+          <div className="marquee-row" key={ri}>
+            <div
+              className="marquee-track"
+              style={{ "--marq-dur": `${ROW_DURATION[ri]}s` } as CSSProperties}
+            >
+              {Array.from({ length: LOOP_COPIES }).flatMap((_, copy) =>
+                row.map((n) => reviewCard(n, ri, copy)),
+              )}
             </div>
           </div>
-          <button
-            type="button"
-            className="tcards-more btn btn-ghost btn-sm"
-            aria-expanded={showAll}
-            aria-controls="reviews-more"
-            onClick={() => setShowAll((v) => !v)}
-          >
-            {showAll ? "Show less" : "Show more reviews"}
-            <span className="tcards-more-ico" aria-hidden>
-              {showAll ? "↑" : "↓"}
-            </span>
-          </button>
-        </div>
+        ))}
       </div>
 
       <dialog
