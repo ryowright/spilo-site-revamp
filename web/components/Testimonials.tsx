@@ -98,7 +98,7 @@ export function Testimonials() {
     >
       <div className="wrap wrap-wide">
         <Reveal className="section-head">
-          <h2>REAL PLAYERS, REAL RESULTS.</h2>
+          <h2>REAL PLAYERS, REAL RESULTS</h2>
         </Reveal>
 
         <Stagger className="tcards" gap={STAGGER_TIGHT}>

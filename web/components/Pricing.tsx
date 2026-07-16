@@ -133,7 +133,7 @@ export function Pricing() {
       />
       <div className="wrap wrap-wide">
         <Reveal className="section-head">
-          <h2>Book the review.</h2>
+          <h2>Book the review</h2>
         </Reveal>
 
         <Reveal className="coach-switch">
