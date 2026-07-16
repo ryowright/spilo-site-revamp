@@ -71,15 +71,15 @@ export function Hero() {
         <div className="hero-stage-inner">
           <Stagger className="hero-copy">
             <motion.h1 variants={staggerItem}>
-              Improving<br />shouldn&apos;t be<br /><em>guesswork.</em>
+              Improving<br />shouldn&apos;t be<br /><em>guesswork</em>
             </motion.h1>
             <motion.p className="hero-lead" variants={staggerItem}>
-              <b>Professional-grade</b> Overwatch coaching, for players{" "}
-              <b>serious about improving.</b>
+              Overwatch coaching that <b>provides clarity</b> for players{" "}
+              serious about improving
             </motion.p>
             <motion.div className="hero-cta" variants={staggerItem}>
               <a href="#pricing" className="btn btn-red">
-                Schedule a call <span className="arrow">→</span>
+                Schedule a call <span className="arrow-down">↓</span>
               </a>
             </motion.div>
           </Stagger>
