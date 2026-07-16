@@ -51,9 +51,9 @@ export function About() {
             I&apos;m a retired Mixed Martial Arts Instructor turned{" "}
             <b style={{ color: "var(--text)" }}>Pro Overwatch Coach</b>. I am
             the previous assistant coach for the{" "}
-            <b style={{ color: "var(--text)" }}>London Spitfire</b> (Overwatch
-            League) with an additional three years of experience Head Coaching
-            in <b style={{ color: "var(--text)" }}>Overwatch Contenders</b>.
+            London Spitfire (Overwatch
+            League) with an additional <b style={{ color: "var(--text)" }}>three years of experience</b> Head Coaching
+            in Overwatch Contenders.
           </p>
           <p
             style={{
@@ -64,17 +64,17 @@ export function About() {
               marginTop: "22px",
             }}
           >
-            I&apos;m also a VOD review expert with over{" "}
-            <b style={{ color: "var(--text)" }}>8,000 hours</b> in Live VOD
-            review experience—all heroes, all ranks. Additionally, I have
+            I&apos;m also a VOD review expert with{" "}
+            <b style={{ color: "var(--text)" }}>over 8,000 hours in Live VOD
+            review experience</b>—all heroes, all ranks. Additionally, I have
             served as a{" "}
-            <b style={{ color: "var(--text)" }}>playtester</b> for many of the
-            new Overwatch heroes and systems, providing additional insight
-            into the secrets of what makes Overwatch work.
+            <b style={{ color: "var(--text)" }}></b>playtester for many of the
+            new Overwatch heroes and systems, providing additional <b style={{ color: "var(--text)" }}>insight
+            into the secrets of what makes Overwatch work.</b>
           </p>
           <div style={{ marginTop: "40px" }}>
             <a href="#pricing" className="btn btn-red">
-              Schedule a call <span className="arrow">→</span>
+              Schedule a call <span className="arrow-up">↑</span>
             </a>
           </div>
           <div className="about-mission">

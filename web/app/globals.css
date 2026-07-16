@@ -118,6 +118,9 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
    downward on hover instead of sideways. */
 .btn .arrow-down { display: inline-block; transition: transform 160ms ease; }
 .btn:hover .arrow-down { transform: translateY(3px); }
+/* Up-arrow variant (CTAs below the booking section, e.g. About): nudges up. */
+.btn .arrow-up { display: inline-block; transition: transform 160ms ease; }
+.btn:hover .arrow-up { transform: translateY(-3px); }
 
 .btn-red {
   background: var(--red); color: var(--red-ink);
