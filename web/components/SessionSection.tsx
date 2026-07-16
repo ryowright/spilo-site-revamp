@@ -25,7 +25,7 @@ const OUTLINE = [
   },
   {
     title: "VOD Review",
-    desc: "We break down your replay(s) together—spotting the habits and decisions holding you back.",
+    desc: "We break down your replay(s) together, spotting the habits and decisions holding you back.",
   },
   {
     title: "Closing / Questions",
@@ -47,10 +47,10 @@ export function SessionSection() {
     >
       <div className="wrap wrap-wide">
         <Reveal className="section-head">
-          <h2>WHAT A SESSION LOOKS LIKE.</h2>
+          <h2>WHAT A SESSION LOOKS LIKE</h2>
           <p>
-            Take a look inside a real coaching call—so you know exactly what to
-            expect before you book.
+            Take a look inside a real coaching call so you know exactly what to
+            expect before you book
           </p>
         </Reveal>
 
@@ -77,7 +77,7 @@ export function SessionSection() {
 
             <Reveal delay={0.1}>
               <a href="#pricing" className="btn btn-red session-cta">
-                Schedule a call <span className="arrow">→</span>
+                Schedule a call <span className="arrow-down">↓</span>
               </a>
             </Reveal>
           </div>
