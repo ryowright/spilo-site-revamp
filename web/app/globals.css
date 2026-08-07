@@ -44,8 +44,8 @@ body {
   font-size: 17px;
   line-height: 1.6;
   letter-spacing: 0.005em;
-  /* `clip` (not `hidden`) contains horizontal bleed WITHOUT creating a scroll
-     container — `hidden` would silently break the sticky hero (.hero). */
+  /* `clip` (not `hidden`) contains horizontal bleed without creating a scroll
+     container (which `hidden` would). */
   overflow-x: clip;
 }
 img { max-width: 100%; display: block; }
@@ -213,14 +213,11 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
 /* ============================================================
    HERO
    ============================================================ */
-/* Sticky-reveal hero: it pins to the viewport while the sections below
-   (wrapped in .page-reveal) scroll up and cover it. Pinned as a full-height
-   flex column so the copy sits in the stage and the stat bar rides the bottom
-   edge — both stay visible while pinned. Reset to normal flow on mobile. */
+/* Full-height hero: a full-viewport flex column so the copy sits in the stage
+   and the stat bar rides the bottom edge. It scrolls up with the page like any
+   other section. Reset to content height on mobile. */
 .hero {
-  position: sticky;
-  top: 0;
-  z-index: 0;
+  position: relative;
   /* Fill the viewport minus the sticky nav (.nav-inner 70px + 1px border) so
      the stat bar sits at the bottom edge instead of being pushed under the fold. */
   min-height: calc(100svh - 71px);
@@ -245,13 +242,6 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
   /* Soft spotlight behind the coach — gives the hero a luminous focal point so
      the flat page panel has something to contrast against as it covers it. */
   background: radial-gradient(52% 62% at 70% 44%, oklch(0.28 0.016 264 / 0.6), transparent 72%);
-  /* Promote to its own compositing layer. The sticky hero sits under the
-     .page-reveal sheet as it scrolls over it; without a dedicated layer the
-     browser can fail to fully repaint the coach cutout on the way back up,
-     leaving a ghosted sliver of the image (most visible at widths where the
-     stage height lands on a fractional pixel, e.g. 1366). */
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 .hero-figure {
   position: absolute;
@@ -307,25 +297,19 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
 .hero-stage .hero-copy { max-width: 820px; }
 
 @media (max-width: 940px) {
-  /* Drop the sticky-reveal on mobile — normal stacked flow instead. */
-  .hero { position: static; min-height: 0; display: block; }
+  /* Hero shrinks to content height on mobile (full-viewport only on desktop). */
+  .hero { min-height: 0; display: block; }
   /* No figure on mobile, so drop the spotlight glow it was lighting. */
   .hero-stage { flex: none; min-height: 0; display: block; background: none; }
   .hero-figure, .hero-stage::after { display: none; }
   .hero-stage-inner { padding-block: clamp(40px, 9vw, 72px); }
 }
 
-/* Everything below the hero rides above it (higher z-index) with an opaque
-   background, so as the page scrolls it slides up and covers the pinned hero.
-   The hairline top rule + upward shadow give it a distinct leading edge so it
-   reads as a sheet sliding over the hero rather than blending into the same
-   black. */
+/* Wrapper for the sections below the hero. Opaque background so the fixed page
+   texture (body::before) shows only behind the hero and footer, not here. */
 .page-reveal {
   position: relative;
-  z-index: 1;
   background: var(--bg);
-  border-top: 1px solid var(--line);
-  box-shadow: 0 -34px 64px -24px oklch(0 0 0 / 0.85);
 }
 
 .hero-grid {
@@ -394,8 +378,8 @@ html[data-hero="stacked"] .media-frame image-slot { height: clamp(300px, 40vw, 4
    STATS STRIP
    ============================================================ */
 .stats {
-  /* No top border — it would sit right where the .page-reveal panel's own top
-     edge slides past during the parallax scroll, reading as a doubled line. */
+  /* Bottom border only — it reads as the hero's closing edge where the page
+     content begins below the stat strip. */
   border-bottom: 1px solid var(--line-soft);
   background: oklch(0.185 0.009 264 / 0.6);
   margin-top: clamp(32px, 4vw, 56px);
