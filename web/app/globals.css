@@ -1,6 +1,6 @@
 /* ============================================================
    SPILO — Overwatch coaching. Dark, credible, premium.
-   Type:  Anton (display, swappable) · Hanken Grotesk (body) · JetBrains Mono (labels)
+   Type:  Anton (display, swappable) · Hanken Grotesk (body + labels)
    Red is reserved: rank-up destinations + primary CTAs only.
    ============================================================ */
 
@@ -22,11 +22,10 @@
   --red-ink:   oklch(0.985 0.01 25);
   --red-glow:  oklch(0.585 0.205 25 / 0.22);
 
-  /* Fonts are loaded via next/font; --font-anton, --font-hanken, --font-jet
-     are published on <html> by app/fonts.ts. */
+  /* Fonts are loaded via next/font; --font-anton and --font-hanken are
+     published on <html> by app/fonts.ts. */
   --font-display: var(--font-anton), 'Arial Narrow', sans-serif;
   --font-body: var(--font-hanken), system-ui, sans-serif;
-  --font-mono: var(--font-jet), ui-monospace, monospace;
 
   --maxw: 1200px;
   --gut: clamp(20px, 5vw, 72px);
@@ -64,7 +63,7 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
 
 /* ---------- shared type helpers ---------- */
 .eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
@@ -106,7 +105,7 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
 /* ---------- buttons ---------- */
 .btn {
   display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--font-mono); font-size: 13px; font-weight: 600;
+  font-family: var(--font-body); font-size: 16px; font-weight: 600;
   letter-spacing: 0.02em; text-transform: none;
   padding: 15px 26px; border-radius: 2px; cursor: pointer;
   border: 1px solid transparent; transition: 160ms ease;
@@ -131,7 +130,7 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
 .btn-ghost { background: transparent; color: var(--text); border-color: var(--line); }
 .btn-ghost:hover { border-color: var(--text-dim); background: oklch(0.24 0.01 264 / 0.5); }
 
-.btn-sm { padding: 11px 18px; font-size: 12px; }
+.btn-sm { padding: 11px 18px; font-size: 15px; }
 
 /* ============================================================
    NAV
@@ -165,7 +164,7 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
 
 .nav-links { display: flex; gap: 30px; margin-left: 14px; }
 .nav-links a {
-  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.02em;
+  font-family: var(--font-body); font-size: 16px; letter-spacing: 0.02em;
   text-transform: none; color: var(--text-dim); padding: 6px 0; position: relative;
 }
 .nav-links a::after {
@@ -333,8 +332,8 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
 html[data-hero="stacked"] .hero-lead { border-left: 0; padding-left: 0; }
 .hero-lead b { color: var(--text); font-weight: 800; }
 .hero-cta { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
-.hero-cta .btn { font-size: 14px; padding: 18px 34px; }
-.hero-cta .note { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; color: var(--text-faint); text-transform: uppercase; }
+.hero-cta .btn { font-size: 17px; padding: 18px 34px; }
+.hero-cta .note { font-family: var(--font-body); font-size: 12px; letter-spacing: 0.1em; color: var(--text-faint); text-transform: uppercase; }
 .hero-welcome { margin: 22px 0 0; max-width: 42ch; font-size: 14.5px; line-height: 1.5; color: var(--text-faint); font-style: italic; }
 html[data-hero="stacked"] .hero-welcome { margin-inline: auto; }
 
@@ -399,7 +398,7 @@ html[data-hero="stacked"] .media-frame image-slot { height: clamp(300px, 40vw, 4
 }
 .stat .num-plus { color: var(--red-bright); }
 .stat .lbl {
-  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.13em;
+  font-family: var(--font-body); font-size: 13px; letter-spacing: 0.13em;
   text-transform: uppercase; color: var(--text-faint); margin-top: 15px; line-height: 1.55;
 }
 
@@ -505,7 +504,7 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 }
 .coach-toggle-btn {
   position: relative;
-  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.02em;
+  font-family: var(--font-body); font-size: 12.5px; letter-spacing: 0.02em;
   text-transform: none; color: var(--text);
   background: none; border: 0; border-radius: 2px;
   padding: 10px 20px; cursor: pointer;
@@ -520,7 +519,7 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 /* "Choose your coach" prompt above the toggle so the two-coach choice reads as
    a decision. */
 .coach-switch-label {
-  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em;
+  font-family: var(--font-body); font-size: 12px; letter-spacing: 0.16em;
   text-transform: uppercase; color: var(--text-faint);
 }
 
@@ -592,10 +591,10 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 .tiers > .tier:first-child { justify-content: center; }
 .tier-flag {
   position: absolute; top: -1px; right: 24px; transform: translateY(-50%);
-  font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase;
+  font-family: var(--font-body); font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase;
   background: var(--red); color: var(--red-ink); padding: 8px 14px; border-radius: 2px;
 }
-.tier-len { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); }
+.tier-len { font-family: var(--font-body); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); }
 .tier h3 {
   font-family: var(--font-display); font-weight: 400; text-transform: uppercase;
   font-size: clamp(26px, 2.8vw, 34px); line-height: 0.95; margin: 12px 0 0; letter-spacing: 0.01em;
@@ -612,10 +611,10 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 .tier.featured .tier-list li::before { border-color: var(--red-bright); }
 .tier-prices { margin-top: auto; border-top: 1px solid var(--line-soft); padding-top: 16px; display: flex; flex-direction: column; gap: 10px; }
 .price-row { display: flex; align-items: baseline; justify-content: space-between; }
-.price-row .k { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
+.price-row .k { font-family: var(--font-body); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
 .price-row .v { font-family: var(--font-display); font-size: 26px; letter-spacing: 0.01em; }
 .tier .btn { margin-top: 22px; justify-content: center; }
-.tier-sub { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--text-faint); margin-top: 14px; text-align: center; text-transform: uppercase; }
+.tier-sub { font-family: var(--font-body); font-size: 11px; letter-spacing: 0.08em; color: var(--text-faint); margin-top: 14px; text-align: center; text-transform: uppercase; }
 
 .pricing-free {
   margin-top: 22px; margin-inline: auto; max-width: 1376px; width: 100%;
@@ -646,7 +645,7 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
   transition: color 150ms ease;
 }
 .faq-summary:hover .faq-q { color: var(--text); }
-.faq-num { font-family: var(--font-mono); font-size: 12px; color: var(--text-faint); letter-spacing: 0.1em; width: 30px; }
+.faq-num { font-family: var(--font-body); font-size: 12px; color: var(--text-faint); letter-spacing: 0.1em; width: 30px; }
 .faq-ico { position: relative; width: 20px; height: 20px; flex: none; }
 .faq-ico::before, .faq-ico::after { content: ""; position: absolute; background: var(--text-dim); transition: transform 220ms ease, opacity 220ms ease; }
 .faq-ico::before { left: 0; right: 0; top: 50%; height: 2px; transform: translateY(-50%); }
@@ -715,7 +714,7 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 /* Copyright — quiet legal line on the left of the footer bar; the contact
    links sit opposite it on the right. */
 .footer-copyright {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -738,7 +737,7 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 }
 .footer-contact { display: flex; gap: 26px; flex-wrap: wrap; margin-left: auto; }
 .footer-contact span,
-.footer-contact a { font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; color: var(--text-faint); text-transform: uppercase; transition: color 150ms ease; }
+.footer-contact a { font-family: var(--font-body); font-size: 12px; letter-spacing: 0.06em; color: var(--text-faint); text-transform: uppercase; transition: color 150ms ease; }
 .footer-contact b { color: var(--text-dim); font-weight: 500; transition: color 150ms ease; }
 .footer-contact a:hover { color: var(--text); }
 .footer-contact a:hover b { color: var(--text); }
@@ -789,7 +788,7 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
   .nav-mobile a {
     display: block;
     padding: 15px var(--gut);
-    font-family: var(--font-mono);
+    font-family: var(--font-body);
     font-size: 14px;
     letter-spacing: 0.02em;
     text-transform: none;
@@ -956,7 +955,7 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
    otherwise shrink to content width and collapse the fr columns. */
 #about .hero-grid { width: 100%; }
 #about .media-frame image-slot { height: clamp(440px, 50vw, 700px); }
-#about .btn { font-size: 14px; padding: 18px 34px; }
+#about .btn { font-size: 17px; padding: 18px 34px; }
 
 /* About section — mission pull-quote sitting below the CTA. Red left rule
    echoes the hero's .hero-lead treatment so the page feels coherent. */
@@ -1282,7 +1281,7 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   gap: 12px;
 }
 .booking-format-card-title {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1313,7 +1312,7 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   background: oklch(0.18 0.008 264 / 0.5);
 }
 .booking-price-line-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -1338,7 +1337,7 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 .booking-section-head { display: flex; flex-direction: column; gap: 6px; }
 .booking-section-title {
   margin: 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -1371,7 +1370,7 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
    its longest word under the button. */
 .booking-discount-row-info { display: flex; flex-direction: column; gap: 4px; min-width: auto; }
 .booking-discount-row-label {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 13px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1398,7 +1397,7 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   background: none;
   border: none;
   padding: 0;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -1410,7 +1409,7 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 }
 .booking-discount-remove:hover { color: var(--text); }
 .booking-discount-applied-eyebrow {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
   font-size: 11px;
   letter-spacing: 0.16em;
   text-transform: uppercase;

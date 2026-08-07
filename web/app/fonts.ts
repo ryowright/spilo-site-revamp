@@ -1,4 +1,4 @@
-import { Anton, Hanken_Grotesk, JetBrains_Mono } from 'next/font/google';
+import { Anton, Hanken_Grotesk } from 'next/font/google';
 
 export const anton = Anton({
   subsets: ['latin'],
@@ -14,11 +14,3 @@ export const hanken = Hanken_Grotesk({
   display: 'swap',
 });
 
-export const jet = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-jet',
-  display: 'swap',
-});
-
-// Adding this comment as part of a no-op commit

@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { anton, hanken, jet } from "./fonts";
+import { anton, hanken } from "./fonts";
 import "./globals.css";
 
 const SITE_TITLE = "Spilo — Overwatch Coaching";
@@ -53,7 +53,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const fontVars = [anton.variable, hanken.variable, jet.variable].join(" ");
+const fontVars = [anton.variable, hanken.variable].join(" ");
 
 export default function RootLayout({
   children,
