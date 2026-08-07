@@ -77,8 +77,8 @@ export function Hero() {
               Improving<br />shouldn&apos;t be<br /><em>guesswork</em>
             </motion.h1>
             <motion.p className="hero-lead" variants={staggerItem}>
-              Overwatch coaching that <b>provides clarity</b> for players{" "}
-              serious about improving
+              <b>Professional-grade</b> Overwatch coaching for players{" "}
+              <b>serious about improving</b>
             </motion.p>
             <motion.div className="hero-cta" variants={staggerItem}>
               <a href="#pricing" className="btn btn-red">
