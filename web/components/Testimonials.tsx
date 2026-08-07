@@ -9,8 +9,7 @@ import { LIGHTBOX_DURATION } from "./motion/transitions";
 const REVIEW_PLACEHOLDER = "Discord review · 3:2 (≈1200×800px)";
 
 // A calm, non-overwhelming social-proof display: three rows of small review
-// screenshots that continuously scroll left→right. Reviews 1–15 split 5 per row
-// (review-16.png still exists on disk but is intentionally unused now).
+// screenshots that continuously scroll left→right. Reviews 1–15, split 5 per row.
 const ROWS = [
   [1, 2, 3, 4, 5],
   [6, 7, 8, 9, 10],

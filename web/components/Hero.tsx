@@ -63,10 +63,14 @@ export function Hero() {
           src="/coach-hero-cutout.png"
           alt=""
           aria-hidden="true"
+          decoding="async"
           className="hero-figure"
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.7, ease: REVEAL_EASE, delay: 0.15 }}
+          /* Slide in via transform only — no opacity fade or start delay, both of
+             which would hold back this element's LCP paint on desktop (where it's
+             the largest element). Transform keeps it painted from frame one. */
+          initial={{ x: 24 }}
+          animate={{ x: 0 }}
+          transition={{ duration: 0.7, ease: REVEAL_EASE }}
         />
         <div className="hero-stage-inner">
           <Stagger className="hero-copy">

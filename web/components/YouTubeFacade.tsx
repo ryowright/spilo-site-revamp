@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Props = {
   videoId: string;
@@ -22,18 +22,34 @@ export function YouTubeFacade({ videoId, title }: Props) {
   // to the sharper maxresdefault (1280×720) once we've confirmed it exists for
   // this video. Not every video has a maxres, so we verify before swapping.
   const [thumb, setThumb] = useState(() => thumbUrl(videoId, "hqdefault"));
+  const facadeRef = useRef<HTMLButtonElement>(null);
 
+  // Defer the maxres upgrade until the facade nears the viewport, so its ~80KB
+  // fetch never competes with above-the-fold content on first load (the video
+  // sits well below the fold). hqdefault stays visible until the swap.
   useEffect(() => {
-    const maxres = thumbUrl(videoId, "maxresdefault");
-    const img = new Image();
-    img.onload = () => {
-      // i.ytimg 404s when maxres is absent (onload won't fire). Guard on width
-      // too, in case a small grey placeholder is ever served with a 200.
-      if (img.naturalWidth > 320) setThumb(maxres);
-    };
-    img.src = maxres;
+    const el = facadeRef.current;
+    if (!el) return;
+    let img: HTMLImageElement | null = null;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        observer.disconnect();
+        const maxres = thumbUrl(videoId, "maxresdefault");
+        img = new Image();
+        img.onload = () => {
+          // i.ytimg 404s when maxres is absent (onload won't fire). Guard on
+          // width too, in case a small grey placeholder is served with a 200.
+          if (img && img.naturalWidth > 320) setThumb(maxres);
+        };
+        img.src = maxres;
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(el);
     return () => {
-      img.onload = null;
+      observer.disconnect();
+      if (img) img.onload = null;
     };
   }, [videoId]);
 
@@ -53,6 +69,7 @@ export function YouTubeFacade({ videoId, title }: Props) {
 
   return (
     <button
+      ref={facadeRef}
       type="button"
       className="yt-facade"
       style={{ backgroundImage: `url(${thumb})` }}
