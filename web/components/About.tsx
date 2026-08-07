@@ -75,7 +75,7 @@ export function About() {
           </p>
           <div style={{ marginTop: "40px" }}>
             <a href="#pricing" className="btn btn-red">
-              Schedule a call <span className="arrow-up">↑</span>
+              Schedule a Call <span className="arrow-up">↑</span>
             </a>
           </div>
           <div className="about-mission">

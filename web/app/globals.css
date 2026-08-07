@@ -107,7 +107,7 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
 .btn {
   display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--font-mono); font-size: 13px; font-weight: 600;
-  letter-spacing: 0.14em; text-transform: uppercase;
+  letter-spacing: 0.02em; text-transform: none;
   padding: 15px 26px; border-radius: 2px; cursor: pointer;
   border: 1px solid transparent; transition: 160ms ease;
   white-space: nowrap;
@@ -505,8 +505,8 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 }
 .coach-toggle-btn {
   position: relative;
-  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--text);
+  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.02em;
+  text-transform: none; color: var(--text);
   background: none; border: 0; border-radius: 2px;
   padding: 10px 20px; cursor: pointer;
   transition: color 180ms ease, background 180ms ease;

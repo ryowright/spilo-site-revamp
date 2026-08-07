@@ -152,7 +152,7 @@ export function SiteNav() {
             </a>
           </div>
           <a href="#pricing" className="btn btn-red btn-sm">
-            Schedule a call
+            Schedule a Call
           </a>
           <button
             type="button"

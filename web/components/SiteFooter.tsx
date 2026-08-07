@@ -22,7 +22,7 @@ export function SiteFooter() {
           </Reveal>
           <Reveal delay={0.08}>
             <a href="#pricing" className="btn btn-red">
-              Schedule a call <span className="arrow-up">↑</span>
+              Schedule a Call <span className="arrow-up">↑</span>
             </a>
           </Reveal>
         </div>

@@ -82,7 +82,7 @@ export function Hero() {
             </motion.p>
             <motion.div className="hero-cta" variants={staggerItem}>
               <a href="#pricing" className="btn btn-red">
-                Schedule a call <span className="arrow-down">↓</span>
+                Schedule a Call <span className="arrow-down">↓</span>
               </a>
             </motion.div>
           </Stagger>
