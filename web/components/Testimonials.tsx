@@ -64,6 +64,7 @@ export function Testimonials() {
           placeholder={REVIEW_PLACEHOLDER}
           src={src}
           alt={primary ? alt : ""}
+          sizes="(max-width: 560px) 200px, 340px"
         />
       </button>
     );
@@ -116,6 +117,9 @@ export function Testimonials() {
               exit={{ opacity: 0, scale: 0.96 }}
               transition={{ duration: LIGHTBOX_DURATION, ease: "easeOut" }}
             >
+              {/* Plain <img>: the lightbox opens only on click (never on load),
+                  so it's outside every load-perf budget. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={active.src} alt={active.alt} />
               <button
                 type="button"

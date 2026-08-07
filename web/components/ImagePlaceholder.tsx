@@ -1,3 +1,6 @@
+import Image from "next/image";
+import type { CSSProperties } from "react";
+
 type Props = {
   id?: string;
   shape?: string;
@@ -5,9 +8,12 @@ type Props = {
   placeholder?: string;
   src?: string;
   alt?: string;
-  /** Above-the-fold images should pass `eager` to load immediately. Everything
+  /** Roughly how wide the image renders, for next/image srcset selection
+   *  (e.g. "(max-width: 560px) 200px, 340px"). Falls back to full-width. */
+  sizes?: string;
+  /** Above-the-fold images should pass `priority` to preload eagerly. Everything
    *  through this component is below the fold today, so the default is lazy. */
-  eager?: boolean;
+  priority?: boolean;
 };
 
 export function ImagePlaceholder({
@@ -17,19 +23,21 @@ export function ImagePlaceholder({
   placeholder,
   src,
   alt,
-  eager,
+  sizes,
+  priority,
 }: Props) {
   return (
+    // image-slot is position:relative (globals.css) so next/image `fill` anchors
+    // to it; it already has a definite size via aspect-ratio / height per use.
     <image-slot id={id} shape={shape} fit={fit} placeholder={placeholder}>
       {src ? (
-        // Plain <img> is intentional here for now; a next/image conversion is
-        // staged separately. All uses are below the fold, hence loading="lazy".
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={src}
           alt={alt ?? ""}
-          loading={eager ? undefined : "lazy"}
-          decoding="async"
+          fill
+          sizes={sizes ?? "100vw"}
+          priority={priority}
+          style={{ objectFit: (fit as CSSProperties["objectFit"]) ?? "cover" }}
         />
       ) : null}
     </image-slot>

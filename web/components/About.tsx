@@ -23,6 +23,7 @@ export function About() {
               placeholder="Drop coach photo"
               src="/coach-about.png"
               alt="Jacob &quot;Spilo&quot; Clifton"
+              sizes="(max-width: 940px) 90vw, 640px"
             />
           </div>
         </Reveal>

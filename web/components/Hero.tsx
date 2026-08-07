@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { animate, motion, useInView, useReducedMotion } from "framer-motion";
 import { Stagger, staggerItem } from "./motion/Stagger";
-import { REVEAL_EASE } from "./motion/transitions";
 
 type Stat = {
   target: number;
@@ -57,20 +57,19 @@ export function Hero() {
     <section className="hero" data-screen-label="Hero">
       <div className="hero-stage">
         {/* Coach cutout — decorative; bleeds off the right and fades into the
-            page via the .hero-stage scrim. Positioned via `right` in CSS. */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <motion.img
+            page via the .hero-stage scrim. Positioned via `left` in CSS.
+            `priority` preloads it since it's the desktop LCP element. The `sizes`
+            hands mobile a ~1px candidate (it's display:none ≤940px, so we never
+            want to pay for the full image there) and desktop a right-sized WebP. */}
+        <Image
           src="/coach-hero-cutout.png"
           alt=""
           aria-hidden="true"
-          decoding="async"
           className="hero-figure"
-          /* Slide in via transform only — no opacity fade or start delay, both of
-             which would hold back this element's LCP paint on desktop (where it's
-             the largest element). Transform keeps it painted from frame one. */
-          initial={{ x: 24 }}
-          animate={{ x: 0 }}
-          transition={{ duration: 0.7, ease: REVEAL_EASE }}
+          width={785}
+          height={873}
+          priority
+          sizes="(max-width: 940px) 1px, 800px"
         />
         <div className="hero-stage-inner">
           <Stagger className="hero-copy">
