@@ -165,8 +165,8 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
 
 .nav-links { display: flex; gap: 30px; margin-left: 14px; }
 .nav-links a {
-  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.13em;
-  text-transform: uppercase; color: var(--text-dim); padding: 6px 0; position: relative;
+  font-family: var(--font-mono); font-size: 12.5px; letter-spacing: 0.02em;
+  text-transform: none; color: var(--text-dim); padding: 6px 0; position: relative;
 }
 .nav-links a::after {
   content: ""; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px;
@@ -791,8 +791,8 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
     padding: 15px var(--gut);
     font-family: var(--font-mono);
     font-size: 14px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    text-transform: none;
     color: var(--text-dim);
     border-top: 1px solid var(--line-soft);
     transition: color 150ms ease, background 150ms ease;
