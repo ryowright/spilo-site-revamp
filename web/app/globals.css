@@ -398,8 +398,8 @@ html[data-hero="stacked"] .media-frame image-slot { height: clamp(300px, 40vw, 4
 }
 .stat .num-plus { color: var(--red-bright); }
 .stat .lbl {
-  font-family: var(--font-body); font-size: 13px; letter-spacing: 0.13em;
-  text-transform: uppercase; color: var(--text-faint); margin-top: 15px; line-height: 1.55;
+  font-family: var(--font-body); font-size: 15px; letter-spacing: 0.02em;
+  color: var(--text-faint); margin-top: 15px; line-height: 1.55;
 }
 
 /* ============================================================
@@ -819,7 +819,7 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
   /* Tighten the stat labels so the longest one ("Followers across / YouTube &
      Twitch") fits its two authored lines in the narrow 2-column cells instead
      of wrapping to four. */
-  .stat .lbl { font-size: 12px; letter-spacing: 0.06em; }
+  .stat .lbl { font-size: 14px; letter-spacing: 0.02em; }
   /* Full-width section CTAs on phones — a big thumb target that reads as
      intentional under the left-aligned copy (no floating half-width button). */
   .hero-cta { width: 100%; }

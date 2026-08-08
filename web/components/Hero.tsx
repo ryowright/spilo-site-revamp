@@ -13,10 +13,10 @@ type Stat = {
 };
 
 const STATS: Stat[] = [
-  { target: 8000, unit: "", tail: "", label: ["Hours live", "VOD review"] },
-  { target: 1000, unit: "", tail: "", label: ["Players", "coached"] },
-  { target: 3, unit: "", tail: " YRS", label: ["Contenders", "head coach"] },
-  { target: 120, unit: "K", tail: "", label: ["Followers across", "YouTube & Twitch"] },
+  { target: 10000, unit: "", tail: "", label: ["Hours of Live", "VOD Review"] },
+  { target: 1000, unit: "", tail: "", label: ["Players", "Coached"] },
+  { target: 4, unit: "", tail: " YRS", label: ["Contenders and Overwatch", "League Coaching Experience"] },
+  { target: 130, unit: "K", tail: "", label: ["Followers Across", "YouTube & Twitch"] },
 ];
 
 // Counts up from 0 to `target` once when scrolled into view. `delay` lets the
