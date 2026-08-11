@@ -802,6 +802,8 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
   html[data-hero] .hero-grid { grid-template-columns: 1fr !important; text-align: left; }
   html[data-hero] .hero-media { order: 0 !important; }
   html[data-hero] .media-frame image-slot { height: clamp(320px, 70vw, 460px) !important; }
+  /* The About coach blocks respond further down the file, next to their base
+     rules — see the note above the late @media block after .about-mission. */
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .stat:nth-child(3)::before, .stat:nth-child(odd)::before { display: none; }
   .stat:nth-child(even)::before { display: block; }
@@ -939,23 +941,46 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 }
 .lightbox-close:hover { background: var(--bg-1); border-color: var(--text-dim); }
 
-/* About — enlarged + widened to match the expanded sections above. The grid
-   width/gap and copy sizes are bumped inline in About.tsx; these cover the photo
-   frame, the CTA, and the pull-quote. */
-/* Fill the viewport (minus the sticky-nav scroll offset) so jumping to #about
-   via the nav doesn't reveal the FAQ headline peeking below; the content stays
-   vertically centered. Content taller than this just grows the section. */
-#about {
-  min-height: calc(100svh - 80px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-/* Pin the grid to full width — as a flex item with `margin: 0 auto`, it could
-   otherwise shrink to content width and collapse the fr columns. */
-#about .hero-grid { width: 100%; }
+/* "Meet the Coaches" — a heading over two coach blocks (Spilo, then Stephano
+   mirrored). The section grows with its content; no forced full-height centering. */
 #about .media-frame image-slot { height: clamp(440px, 50vw, 700px); }
 #about .btn { font-size: 17px; padding: 18px 34px; }
+
+.about-wrap { max-width: 1360px; margin: 0 auto; padding-inline: var(--gut); }
+.about-head { margin-bottom: clamp(44px, 5.5vw, 84px); }
+
+/* Each coach: a two-column grid. Spilo = image left / copy right; Stephano is
+   mirrored (copy left / image right) via .coach-block-rev + reversed columns. */
+.coach-block {
+  display: grid; grid-template-columns: 0.85fr 1.15fr;
+  gap: clamp(40px, 5.5vw, 84px); align-items: center;
+}
+.coach-block-rev { grid-template-columns: 1.15fr 0.85fr; }
+.coach-block + .coach-block { margin-top: clamp(64px, 9vw, 130px); }
+/* Own class (not .hero-media) so the hero-variant `.hero-media { order: -1 }`
+   rule doesn't reorder these and shove Stephano's photo into the wide column. */
+.coach-media { position: relative; }
+
+/* Hanken (not the Anton display face) — the greeting reads as a spoken line
+   rather than a section title. line-height opens up from the 0.95 Anton wants,
+   since Hanken's descenders would clash with the next line when this wraps. */
+.coach-name {
+  font-family: var(--font-body); font-weight: 700;
+  /* Sized so "Greetings, my name is Spilo." holds one line for the whole
+     two-column range: Hanken Bold measures 13.05em for that string, and the
+     copy column runs ~457px (941px viewport) to ~653px (1440px+). Both the vw
+     term and the 46px cap are set from those measurements — retune them if the
+     greeting, the column ratio, or .about-wrap's max-width changes. */
+  font-size: clamp(32px, 3.5vw, 46px); line-height: 1.1;
+  letter-spacing: 0.01em; margin: 0 0 30px;
+}
+/* No max-width: both coaches' bios fill their copy column so each block spans the
+   full about-wrap width — Spilo's copy right edge lines up with Stephano's photo
+   right edge (about-wrap caps at 1360px, so the 1.15fr column never runs long). */
+.coach-bio { color: var(--text-dim); font-size: 20px; line-height: 1.6; }
+.coach-bio + .coach-bio { margin-top: 22px; }
+.coach-bio b { color: var(--text); }
+.coach-cta { margin-top: 40px; }
 
 /* About section — mission pull-quote sitting below the CTA. Red left rule
    echoes the hero's .hero-lead treatment so the page feels coherent. */
@@ -975,6 +1000,28 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   line-height: 1.55;
   margin: 0;
   font-style: italic;
+}
+
+/* About's breakpoints live HERE, after the .coach-* base rules, on purpose. The
+   file's main @media blocks (~750-835) sit above this appended region, and media
+   queries add no specificity — so an About override authored up there loses to
+   the equal-specificity base rules below it. Keep About responsive rules here. */
+@media (max-width: 940px) {
+  .coach-block, .coach-block-rev {
+    grid-template-columns: 1fr;
+    gap: clamp(28px, 5vw, 40px);
+  }
+  /* Photo above copy in both blocks; Stephano's image is his 2nd child. */
+  .coach-block-rev .coach-media { order: -1; }
+  /* Cap the stacked photo so it stays portrait-ish and left-aligns with the copy
+     instead of stretching into a short letterbox on tablets. */
+  .coach-media { max-width: 520px; }
+}
+
+@media (max-width: 560px) {
+  .coach-bio { font-size: 18px; }
+  .coach-bio + .coach-bio { margin-top: 18px; }
+  .coach-cta { margin-top: 32px; }
 }
 
 /* ============================================================
