@@ -19,9 +19,9 @@ export function About() {
                 id="coach-about"
                 shape="rect"
                 placeholder="Drop coach photo"
-                src="/coach-about.png"
+                src="/coach-spilo-about.jpg"
                 alt="Jacob &quot;Spilo&quot; Clifton"
-                sizes="(max-width: 940px) 90vw, 640px"
+                sizes="(max-width: 940px) 90vw, 900px"
               />
             </div>
           </Reveal>
@@ -86,9 +86,9 @@ export function About() {
                 id="coach-stephano"
                 shape="rect"
                 placeholder="Drop coach photo"
-                src="/coach-stephano-about.png"
+                src="/coach-stephano-about.jpg"
                 alt="Coach Stephano"
-                sizes="(max-width: 940px) 90vw, 640px"
+                sizes="(max-width: 940px) 90vw, 900px"
               />
             </div>
           </Reveal>

@@ -29,6 +29,9 @@
 
   --maxw: 1200px;
   --gut: clamp(20px, 5vw, 72px);
+  /* Shared width of the testimonial marquee and the About coach blocks, so the
+     two sections' edges stay aligned. Insets itself — no padding needed. */
+  --band: min(92vw, 1500px);
 }
 
 /* display font swap (Tweaks) */
@@ -411,7 +414,7 @@ html[data-hero="stacked"] .media-frame image-slot { height: clamp(300px, 40vw, 4
    animates by one block (-50% ↔ 0) so the loop is seamless; the block is wider
    than the container so no review shows twice. The mask fades each row's edges;
    auto-scroll is gated behind prefers-reduced-motion. */
-.tmarquee { width: min(92vw, 1500px); margin: clamp(32px, 4vw, 56px) auto 0; }
+.tmarquee { width: var(--band); margin: clamp(32px, 4vw, 56px) auto 0; }
 .marquee-row {
   /* clip the horizontal scroll but let the hover glow escape vertically */
   overflow-x: clip;
@@ -943,19 +946,29 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 
 /* "Meet the Coaches" — a heading over two coach blocks (Spilo, then Stephano
    mirrored). The section grows with its content; no forced full-height centering. */
-#about .media-frame image-slot { height: clamp(440px, 50vw, 700px); }
+/* Square frames. aspect-ratio (not a fixed height) keeps them square at every
+   width; the !important beats the hero-variant height rule that would otherwise
+   win on mobile — see html[data-hero] .media-frame image-slot in the ≤940px block. */
+#about .media-frame image-slot { aspect-ratio: 1; height: auto !important; }
 #about .btn { font-size: 17px; padding: 18px 34px; }
 
-.about-wrap { max-width: 1360px; margin: 0 auto; padding-inline: var(--gut); }
+/* Matches .tmarquee, NOT .wrap-wide. The testimonial cards live in .tmarquee (a
+   sibling of that section's .wrap, which holds only its heading), so --band is
+   what About has to share to line up with them. .wrap-wide would be 236px wider
+   at 1920px, since the marquee freezes at 1500px above a ~1630px viewport. */
+.about-wrap { width: var(--band); margin-inline: auto; }
 .about-head { margin-bottom: clamp(44px, 5.5vw, 84px); }
 
 /* Each coach: a two-column grid. Spilo = image left / copy right; Stephano is
    mirrored (copy left / image right) via .coach-block-rev + reversed columns. */
+/* Photo takes 45% of the row, copy 55%. At 1920 that is a 615px slot, which the
+   912px sources render into at a 1.48x downscale — sharper than native, with
+   headroom left for high-DPI screens. */
 .coach-block {
-  display: grid; grid-template-columns: 0.85fr 1.15fr;
+  display: grid; grid-template-columns: 0.9fr 1.1fr;
   gap: clamp(40px, 5.5vw, 84px); align-items: center;
 }
-.coach-block-rev { grid-template-columns: 1.15fr 0.85fr; }
+.coach-block-rev { grid-template-columns: 1.1fr 0.9fr; }
 .coach-block + .coach-block { margin-top: clamp(64px, 9vw, 130px); }
 /* Own class (not .hero-media) so the hero-variant `.hero-media { order: -1 }`
    rule doesn't reorder these and shove Stephano's photo into the wide column. */
@@ -966,18 +979,19 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
    since Hanken's descenders would clash with the next line when this wraps. */
 .coach-name {
   font-family: var(--font-body); font-weight: 700;
-  /* Sized so "Greetings, my name is Spilo." holds one line for the whole
-     two-column range: Hanken Bold measures 13.05em for that string, and the
-     copy column runs ~457px (941px viewport) to ~653px (1440px+). Both the vw
-     term and the 46px cap are set from those measurements — retune them if the
-     greeting, the column ratio, or .about-wrap's max-width changes. */
-  font-size: clamp(32px, 3.5vw, 46px); line-height: 1.1;
+  /* Sized so "Greetings, my name is Spilo." holds one line across the whole
+     two-column range: Hanken Bold measures 13.05em for that string, and the copy
+     column runs ~448px (941px viewport) to 779px (1630px+, where --band caps).
+     Verified to never wrap from 941px up. Retune the vw term and the 56px cap if
+     the greeting, the column ratio, or --band changes. */
+  font-size: clamp(32px, 3.5vw, 56px); line-height: 1.1;
   letter-spacing: 0.01em; margin: 0 0 30px;
 }
 /* No max-width: both coaches' bios fill their copy column so each block spans the
-   full about-wrap width — Spilo's copy right edge lines up with Stephano's photo
-   right edge (about-wrap caps at 1360px, so the 1.15fr column never runs long). */
-.coach-bio { color: var(--text-dim); font-size: 20px; line-height: 1.6; }
+   full wrap width — Spilo's copy right edge lines up with Stephano's photo right
+   edge. The size steps up with the column so the measure holds near 62ch instead
+   of drifting to 74ch once the copy reaches its 779px maximum. */
+.coach-bio { color: var(--text-dim); font-size: clamp(20px, 1.45vw, 24px); line-height: 1.6; }
 .coach-bio + .coach-bio { margin-top: 22px; }
 .coach-bio b { color: var(--text); }
 .coach-cta { margin-top: 40px; }
