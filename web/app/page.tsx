@@ -18,9 +18,9 @@ export default function Home() {
             .page-reveal in globals.css). */}
         <div className="page-reveal">
           <Testimonials />
-          <SessionSection />
-          <Pricing />
           <About />
+          <Pricing />
+          <SessionSection />
           <Faq />
         </div>
       </main>

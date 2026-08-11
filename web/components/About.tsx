@@ -42,7 +42,7 @@ export function About() {
             </p>
             <div className="coach-cta">
               <a href="#pricing" className="btn btn-red">
-                Schedule a Call <span className="arrow-up">↑</span>
+                Schedule a Call <span className="arrow-down">↓</span>
               </a>
             </div>
             <div className="about-mission">
@@ -76,7 +76,7 @@ export function About() {
             </p>
             <div className="coach-cta">
               <a href="#pricing" className="btn btn-red">
-                Schedule a Call <span className="arrow-up">↑</span>
+                Schedule a Call <span className="arrow-down">↓</span>
               </a>
             </div>
           </Reveal>

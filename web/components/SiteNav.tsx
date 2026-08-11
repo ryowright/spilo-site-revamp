@@ -12,9 +12,9 @@ import {
 
 const SECTIONS = [
   { id: "testimonials", label: "Results" },
-  { id: "session", label: "The Session" },
-  { id: "pricing", label: "Coaching" },
   { id: "about", label: "About" },
+  { id: "pricing", label: "Coaching" },
+  { id: "session", label: "The Session" },
   { id: "faq", label: "FAQ" },
 ] as const;
 

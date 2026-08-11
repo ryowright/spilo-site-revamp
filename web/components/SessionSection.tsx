@@ -77,7 +77,7 @@ export function SessionSection() {
 
             <Reveal delay={0.1}>
               <a href="#pricing" className="btn btn-red session-cta">
-                Schedule a Call <span className="arrow-down">↓</span>
+                Schedule a Call <span className="arrow-up">↑</span>
               </a>
             </Reveal>
           </div>
