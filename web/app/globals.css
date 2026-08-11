@@ -964,9 +964,14 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 /* Photo takes 45% of the row, copy 55%. At 1920 that is a 615px slot, which the
    912px sources render into at a 1.48x downscale — sharper than native, with
    headroom left for high-DPI screens. */
+/* start, not center: the copy's height swings a lot with the viewport, and a
+   centred photo drifts down the block at widths where the text runs tall. Top
+   alignment keeps the photo pinned to the coach's heading at every width. Below
+   940px the blocks are single-column, so each item owns its row and this has no
+   effect there. */
 .coach-block {
   display: grid; grid-template-columns: 0.9fr 1.1fr;
-  gap: clamp(40px, 5.5vw, 84px); align-items: center;
+  gap: clamp(40px, 5.5vw, 84px); align-items: start;
 }
 .coach-block-rev { grid-template-columns: 1.1fr 0.9fr; }
 .coach-block + .coach-block { margin-top: clamp(64px, 9vw, 130px); }
