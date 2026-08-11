@@ -40,16 +40,14 @@ export function About() {
               systems, providing additional insight into the secrets of what
               makes Overwatch work.
             </p>
+            <p className="coach-bio">
+              Whether Bronze or Champion, my mission is to educate players on
+              how to improve their game.
+            </p>
             <div className="coach-cta">
               <a href="#pricing" className="btn btn-red">
                 Schedule a Call <span className="arrow-down">↓</span>
               </a>
-            </div>
-            <div className="about-mission">
-              <p>
-                Whether Bronze or Champion, my mission is to educate players on
-                how to improve their game.
-              </p>
             </div>
           </Reveal>
         </div>

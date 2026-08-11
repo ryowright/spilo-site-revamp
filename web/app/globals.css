@@ -806,7 +806,7 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
   html[data-hero] .hero-media { order: 0 !important; }
   html[data-hero] .media-frame image-slot { height: clamp(320px, 70vw, 460px) !important; }
   /* The About coach blocks respond further down the file, next to their base
-     rules — see the note above the late @media block after .about-mission. */
+     rules — see the note above the late @media block after the .coach-* rules. */
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
   .stat:nth-child(3)::before, .stat:nth-child(odd)::before { display: none; }
   .stat:nth-child(even)::before { display: block; }
@@ -995,26 +995,6 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 .coach-bio + .coach-bio { margin-top: 22px; }
 .coach-bio b { color: var(--text); }
 .coach-cta { margin-top: 40px; }
-
-/* About section — mission pull-quote sitting below the CTA. Red left rule
-   echoes the hero's .hero-lead treatment so the page feels coherent. */
-.about-mission {
-  margin-top: clamp(28px, 3.2vw, 40px);
-  padding-left: clamp(18px, 1.6vw, 26px);
-  border-left: 2px solid var(--red);
-  max-width: 56ch;
-}
-.about-mission .eyebrow {
-  display: block;
-  margin-bottom: 14px;
-}
-.about-mission p {
-  color: var(--text-dim);
-  font-size: clamp(19px, 1.9vw, 23px);
-  line-height: 1.55;
-  margin: 0;
-  font-style: italic;
-}
 
 /* About's breakpoints live HERE, after the .coach-* base rules, on purpose. The
    file's main @media blocks (~750-835) sit above this appended region, and media
