@@ -649,9 +649,8 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
    links sit opposite it on the right. */
 .footer-copyright {
   font-family: var(--font-body);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.02em;
   color: var(--text-faint);
 }
 
@@ -670,14 +669,13 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
   max-width: var(--maxw); margin: 0 auto; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
 }
 .footer-contact { display: flex; gap: 26px; flex-wrap: wrap; margin-left: auto; }
+/* No uppercasing — both entries render their literal value ("coachspilo", the
+   email address), so the source casing is the correct casing. */
 .footer-contact span,
-.footer-contact a { font-family: var(--font-body); font-size: 12px; letter-spacing: 0.06em; color: var(--text-faint); text-transform: uppercase; transition: color 150ms ease; }
+.footer-contact a { font-family: var(--font-body); font-size: 13px; letter-spacing: 0.02em; color: var(--text-faint); transition: color 150ms ease; }
 .footer-contact b { color: var(--text-dim); font-weight: 500; transition: color 150ms ease; }
 .footer-contact a:hover { color: var(--text); }
 .footer-contact a:hover b { color: var(--text); }
-/* Email shows the literal address (not a label + value); skip uppercasing so
-   the @ and lowercase letters render naturally. */
-.footer-contact a[href^="mailto:"] { text-transform: none; }
 
 /* Below desktop the footer bar stacks — center it so the copyright and contact
    sit tidily on top of one another instead of split left/right. Scoped to ≤940
