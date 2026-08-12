@@ -1167,10 +1167,11 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   padding: 24px 28px 16px;
   border-bottom: 1px solid var(--line-soft);
 }
+/* Title Case, matching .tier h3 on the coaching cards — the strings in
+   TIER_META are already the card titles, so no transform is wanted. */
 .booking-modal-title {
   font-family: var(--font-display);
   font-weight: 400;
-  text-transform: uppercase;
   font-size: clamp(20px, 2.4vw, 28px);
   line-height: 1.05;
   letter-spacing: 0.01em;
@@ -1202,10 +1203,12 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 
 /* ─── Step shells ─── */
 .booking-step { display: flex; flex-direction: column; gap: 24px; }
+/* Sized to the same scale as a section subheading (.section-head p) so the
+   step's lede reads as one, rather than as body copy. */
 .booking-step-intro {
   margin: 0;
   color: var(--text-dim);
-  font-size: 15px;
+  font-size: clamp(16px, 1.6vw, 19px);
   line-height: 1.55;
   max-width: 60ch;
 }
@@ -1220,44 +1223,9 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 .arrow-back { display: inline-block; transition: transform 160ms ease; }
 .btn:hover .arrow-back { transform: translateX(-3px); }
 
-/* ─── Format step ─── */
-.booking-format-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 14px;
-}
-.booking-format-card {
-  position: relative;
-  border: 1px solid var(--line);
-  background: oklch(0.18 0.008 264 / 0.5);
-  border-radius: 4px;
-  padding: 18px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  cursor: pointer;
-  transition: border-color 150ms ease, background 150ms ease;
-}
-.booking-format-card:hover { border-color: var(--text-faint); }
-.booking-format-card.is-selected {
-  border-color: var(--red);
-  background: oklch(0.22 0.012 264 / 0.7);
-  box-shadow: 0 14px 44px -28px var(--red-glow);
-}
-.booking-format-card input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
-.booking-format-card-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
-}
-.booking-format-card-title {
-  font-family: var(--font-body);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text);
-}
+/* Price display, shared by the coach step's buttons and the discount step's
+   confirmation line. (The radio-card format picker these were named for is
+   gone — the coach step now selects the format.) */
 .booking-format-card-price {
   font-family: var(--font-display);
   font-size: 24px;
@@ -1274,7 +1242,9 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 /* Single-format tiers (30-min) show a plain price row instead of format cards. */
 .booking-price-line {
   display: flex;
-  align-items: baseline;
+  /* Centered, not baseline-aligned: these are buttons, so the label should sit
+     in the middle of the hit area rather than share a baseline with the price. */
+  align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 16px 20px;
@@ -1282,12 +1252,73 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   border-radius: 4px;
   background: oklch(0.18 0.008 264 / 0.5);
 }
+/* On the coach step the same row IS the CTA — rendered as a <button> (Spilo) or
+   an <a> (Stephano), so it needs the element resets plus real hover/focus
+   affordances. On the discount step it stays a plain <div> and inherits none of
+   this. */
+button.booking-price-line,
+a.booking-price-line {
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+button.booking-price-line:hover,
+a.booking-price-line:hover {
+  border-color: var(--text-dim);
+  background: oklch(0.24 0.01 264 / 0.6);
+}
+button.booking-price-line:focus-visible,
+a.booking-price-line:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 2px;
+}
 .booking-price-line-label {
   font-family: var(--font-body);
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 15px;
+  letter-spacing: 0.02em;
   color: var(--text);
+}
+
+/* ─── Coach step ─── */
+/* The first step: pick a coach. Two-up on desktop, stacked on phones. */
+.booking-coach-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.booking-coach-card { display: flex; flex-direction: column; gap: 16px; }
+/* The prices are the CTAs now, so this heading is the only thing naming the
+   coach. It overlays the photo, bottom-left. The insets match .media-frame's
+   10px padding so the scrim lines up with the image edges rather than the
+   frame's; it can't be a ::before/::after on the frame, since both of those
+   already draw the red corner brackets. The gradient carries the text over
+   whatever the photo does down there — Spilo's corner is light grey, Stephano's
+   near-black, and plain white type would fail on one of them. */
+.booking-coach-name {
+  position: absolute;
+  left: 10px; right: 10px; bottom: 10px;
+  margin: 0;
+  padding: 44px 14px 12px;
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 24px; letter-spacing: 0.01em;
+  color: var(--text);
+  text-shadow: 0 1px 3px oklch(0.1 0.005 264 / 0.8);
+  background: linear-gradient(to top, oklch(0.1 0.005 264 / 0.88), transparent);
+  pointer-events: none;
+}
+/* Photos are square. The 1:1 rule elsewhere is scoped to #about, but the
+   html[data-hero] slot heights are global and would otherwise stretch these to
+   380-560px (and win with !important below 940px) — hence the override here. */
+.booking-coach-card .media-frame image-slot { aspect-ratio: 1; height: auto !important; }
+/* Pin the CTA to the bottom so both cards' buttons align when one coach has an
+   extra price line. */
+.booking-coach-card .btn { margin-top: auto; justify-content: center; }
+.booking-coach-prices { display: flex; flex-direction: column; gap: 10px; }
+@media (max-width: 560px) {
+  .booking-coach-grid { grid-template-columns: 1fr; }
 }
 
 /* ─── Discount step ─── */
@@ -1309,9 +1340,8 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 .booking-section-title {
   margin: 0;
   font-family: var(--font-body);
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.02em;
   color: var(--red-bright);
 }
 .booking-section-sub { margin: 0; color: var(--text-dim); font-size: 14px; line-height: 1.55; }
@@ -1342,9 +1372,8 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 .booking-discount-row-info { display: flex; flex-direction: column; gap: 4px; min-width: auto; }
 .booking-discount-row-label {
   font-family: var(--font-body);
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.02em;
   color: var(--text);
 }
 .booking-discount-row-desc { color: var(--text-dim); font-size: 13.5px; line-height: 1.5; }
@@ -1369,9 +1398,8 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   border: none;
   padding: 0;
   font-family: var(--font-body);
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.02em;
   color: var(--text-dim);
   cursor: pointer;
   text-decoration: underline;
@@ -1381,9 +1409,8 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 .booking-discount-remove:hover { color: var(--text); }
 .booking-discount-applied-eyebrow {
   font-family: var(--font-body);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.02em;
   color: var(--red-bright);
 }
 .booking-discount-applied-label { color: var(--text); font-size: 15px; }

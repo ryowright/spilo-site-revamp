@@ -42,6 +42,10 @@ export function useReopenOnReturn() {
     open({
       tier,
       format,
+      // Skip the coach chooser: only Spilo's flow reaches the modal at all, so
+      // a returning visitor has already picked him and a format. Sending them
+      // back to choose again would discard both.
+      step: "discount",
       verifyError:
         isRealFailure && (provider === "patreon" || provider === "twitch")
           ? { provider: provider as DiscountKind, reason: verifyError ?? "unknown" }

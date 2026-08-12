@@ -1,6 +1,7 @@
 "use client";
 
 import { ImagePlaceholder } from "./ImagePlaceholder";
+import { COACH_PHOTO } from "./booking/coaches";
 import { Reveal } from "./motion/Reveal";
 
 export function About() {
@@ -19,7 +20,7 @@ export function About() {
                 id="coach-about"
                 shape="rect"
                 placeholder="Drop coach photo"
-                src="/coach-spilo-about.jpg"
+                src={COACH_PHOTO.spilo}
                 alt="Jacob &quot;Spilo&quot; Clifton"
                 sizes="(max-width: 940px) 90vw, 900px"
               />
@@ -84,7 +85,7 @@ export function About() {
                 id="coach-stephano"
                 shape="rect"
                 placeholder="Drop coach photo"
-                src="/coach-stephano-about.jpg"
+                src={COACH_PHOTO.stephano}
                 alt="Coach Stephano"
                 sizes="(max-width: 940px) 90vw, 900px"
               />

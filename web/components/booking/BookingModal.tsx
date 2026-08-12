@@ -2,33 +2,42 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useBooking } from "./store";
+import { useBooking, type BookingStep } from "./store";
 import { TIER_META, type Discount, type Format } from "./SchedulingEvents";
 import { useBookingSession } from "./hooks/useBookingSession";
-import { OptionsStep } from "./steps/OptionsStep";
+import { CoachStep } from "./steps/CoachStep";
+import { DiscountStep } from "./steps/DiscountStep";
 import { ScheduleStep } from "./steps/ScheduleStep";
 
-type Step = "options" | "schedule";
-
 export function BookingModal() {
-  const { isOpen, tier, format: initialFormat, verifyError, close } =
-    useBooking();
+  const {
+    isOpen,
+    tier,
+    format: initialFormat,
+    verifyError,
+    step: initialStep,
+    close,
+  } = useBooking();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const { session, clear } = useBookingSession();
 
   // Per-flow state (resets each time a modal opens).
-  const [step, setStep] = useState<Step>("options");
+  const [step, setStep] = useState<BookingStep>("coach");
   const [format, setFormat] = useState<Format>("youtube");
   const [discount, setDiscount] = useState<Discount>("full");
 
-  // When the modal opens, sync the format from the open() args and always land
-  // on the combined options step.
+  // When the modal opens, sync the format from the open() args and land on the
+  // requested step. The landing step is an explicit open() argument rather than
+  // a derived condition: the card CTAs want the coach chooser, but the OAuth
+  // return passes "discount" so verifying doesn't discard the coach and format
+  // already picked. This component never unmounts (it returns null), so this
+  // effect is the only thing that resets `step`.
   useEffect(() => {
     if (!isOpen || !tier) return;
     const meta = TIER_META[tier];
     setFormat(initialFormat ?? meta.formats[0]);
-    setStep("options");
-  }, [isOpen, tier, initialFormat]);
+    setStep(initialStep ?? "coach");
+  }, [isOpen, tier, initialFormat, initialStep]);
 
   // Mirror the verified discount from the session cookie into local state.
   useEffect(() => {
@@ -86,14 +95,26 @@ export function BookingModal() {
             </header>
 
             <div className="booking-modal-body">
-              {step === "options" && (
-                <OptionsStep
+              {step === "coach" && (
+                <CoachStep
+                  tier={tier}
+                  onChoose={(f) => {
+                    setFormat(f);
+                    // Tiers without discounts (Team) would land on an empty
+                    // step, so they go straight to the scheduler.
+                    setStep(meta.discountsApply ? "discount" : "schedule");
+                  }}
+                  onClose={close}
+                />
+              )}
+              {step === "discount" && (
+                <DiscountStep
                   tier={tier}
                   selectedFormat={format}
-                  onSelectFormat={setFormat}
                   appliedDiscount={session?.discount ?? null}
                   verifyError={verifyError}
                   onClearApplied={clear}
+                  onBack={() => setStep("coach")}
                   onContinue={() => {
                     setDiscount(session?.discount ?? "full");
                     setStep("schedule");
@@ -105,7 +126,10 @@ export function BookingModal() {
                   tier={tier}
                   format={format}
                   discount={discount}
-                  onBack={() => setStep("options")}
+                  // Back to whichever step they actually came from.
+                  onBack={() =>
+                    setStep(meta.discountsApply ? "discount" : "coach")
+                  }
                 />
               )}
             </div>

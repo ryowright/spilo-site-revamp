@@ -15,6 +15,12 @@ export const COACH_LABEL: Record<Coach, string> = {
   stephano: "Coach Stephano",
 };
 
+// Shared by the About section and the coach-choice modal so the two can't drift.
+export const COACH_PHOTO: Record<Coach, string> = {
+  spilo: "/coach-spilo-about.jpg",
+  stephano: "/coach-stephano-about.jpg",
+};
+
 // Kept for the coach-choice modal (see the follow-up pass) — no longer rendered
 // as a toggle tooltip now that the switch is gone from the section.
 export const STEPHANO_NOTE =
@@ -150,7 +156,13 @@ export const FORMAT_LABEL: Record<Format, string> = {
   private: "Private",
 };
 
-export type PriceRow = { label: string; value: string };
+export type PriceRow = {
+  label: string;
+  value: string;
+  // The format(s) this row covers. The coach step turns each row into a button
+  // and selects formats[0]; rows that merged equal amounts list them all.
+  formats: Format[];
+};
 
 /**
  * The rendered price lines for one coach. A coach charging different amounts per
@@ -162,11 +174,36 @@ export function priceRows(price: CoachPrice): PriceRow[] {
   const coach = COACH_LABEL[price.coach];
   const distinct = new Set(price.amounts.map((a) => a.amount));
   if (distinct.size <= 1) {
-    return [{ label: coach, value: `$${price.amounts[0].amount}` }];
+    return [
+      {
+        label: coach,
+        value: `$${price.amounts[0].amount}`,
+        formats: price.amounts.map((a) => a.format),
+      },
+    ];
   }
   return price.amounts.map((a) => ({
     label: `${coach} (${FORMAT_LABEL[a.format]})`,
     value: `$${a.amount}`,
+    formats: [a.format],
+  }));
+}
+
+/**
+ * The price lines for one coach *inside the modal*, where their photo already
+ * identifies them — so the label is the format rather than the coach. Formats
+ * sharing an amount merge into one line ("Posted to YouTube / Private" $40),
+ * which is the mirror image of `priceRows` on the pricing cards.
+ */
+export function formatRows(price: CoachPrice): PriceRow[] {
+  const byAmount = new Map<number, Format[]>();
+  for (const { format, amount } of price.amounts) {
+    byAmount.set(amount, [...(byAmount.get(amount) ?? []), format]);
+  }
+  return Array.from(byAmount, ([amount, formats]) => ({
+    label: Array.from(new Set(formats.map((f) => FORMAT_LABEL[f]))).join(" / "),
+    value: `$${amount}`,
+    formats,
   }));
 }
 

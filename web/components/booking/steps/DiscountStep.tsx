@@ -38,30 +38,28 @@ function verifyErrorMessage({ provider, reason }: VerifyError): string {
 type Props = {
   tier: Tier;
   selectedFormat: Format;
-  onSelectFormat: (format: Format) => void;
   appliedDiscount: DiscountKind | null;
   verifyError?: VerifyError | null;
   onClearApplied: () => Promise<void>;
+  onBack: () => void;
   onContinue: () => void;
 };
 
 /**
- * Combined "options" step — format choice and discount verification on one
- * page (modeled after the original site), before the schedule step. Sections
- * render conditionally per the tier: Team has no discounts, the 30-min review
- * has no format choice.
+ * Verify a Patreon/Twitch discount and confirm the price, between the coach
+ * step (which picks the coach and the format) and the scheduler. Tiers with no
+ * discounts skip this step entirely — see BookingModal.
  */
-export function OptionsStep({
+export function DiscountStep({
   tier,
   selectedFormat,
-  onSelectFormat,
   appliedDiscount,
   verifyError,
   onClearApplied,
+  onBack,
   onContinue,
 }: Props) {
   const meta = TIER_META[tier];
-  const hasFormatChoice = meta.formats.length > 1;
 
   // A verified Twitch sub / Patreon patron knocks $5 off each session on the
   // discountable tiers. Resolve the full + net price for a format so both the
@@ -95,7 +93,7 @@ export function OptionsStep({
             <div className="booking-discount-applied">
               <div className="booking-discount-applied-head">
                 <span className="booking-discount-applied-eyebrow">
-                  Discount verified
+                  Discount Verified
                 </span>
                 <span className="booking-discount-applied-label">
                   {DISCOUNT_LABEL[appliedDiscount]} discount will be applied.
@@ -108,7 +106,7 @@ export function OptionsStep({
                   void onClearApplied();
                 }}
               >
-                Use a different one
+                Use a Different One
               </button>
             </div>
           ) : (
@@ -122,7 +120,7 @@ export function OptionsStep({
                 <div className="booking-discount-row">
                   <div className="booking-discount-row-info">
                     <span className="booking-discount-row-label">
-                      Twitch subscriber
+                      Twitch Subscriber
                     </span>
                   </div>
                   <a
@@ -135,7 +133,7 @@ export function OptionsStep({
                 <div className="booking-discount-row">
                   <div className="booking-discount-row-info">
                     <span className="booking-discount-row-label">
-                      Patreon patron
+                      Patreon Patron
                     </span>
                   </div>
                   <a
@@ -151,81 +149,38 @@ export function OptionsStep({
         </section>
       )}
 
-      {hasFormatChoice && (
-        <section className="booking-section">
-          <div className="booking-section-head">
-            <h3 className="booking-section-title">Format</h3>
-            <p className="booking-section-sub">
-              Posting to YouTube helps me grow my audience and helps other students of the game to learn.
-            </p>
-          </div>
-          <div className="booking-format-grid">
-            {meta.formats.map((f) => {
-              const p = priceFor(f);
-              const isSelected = selectedFormat === f;
-              return (
-                <label
-                  key={f}
-                  className={`booking-format-card ${isSelected ? "is-selected" : ""}`}
-                >
-                  <input
-                    type="radio"
-                    name="booking-format"
-                    checked={isSelected}
-                    onChange={() => onSelectFormat(f)}
-                  />
-                  <div className="booking-format-card-head">
-                    <span className="booking-format-card-title">
-                      {FORMAT_LABEL[f]}
-                    </span>
-                    {p && (
-                      <span className="booking-format-card-price">
-                        {isDiscounted && (
-                          <span className="booking-format-card-price-was">
-                            ${p.full}
-                          </span>
-                        )}
-                        ${p.net}
-                      </span>
-                    )}
-                  </div>
-                </label>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* Single-format tiers (30-min review) have no format choice, so show a
-          plain price line here instead — still reflecting the discount. */}
-      {!hasFormatChoice &&
-        (() => {
-          const f = meta.formats[0];
-          const p = priceFor(f);
-          if (!p) return null;
-          return (
-            <section className="booking-section">
-              <div className="booking-section-head">
-                <h3 className="booking-section-title">Price</h3>
-              </div>
-              <div className="booking-price-line">
-                <span className="booking-price-line-label">
-                  {FORMAT_LABEL[f]}
-                </span>
-                <span className="booking-format-card-price">
-                  {isDiscounted && (
-                    <span className="booking-format-card-price-was">
-                      ${p.full}
-                    </span>
-                  )}
-                  ${p.net}
-                </span>
-              </div>
-            </section>
-          );
-        })()}
+      {/* The format was chosen on the coach step, so this only confirms it back
+          — for every tier, not just single-format ones, and for the format the
+          visitor actually picked rather than the tier's first. */}
+      {(() => {
+        const p = priceFor(selectedFormat);
+        if (!p) return null;
+        return (
+          <section className="booking-section">
+            <div className="booking-section-head">
+              <h3 className="booking-section-title">Price</h3>
+            </div>
+            <div className="booking-price-line">
+              <span className="booking-price-line-label">
+                {FORMAT_LABEL[selectedFormat]}
+              </span>
+              <span className="booking-format-card-price">
+                {isDiscounted && (
+                  <span className="booking-format-card-price-was">
+                    ${p.full}
+                  </span>
+                )}
+                ${p.net}
+              </span>
+            </div>
+          </section>
+        );
+      })()}
 
       <div className="booking-step-actions">
+        <button type="button" className="btn btn-ghost" onClick={onBack}>
+          <span className="arrow-back">←</span> Back
+        </button>
         <button type="button" className="btn btn-red" onClick={onContinue}>
           Continue <span className="arrow">→</span>
         </button>
