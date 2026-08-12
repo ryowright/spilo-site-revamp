@@ -778,16 +778,10 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
    automatically when the user has prefers-reduced-motion set. */
 html { scroll-padding-top: 80px; scroll-behavior: smooth; }
 
-/* The pricing section is tall and its own top padding pushes the heading well
-   below center on anchor scroll. A negative scroll-margin makes "Coaching"
-   (and the Schedule-a-call anchors) land a bit further down so the section
-   sits with more even top/bottom spacing. Tune this one value. */
-#pricing { scroll-margin-top: -80px; }
-/* On mobile the tiers stack, so that desktop-only negative offset overshoots and
-   tucks "Book the review." under the nav. Land it like any other section. */
-@media (max-width: 940px) {
-  #pricing { scroll-margin-top: 0; }
-}
+/* #pricing takes the default 80px offset like #about. It used to carry a -80px
+   scroll-margin, tuned when the section was centered with the coach toggle
+   under the heading; the left-aligned redesign made that overshoot, landing
+   "Book the review" 80px higher than every other section. */
 
 /* Testimonials is the first section under .page-reveal, whose 1px top border
    would otherwise sit just below the nav when you jump to "Results". Scroll a
