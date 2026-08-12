@@ -15,7 +15,7 @@ const SECTIONS = [
   { id: "about", label: "About" },
   { id: "pricing", label: "Coaching" },
   { id: "session", label: "The Session" },
-  { id: "faq", label: "FAQ" },
+  { id: "faq", label: "FAQs" },
 ] as const;
 
 export function SiteNav() {
