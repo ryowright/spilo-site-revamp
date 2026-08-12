@@ -91,12 +91,13 @@ main, .site-nav, .site-footer { position: relative; z-index: 1; }
 .section-head { max-width: none; }
 #testimonials .section-head { text-align: center; }
 #testimonials .section-head h2 { font-size: clamp(44px, 6.8vw, 92px); }
-/* Center the Coaching headline onto the same axis as the (centered) coach
-   toggle + cards, so the title stops fighting the toggle for attention. */
-#pricing .section-head { text-align: center; }
 /* FAQ headline is large enough to read better centered over the list. */
 #faq .section-head { text-align: center; }
 #session .section-head p { max-width: none; font-size: clamp(17px, 1.7vw, 21px); }
+/* The Coaching headline is left-aligned (no cap on its subtitle, which would
+   otherwise wrap mid-sentence). The .tiers grid is exactly as wide as the
+   .pricing .wrap content box, so the heading lands flush with the first card. */
+#pricing .section-head p { max-width: none; }
 .section-head .eyebrow { display: block; margin-bottom: 18px; }
 .section-head h2 {
   font-family: var(--font-display); font-weight: 400; text-transform: uppercase;
@@ -489,93 +490,17 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
   pointer-events: none;
   background: radial-gradient(64% 60% at 50% 46%, oklch(0.55 0.21 27 / 0.32), transparent 72%);
 }
-.pricing .wrap { position: relative; z-index: 1; display: block; max-width: 1436px; padding-inline: clamp(20px, 3vw, 30px); }
+/* Same --band as the About blocks and the testimonial marquee, so all three
+   sections share one set of edges. The band insets itself, hence no padding. */
+.pricing .wrap { position: relative; z-index: 1; display: block; width: var(--band); max-width: none; padding-inline: 0; }
 
-/* Coach selector — segmented control + context line above the pricing cards. */
-.coach-switch {
-  /* Extra top room so the (now centered) headline has breathing space above
-     the toggle rather than crowding it. */
-  margin-top: clamp(36px, 4.5vw, 60px);
-  display: flex; flex-direction: column; align-items: center; gap: 14px;
-}
-.coach-toggle {
-  display: inline-flex;
-  padding: 4px;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  background: oklch(0.18 0.008 264 / 0.5);
-}
-.coach-toggle-btn {
-  position: relative;
-  font-family: var(--font-body); font-size: 12.5px; letter-spacing: 0.02em;
-  text-transform: none; color: var(--text);
-  background: none; border: 0; border-radius: 2px;
-  padding: 10px 20px; cursor: pointer;
-  transition: color 180ms ease, background 180ms ease;
-}
-/* Unselected option stays full-contrast (reads as a live choice, not disabled);
-   a subtle bg tint on hover gives clickable feedback. Selected = red pill. */
-.coach-toggle-btn:not(.is-active):hover { background: oklch(0.26 0.012 264 / 0.6); }
-.coach-toggle-btn.is-active { background: var(--red); color: var(--red-ink); }
-.coach-toggle-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
-
-/* "Choose your coach" prompt above the toggle so the two-coach choice reads as
-   a decision. */
-.coach-switch-label {
-  font-family: var(--font-body); font-size: 12px; letter-spacing: 0.16em;
-  text-transform: uppercase; color: var(--text-faint);
-}
-
-/* On-hover / focus tooltip above a coach button (Stephano's context line).
-   Sentence-case + body font so it reads as a sentence, not a label. */
-.coach-tip {
-  position: absolute;
-  bottom: calc(100% + 12px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  white-space: nowrap;
-  background: var(--bg-1);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 10px 14px;
-  font-family: var(--font-body); font-size: 13.5px; font-weight: 400;
-  letter-spacing: normal; text-transform: none;
-  color: var(--text-dim);
-  box-shadow: 0 14px 34px -14px oklch(0 0 0 / 0.6);
-  opacity: 0; pointer-events: none;
-  transition: opacity 120ms ease, transform 120ms ease;
-  z-index: 20;
-}
-/* caret pointing down to the button */
-.coach-tip::before {
-  content: "";
-  position: absolute;
-  top: 100%; left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: var(--bg-1);
-}
-.coach-toggle-btn:hover .coach-tip,
-.coach-toggle-btn:focus-visible .coach-tip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
+/* Equal fr tracks so the cards fill the band exactly (~481px each at the 1500px
+   cap) and keep pace if --band changes. justify-content matters only at ≤940px,
+   where the grid drops to a single 440px-max track that needs centering. */
 .tiers {
   margin-top: clamp(40px, 5vw, 60px);
-  display: grid; grid-template-columns: repeat(3, minmax(0, 440px));
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   justify-content: center; gap: 28px; align-items: stretch;
-}
-/* A 2-card set (Coach Stephano) uses 2 tracks so it stays centered instead of
-   filling the left two of three. Single-class selector so the 940px media
-   query below still collapses it to one column on mobile. */
-.tiers-2 { grid-template-columns: repeat(2, minmax(0, 440px)); }
-/* Match Stephano's (lighter) cards to Spilo's card height so toggling between
-   coaches doesn't shrink the section. `--card-min` is measured from Spilo's
-   rendered cards in Pricing.tsx and set on the grid wrapper. Desktop only —
-   mobile cards stack and size to content. */
-@media (min-width: 941px) {
-  .tiers-2 .tier { min-height: var(--card-min, 660px); }
 }
 .tier {
   display: flex; flex-direction: column;
@@ -588,22 +513,23 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
   background: linear-gradient(180deg, oklch(0.22 0.012 264), var(--bg-1));
   box-shadow: 0 14px 44px -22px var(--red-glow);
 }
-/* First child after reorder is the 30-min Review tier — its short bullet list
-   sits visually centered so the card doesn't read as deflated. The price
-   stack still uses margin-top: auto and stays glued to the bottom. */
-.tiers > .tier:first-child { justify-content: center; }
 .tier-flag {
   position: absolute; top: -1px; right: 24px; transform: translateY(-50%);
-  font-family: var(--font-body); font-size: 11.5px; letter-spacing: 0.18em; text-transform: uppercase;
+  /* Title Case: tracking drops from the 0.18em the uppercase form needed to
+     0.02em, which lowercase letterforms want (same treatment as the stat labels). */
+  font-family: var(--font-body); font-size: 14.5px; font-weight: 700; letter-spacing: 0.02em;
   background: var(--red); color: var(--red-ink); padding: 8px 14px; border-radius: 2px;
 }
-.tier-len { font-family: var(--font-body); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-faint); }
 .tier h3 {
-  font-family: var(--font-display); font-weight: 400; text-transform: uppercase;
-  font-size: clamp(26px, 2.8vw, 34px); line-height: 0.95; margin: 12px 0 0; letter-spacing: 0.01em;
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(26px, 2.8vw, 34px); line-height: 1.05; margin: 0; letter-spacing: 0.01em;
 }
 .tier-desc { color: var(--text-dim); font-size: 16px; line-height: 1.55; margin: 16px 0 26px; }
-.tier-list { list-style: none; padding: 0; margin: 0 0 30px; display: flex; flex-direction: column; gap: 14px; }
+/* The bottom margin sets the breathing room between the bullets and the price
+   block. Cards are stretch-aligned, so raising it grows the tallest card and the
+   rest follow — every card gains the same height. Held at the old 30px on
+   mobile, where stacked cards would otherwise carry a lot of dead space. */
+.tier-list { list-style: none; padding: 0; margin: 0 0 clamp(30px, 4.3vw, 80px); display: flex; flex-direction: column; gap: 14px; }
 .tier-list li { position: relative; padding-left: 26px; font-size: 15.5px; color: var(--text-dim); line-height: 1.5; }
 /* Proper ✓ shape: a wide-short L (left + bottom borders) rotated -45deg.
    The longer right leg of the L becomes the rising stroke of the checkmark. */
@@ -613,14 +539,19 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 }
 .tier.featured .tier-list li::before { border-color: var(--red-bright); }
 .tier-prices { margin-top: auto; border-top: 1px solid var(--line-soft); padding-top: 16px; display: flex; flex-direction: column; gap: 10px; }
-.price-row { display: flex; align-items: baseline; justify-content: space-between; }
-.price-row .k { font-family: var(--font-body); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-faint); }
-.price-row .v { font-family: var(--font-display); font-size: 26px; letter-spacing: 0.01em; }
+/* gap keeps the longer "Coach Spilo - YouTube / Private" label off the price;
+   min-width: 0 lets it wrap rather than overflow once the cards narrow. */
+.price-row { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+/* Sentence case, no tracking: the label now carries a coach name plus the
+   formats ("Stephano - YouTube / Private"), far longer than the old "PRIVATE"
+   and unreadable uppercased at this width. */
+.price-row .k { font-family: var(--font-body); font-size: 14px; color: var(--text-dim); min-width: 0; }
+.price-row .v { font-family: var(--font-display); font-size: 26px; letter-spacing: 0.01em; white-space: nowrap; }
 .tier .btn { margin-top: 22px; justify-content: center; }
-.tier-sub { font-family: var(--font-body); font-size: 11px; letter-spacing: 0.08em; color: var(--text-faint); margin-top: 14px; text-align: center; text-transform: uppercase; }
 
 .pricing-free {
-  margin-top: 22px; margin-inline: auto; max-width: 1376px; width: 100%;
+  /* Fills the band, so its edges line up with the card grid above it. */
+  margin-top: 22px; width: 100%;
   border: 1px dashed var(--line); border-radius: 4px;
   padding: 22px 28px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
   background: oklch(0.18 0.008 264 / 0.4);

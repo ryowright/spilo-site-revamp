@@ -4,25 +4,16 @@ import { encodeReopenKey } from "@/lib/booking/resolve-url";
 import type { DiscountKind } from "@/lib/session";
 import type { VerifyError } from "../store";
 import { TIER_META, type Format, type Tier } from "../SchedulingEvents";
+import { FORMAT_LABEL, SPILO_PRICES } from "../coaches";
 
-// Display prices per (tier × format). Mirrors the Spilo tier cards in
-// coaches.ts / Pricing.tsx — keep in sync until pricing lives in one place.
-const FORMAT_PRICE: Record<Tier, Partial<Record<Format, number>>> = {
-  thirtyMin: { default: 43 },
-  inDepth: { youtube: 80, private: 90 },
-  team: { youtube: 90, private: 100 },
-};
+// Display prices per (tier × format), derived from the tier cards in coaches.ts
+// so the modal and the pricing section cannot drift apart.
+const FORMAT_PRICE: Record<Tier, Partial<Record<Format, number>>> = SPILO_PRICES;
 
 // A verified Twitch sub / Patreon patron takes a flat $5 off each session on
 // the discountable tiers (Team never discounts). Twitch and Patreon are the
 // same amount and don't stack.
 const DISCOUNT_AMOUNT = 5;
-
-const FORMAT_LABEL: Record<Format, string> = {
-  default: "30-minute review",
-  youtube: "Posted to YouTube",
-  private: "Private",
-};
 
 const DISCOUNT_LABEL: Record<DiscountKind, string> = {
   patreon: "Patreon patron",

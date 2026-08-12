@@ -73,17 +73,18 @@ export const TIER_META: Record<Tier, {
   discountsApply: boolean;
 }> = {
   thirtyMin: {
-    label: "30 Minute Gameplay Review",
+    // Labels mirror the card titles in coaches.ts — they head the booking modal.
+    label: "30-Minute Review",
     formats: ["default"],
     discountsApply: true,
   },
   inDepth: {
-    label: "In-Depth Coaching Call",
+    label: "1-Hour Individual Coaching",
     formats: ["youtube", "private"],
     discountsApply: true,
   },
   team: {
-    label: "Complete Team Analysis Call",
+    label: "70-Minute Team Coaching",
     formats: ["youtube", "private"],
     discountsApply: false,
   },
