@@ -950,11 +950,18 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
    SESSION SECTION — "What a session looks like"
    ============================================================ */
 .session-section { --session-gap: clamp(28px, 4vw, 56px); }
+/* Same --band as Testimonials, About and Coaching so all four share one set of
+   edges. This fully overrides .wrap-wide, which stays on the markup but is inert
+   here — the same arrangement the Coaching section uses (.pricing .wrap). */
+.session-section .wrap { width: var(--band); max-width: none; padding-inline: 0; }
 .session-grid {
   margin-top: clamp(40px, 5vw, 64px);
   display: grid;
-  /* Give the (now larger) outline column a bit more room; video stays dominant. */
-  grid-template-columns: 1.8fr 1fr;
+  /* Weighted toward the video — it's the point of the section. The container is
+     fixed at --band, so this ratio is what trades width between the two: at
+     2.2fr the video is 993px (558px tall at 16:9) and the outline column 451px,
+     which leaves it ~39 characters per line after the fixed 88px numeral inset. */
+  grid-template-columns: 2.2fr 1fr;
   gap: var(--session-gap);
   align-items: start;
 }
