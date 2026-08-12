@@ -64,11 +64,13 @@ export function BookingModal() {
     <dialog
       ref={dialogRef}
       className="booking-modal"
+      // Deliberately no backdrop-click handler: this flow runs up to three steps
+      // and ends in a payment form, so a stray click outside the panel must not
+      // discard it. Dismissal is the × button or Esc only.
+      // `onClose` is not that path — it syncs the store back whenever the user
+      // agent closes the dialog (i.e. Esc), and without it `tier` would stay set
+      // and wedge the modal half-open.
       onClose={close}
-      onClick={(e) => {
-        // Backdrop click closes (target === the dialog itself, not children).
-        if (e.target === dialogRef.current) close();
-      }}
     >
       <AnimatePresence>
         {isOpen && (

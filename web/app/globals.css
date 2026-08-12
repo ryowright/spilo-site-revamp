@@ -1177,14 +1177,17 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   letter-spacing: 0.01em;
   margin: 0;
 }
+/* The only way out of this modal now that backdrop clicks don't close it, so it
+   reads as a control at rest rather than a hairline outline: solid fill, full
+   -strength glyph, and a red hover. */
 .booking-modal-close {
-  border: 1px solid var(--line);
-  background: transparent;
-  color: var(--text-dim);
-  font-size: 22px;
+  border: 1px solid var(--text-faint);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 24px;
   line-height: 1;
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   cursor: pointer;
   display: grid;
@@ -1192,7 +1195,11 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   flex: none;
   transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
 }
-.booking-modal-close:hover { color: var(--text); border-color: var(--text-dim); background: var(--bg); }
+.booking-modal-close:hover { color: var(--red-ink); border-color: var(--red); background: var(--red); }
+/* showModal() focuses the first focusable descendant, and the header precedes
+   the body — so this button takes focus on every open. It needs a ring that
+   looks deliberate, matching .tcard and the coach price buttons. */
+.booking-modal-close:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
 .booking-modal-body {
   padding: 24px 28px 28px;
@@ -1293,30 +1300,27 @@ a.booking-price-line:focus-visible {
   gap: 18px;
 }
 .booking-coach-card { display: flex; flex-direction: column; gap: 16px; }
-/* The prices are the CTAs now, so this heading is the only thing naming the
-   coach. It overlays the photo, top-left. The insets match .media-frame's 10px
-   padding so the scrim lines up with the image edges rather than the frame's;
-   it can't be a ::before/::after on the frame, since both of those already draw
-   the red corner brackets. The gradient is what makes the text legible over two
-   very different photos — plain white type would fail on one of them. */
+/* The prices are the CTAs now, so this is the only thing naming the coach. It
+   overlays the photo bottom-left, directly above the prices it labels, holding
+   the same left rail as the modal title and the price labels. Body face, not
+   the display one — it's a label, not a heading (same treatment as .coach-name
+   in About). The insets match .media-frame's 10px padding so the scrim lines up
+   with the image edges rather than the frame's; it can't be a ::before/::after
+   on the frame, since both of those already draw the red corner brackets. The
+   gradient is what makes the text legible over two very different photos —
+   plain white type would fail on one of them. */
 .booking-coach-name {
   position: absolute;
-  left: 10px; right: 10px; top: 10px;
+  left: 10px; right: 10px; bottom: 10px;
   margin: 0;
-  padding: 12px 14px 44px;
-  font-family: var(--font-display); font-weight: 400;
-  font-size: 24px; letter-spacing: 0.01em;
+  padding: 44px 14px 12px;
+  font-family: var(--font-body); font-weight: 700;
+  font-size: 20px; letter-spacing: 0.01em;
   color: var(--text);
   text-shadow: 0 1px 3px oklch(0.1 0.005 264 / 0.8);
-  background: linear-gradient(to bottom, oklch(0.1 0.005 264 / 0.88), transparent);
+  background: linear-gradient(to top, oklch(0.1 0.005 264 / 0.88), transparent);
   pointer-events: none;
 }
-/* The frame's corner brackets are its ::before/::after. ::before (top-left) is
-   the frame's first child, so it would paint *under* the name's scrim now that
-   the scrim sits at the top — lift both above it. Scoped so the About and hero
-   frames are untouched. */
-.booking-coach-card .media-frame::before,
-.booking-coach-card .media-frame::after { z-index: 2; }
 /* Photos are square. The 1:1 rule elsewhere is scoped to #about, but the
    html[data-hero] slot heights are global and would otherwise stretch these to
    380-560px (and win with !important below 940px) — hence the override here. */
