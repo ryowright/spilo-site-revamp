@@ -10,7 +10,7 @@ type Props = {
 };
 
 /**
- * "Schedule a call" CTA. Two booking modes:
+ * "Book a call" CTA. Two booking modes:
  *   - modal: dispatch to the shared BookingProvider, which runs the
  *     format → discount → schedule flow (Spilo).
  *   - link:  a plain external link straight to the coach's Calendly (Stephano).

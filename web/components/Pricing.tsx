@@ -67,7 +67,7 @@ function TierCard({ card }: { card: PackageCard }) {
         booking={card.booking}
         variant={card.featured ? "red" : "ghost"}
       >
-        Schedule a Call
+        Book a Call
       </SchedulingButton>
     </motion.div>
   );
