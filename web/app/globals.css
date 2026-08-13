@@ -573,9 +573,15 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
   width: 100%; background: none; border: 0; text-align: left; color: inherit; font: inherit;
 }
 .faq-summary:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+/* Sentence case — the strings in Faq.tsx are already written that way. Anton's
+   lowercase is as wide as its capitals, so nothing reflows and the 0.01em
+   tracking (the same value .tier h3 uses uncapitalised) still holds; what caps
+   did give was height, since the x-height is 0.852 of the cap-height. The size
+   is up ~10% to win that back. line-height opens from the caps-tuned 1.05 —
+   descenders clear it, but only by ~1px on a wrapped phone line. */
 .faq-q {
-  font-family: var(--font-display); font-weight: 400; text-transform: uppercase;
-  font-size: clamp(18px, 2.2vw, 26px); line-height: 1.05; letter-spacing: 0.01em; flex: 1;
+  font-family: var(--font-display); font-weight: 400;
+  font-size: clamp(20px, 2.4vw, 28px); line-height: 1.15; letter-spacing: 0.01em; flex: 1;
   transition: color 150ms ease;
 }
 .faq-summary:hover .faq-q { color: var(--text); }
