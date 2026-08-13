@@ -1369,12 +1369,17 @@ a.booking-price-line:focus-visible {
    with a heading + intro, echoing the original site's sectioned layout. */
 .booking-section { display: flex; flex-direction: column; gap: 14px; }
 .booking-section-head { display: flex; flex-direction: column; gap: 6px; }
+/* A real subheading rather than a red eyebrow. 18px puts it above the 15px price
+   labels and the 14px description it heads — at 13px it was smaller than both,
+   and only read as a heading because the red carried it. Weight is declared
+   explicitly: it was bold only by way of the <h3> UA default. */
 .booking-section-title {
   margin: 0;
   font-family: var(--font-body);
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  color: var(--red-bright);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--text);
 }
 .booking-section-sub { margin: 0; color: var(--text-dim); font-size: 14px; line-height: 1.55; }
 

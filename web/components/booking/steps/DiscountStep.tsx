@@ -158,7 +158,7 @@ export function DiscountStep({
         return (
           <section className="booking-section">
             <div className="booking-section-head">
-              <h3 className="booking-section-title">Price</h3>
+              <h3 className="booking-section-title">Format</h3>
             </div>
             <div className="booking-price-line">
               <span className="booking-price-line-label">
