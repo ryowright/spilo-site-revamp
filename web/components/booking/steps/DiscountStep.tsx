@@ -72,9 +72,12 @@ export function DiscountStep({
   };
 
   // OAuth return URL carries the live format selection so it survives the
-  // round-trip and the visitor lands back here with it intact.
+  // round-trip and the visitor lands back here with it intact. The #pricing
+  // fragment puts the Coaching section behind the reopened modal rather than
+  // the hero — safeReturnTo and the callback both preserve the hash, and the
+  // cleanup on arrival strips only the search params.
   const returnQuery = encodeURIComponent(
-    `/?reopen=${encodeReopenKey(tier, selectedFormat)}`,
+    `/?reopen=${encodeReopenKey(tier, selectedFormat)}#pricing`,
   );
 
   return (
