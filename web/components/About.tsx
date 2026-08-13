@@ -58,7 +58,7 @@ export function About() {
           <Reveal className="coach-copy" axis="x" distance={-30}>
             <h2 className="coach-name">Hey, I&apos;m Coach Stephano.</h2>
             <p className="coach-bio">
-              I&apos;ve been coaching players from Bronze to Champion for over 4
+              I&apos;ve been coaching players from Bronze to Champion for over four
               years, helping them improve at the game. I have worked as head
               coach for several high-division US teams.
             </p>
