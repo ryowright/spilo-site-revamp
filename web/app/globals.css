@@ -789,7 +789,10 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 /* Sticky nav anchor offset so #pricing etc. don't tuck under the 70px nav.
    scroll-behavior: smooth animates anchor jumps; the browser disables this
    automatically when the user has prefers-reduced-motion set. */
-html { scroll-padding-top: 80px; scroll-behavior: smooth; }
+/* scrollbar-gutter reserves the scrollbar's space permanently, so locking the
+   page behind an open modal (below) doesn't shift the layout when the scrollbar
+   disappears. The page always scrolls, so nothing changes in the normal case. */
+html { scroll-padding-top: 80px; scroll-behavior: smooth; scrollbar-gutter: stable; }
 
 /* #pricing takes the default 80px offset like #about. It used to carry a -80px
    scroll-margin, tuned when the section was centered with the coach toggle
@@ -1178,6 +1181,13 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   overflow: hidden;
   box-shadow: 0 30px 80px -32px oklch(0 0 0 / 0.6);
 }
+/* Lock the page while the modal is open, so there's only ever one thing to
+   scroll. showModal() makes the rest of the page inert, but inertness governs
+   pointer and focus rather than scrolling, and browsers differ on whether they
+   block it — this makes the behaviour the same everywhere. Keyed off the open
+   dialog rather than a JS effect: the element unmounts on close, so the lock
+   releases on its own and can never get stuck. */
+html:has(.booking-modal[open]) { overflow: hidden; }
 /* The schedule step embeds Acuity's own UI, which needs the room; the coach and
    discount steps are our own layouts and stay at 960px. Below a 1277px viewport
    both resolve to 94vw, so this only widens things on larger screens. */
@@ -1233,6 +1243,9 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
 .booking-modal-body {
   padding: 24px 28px 28px;
   overflow-y: auto;
+  /* Stops the scroll chaining to the page once this reaches its end — the other
+     half of "which thing am I scrolling?", and separate from the page lock. */
+  overscroll-behavior: contain;
   flex: 1 1 auto;
   min-height: 0;
 }
