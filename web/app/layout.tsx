@@ -4,7 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { anton, hanken } from "./fonts";
 import "./globals.css";
 
-const SITE_TITLE = "Spilo — Overwatch Coaching";
+const SITE_TITLE = "Spilo Overwatch Coaching";
 const SITE_DESCRIPTION =
   "Professional-grade Overwatch coaching, for players serious about improving.";
 

@@ -5,7 +5,7 @@ import { ImageResponse } from "next/og";
 // fallback. No request-time data, so it's statically generated at build time
 // and served as a cached build asset (no runtime = "edge" → no cold starts).
 
-export const alt = "Spilo — Overwatch Coaching";
+export const alt = "Spilo Overwatch Coaching";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
