@@ -1178,6 +1178,15 @@ button.tcard:focus-visible { outline: 2px solid var(--red); outline-offset: 3px;
   overflow: hidden;
   box-shadow: 0 30px 80px -32px oklch(0 0 0 / 0.6);
 }
+/* The schedule step embeds Acuity's own UI, which needs the room; the coach and
+   discount steps are our own layouts and stay at 960px. Below a 1277px viewport
+   both resolve to 94vw, so this only widens things on larger screens. */
+.booking-modal-inner.is-scheduler { width: min(1200px, 94vw); }
+/* Eases the widening when advancing from the discount step. Guarded because
+   MotionConfig reducedMotion="user" governs framer-motion, not CSS. */
+@media (prefers-reduced-motion: no-preference) {
+  .booking-modal-inner { transition: width 220ms ease; }
+}
 
 .booking-modal-head {
   display: flex;
@@ -1465,7 +1474,12 @@ a.booking-price-line:focus-visible {
 .booking-schedule-banner strong { color: var(--text); }
 .booking-scheduler-frame {
   width: 100%;
-  height: clamp(520px, 60vh, 720px);
+  /* Subtracting the chrome rather than using a flat vh: the header, body
+     padding, gap and back-row come to a fixed 198px, so the space actually
+     available is 92vh − 198 — a slope no percentage matches. A flat vh either
+     overflows short screens or under-fills tall ones; 210 leaves a margin.
+     Only .booking-scheduler-frame renders in this step, so no scope needed. */
+  height: clamp(460px, calc(92vh - 210px), 900px);
   border: 1px solid var(--line-soft);
   border-radius: 4px;
   overflow: hidden;

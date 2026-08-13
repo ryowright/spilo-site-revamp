@@ -76,7 +76,11 @@ export function BookingModal() {
         {isOpen && (
           <motion.div
             key="booking-inner"
-            className="booking-modal-inner"
+            // Wider on the schedule step so the Acuity iframe — which hosts
+            // scheduling, the intake form and payment — needs less scrolling.
+            className={`booking-modal-inner${
+              step === "schedule" ? " is-scheduler" : ""
+            }`}
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.97 }}
