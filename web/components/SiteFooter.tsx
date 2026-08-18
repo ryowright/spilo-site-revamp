@@ -92,7 +92,7 @@ export function SiteFooter() {
             Discord <b>coachspilo</b>
           </a>
           <a href="mailto:jacobclifton@protonmail.com">
-            <b>jacobclifton@protonmail.com</b>
+            Email <b>jacobclifton@protonmail.com</b>
           </a>
         </div>
       </div>
