@@ -29,13 +29,13 @@ export function About() {
           <Reveal className="coach-copy" axis="x" distance={30}>
             <h2 className="coach-name">Greetings, my name is Spilo.</h2>
             <p className="coach-bio">
-              I&apos;m a retired Mixed Martial Arts Instructor turned Pro
-              Overwatch Coach. I am the previous assistant coach for the London
+              I&apos;m a retired mixed martial arts instructor turned pro
+              Overwatch coach. I am the previous assistant coach for the London
               Spitfire (Overwatch League) with an additional three years of
               experience Head Coaching in Overwatch Contenders.
             </p>
             <p className="coach-bio">
-              I&apos;m also a VOD review expert with over 8,000 hours in Live
+              I&apos;m also a VOD review expert with over 10,000 hours in live
               VOD review experience—all heroes, all ranks. Additionally, I have
               served as a playtester for many of the new Overwatch heroes and
               systems, providing additional insight into the secrets of what
@@ -59,8 +59,8 @@ export function About() {
             <h2 className="coach-name">Hey, I&apos;m Coach Stephano.</h2>
             <p className="coach-bio">
               I&apos;ve been coaching players from Bronze to Champion for over four
-              years, helping them improve at the game. I have worked as head
-              coach for several high-division US teams.
+              years, helping them improve at the game. I have also worked as the head
+              coach for several high-division collegiate Overwatch teams.
             </p>
             <p className="coach-bio">
               As of this year, Spilo has endorsed my coaching and partnered with
