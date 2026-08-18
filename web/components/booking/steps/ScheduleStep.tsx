@@ -2,6 +2,7 @@
 
 import { resolveAcuityUrl } from "@/lib/booking/resolve-url";
 import type { Discount, Format, Tier } from "../SchedulingEvents";
+import { DISCOUNT_LABEL } from "./DiscountStep";
 
 type Props = {
   tier: Tier;
@@ -33,9 +34,7 @@ export function ScheduleStep({ tier, format, discount, onBack }: Props) {
     <div className="booking-step booking-schedule">
       {discount !== "full" && (
         <div className="booking-schedule-banner">
-          {discount === "patreon"
-            ? "Patreon patron discount applied."
-            : "Twitch subscriber discount applied."}{" "}
+          {DISCOUNT_LABEL[discount]} discount applied.{" "}
           Pricing in Acuity reflects the discount.
         </div>
       )}

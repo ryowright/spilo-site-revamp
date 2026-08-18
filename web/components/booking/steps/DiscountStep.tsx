@@ -15,9 +15,12 @@ const FORMAT_PRICE: Record<Tier, Partial<Record<Format, number>>> = SPILO_PRICES
 // same amount and don't stack.
 const DISCOUNT_AMOUNT = 5;
 
-const DISCOUNT_LABEL: Record<DiscountKind, string> = {
-  patreon: "Patreon patron",
-  twitch: "Twitch subscriber",
+// The provider name alone — the discount row, the applied-discount confirmation
+// and the scheduler banner all name the provider in a context that already
+// supplies "discount", so spelling out "patron"/"subscriber" only adds length.
+export const DISCOUNT_LABEL: Record<DiscountKind, string> = {
+  patreon: "Patreon",
+  twitch: "Twitch",
 };
 
 const VERIFY_SUBJECT: Record<DiscountKind, string> = {
@@ -123,7 +126,7 @@ export function DiscountStep({
                 <div className="booking-discount-row">
                   <div className="booking-discount-row-info">
                     <span className="booking-discount-row-label">
-                      Twitch Subscriber
+                      {DISCOUNT_LABEL.twitch}
                     </span>
                   </div>
                   <a
@@ -136,14 +139,14 @@ export function DiscountStep({
                 <div className="booking-discount-row">
                   <div className="booking-discount-row-info">
                     <span className="booking-discount-row-label">
-                      Patreon Patron
+                      {DISCOUNT_LABEL.patreon}
                     </span>
                   </div>
                   <a
                     className="btn btn-ghost btn-sm"
                     href={`/api/auth/patreon?return=${returnQuery}`}
                   >
-                    Sign in with Patreon
+                    Sign in to Patreon
                   </a>
                 </div>
               </div>

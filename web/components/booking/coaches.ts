@@ -64,7 +64,7 @@ export const PACKAGES: PackageCard[] = [
   {
     key: "thirtyMin",
     title: "30-Minute Review",
-    desc: "A thorough gameplay review. Join live if you want — or just get the recording.",
+    desc: "A thorough gameplay review, posted to YouTube. Join live if you want — or just get the recording.",
     bullets: [
       "A recorded VOD you can keep & rewatch",
       "Personalized practice goals",
@@ -72,12 +72,13 @@ export const PACKAGES: PackageCard[] = [
     coaches: [
       {
         coach: "stephano",
-        amounts: [{ format: "private", amount: 25 }],
+        amounts: [{ format: "youtube", amount: 25 }],
         booking: { kind: "link", url: STEPHANO_30MIN },
       },
       {
         // "default" is the Acuity format key for this tier; it renders as
-        // "Private" because the 30-minute review is never posted.
+        // "Posted to YouTube" because the 30-minute review is only offered
+        // publicly.
         coach: "spilo",
         amounts: [{ format: "default", amount: 43 }],
         booking: { kind: "modal", tier: "thirtyMin" },
@@ -151,7 +152,9 @@ export const PACKAGES: PackageCard[] = [
 
 // Shared by the card price rows and the booking modal's format cards.
 export const FORMAT_LABEL: Record<Format, string> = {
-  default: "Private",
+  // "default" is the 30-minute review's only format, and that session is always
+  // posted — so it labels the same way the explicit youtube format does.
+  default: "Posted to YouTube",
   youtube: "Posted to YouTube",
   private: "Private",
 };
