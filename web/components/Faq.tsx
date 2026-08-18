@@ -30,7 +30,7 @@ const ITEMS: FaqItem[] = [
         <p>Two things:</p>
         <ol>
           <li>
-            The ability to join a Discord voice call (use the tag you put in
+            The ability to join a Discord voice call (use the account you put in
             the form).
           </li>
           <li>
@@ -54,7 +54,7 @@ const ITEMS: FaqItem[] = [
         <p>
           Outside of 48 hours, you will receive a refund for canceled sessions/
           be allowed to reschedule sessions through the Acuity scheduling
-          website.
+          website, linked in the confirmation email you receive after booking.
         </p>
       </>
     ),
