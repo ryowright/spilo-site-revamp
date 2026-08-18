@@ -95,7 +95,7 @@ export function Pricing() {
           <h2>Book the review</h2>
           <p>
             The following coaching options are offered by both Coach Spilo and
-            Coach Stephano.
+            Coach Stephano
           </p>
         </Reveal>
 
