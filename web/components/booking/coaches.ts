@@ -17,7 +17,7 @@ export const COACH_LABEL: Record<Coach, string> = {
 
 // Shared by the About section and the coach-choice modal so the two can't drift.
 export const COACH_PHOTO: Record<Coach, string> = {
-  spilo: "/coach-spilo-about-hires.jpg",
+  spilo: "/coach-spilo-about-lake.jpg",
   stephano: "/coach-stephano-about.jpg",
 };
 
