@@ -56,7 +56,7 @@ export function About() {
         {/* Stephano — copy left, image right (mirrored) */}
         <div className="coach-block coach-block-rev">
           <Reveal className="coach-copy" axis="x" distance={-30}>
-            <h2 className="coach-name">Hey, I&apos;m Coach Stephano.</h2>
+            <h2 className="coach-name">Hey, I&apos;m Stephano.</h2>
             <p className="coach-bio">
               I&apos;ve been coaching players from Bronze to Champion for over four
               years, helping them improve at the game. I have also worked as the head
