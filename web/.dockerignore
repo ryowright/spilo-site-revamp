@@ -1,0 +1,38 @@
+# Build context excludes. Keeps the image small, and — more importantly — keeps
+# .env.local out of it.
+
+# Secrets. Never in an image.
+.env
+.env.*
+!.env.local.example
+
+# Installed and built in the image, not copied into it.
+node_modules
+.next
+out
+build
+
+# Version control and platform metadata
+.git
+.gitignore
+.vercel
+
+# Docs and tooling that the build doesn't need
+README.md
+DEPLOY.md
+Dockerfile
+.dockerignore
+app.yaml
+
+# TypeScript incremental cache
+*.tsbuildinfo
+next-env.d.ts
+
+# Editor / OS
+.DS_Store
+.vscode
+.idea
+*.pem
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
