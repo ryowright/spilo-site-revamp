@@ -1,14 +1,18 @@
 // Twitch OAuth + Helix sub-status verification.
 //
-// In production this hits real Twitch APIs. When TWITCH_CLIENT_ID is unset
-// we skip the round-trip and treat the user as verified (mock mode), so
-// dev work can continue before credentials are available.
+// This hits real Twitch APIs whenever TWITCH_CLIENT_ID is set, and always in
+// production. Outside production an unset credential falls back to mock mode,
+// which auto-verifies without leaving the site, so dev work can continue before
+// credentials are available. See resolveMockMode for why that fallback is
+// gated on NODE_ENV rather than on the credential alone.
+
+import { resolveMockMode } from "./flow";
 
 const TWITCH_AUTH_BASE = "https://id.twitch.tv/oauth2";
 const TWITCH_API_BASE = "https://api.twitch.tv/helix";
 
 export function isMockMode(): boolean {
-  return !process.env.TWITCH_CLIENT_ID;
+  return resolveMockMode("twitch", process.env.TWITCH_CLIENT_ID);
 }
 
 export function getAuthorizeUrl(state: string, redirectUri: string): string {

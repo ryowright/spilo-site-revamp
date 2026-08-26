@@ -1,7 +1,11 @@
 // Patreon OAuth + API v2 active-membership verification.
 //
-// In production this hits real Patreon APIs. When PATREON_CLIENT_ID is unset
-// we skip the round-trip and treat the user as verified (mock mode).
+// This hits real Patreon APIs whenever PATREON_CLIENT_ID is set, and always in
+// production. Outside production an unset credential falls back to mock mode,
+// which auto-verifies without leaving the site. See resolveMockMode for why
+// that fallback is gated on NODE_ENV rather than on the credential alone.
+
+import { resolveMockMode } from "./flow";
 
 // Patreon quirk: the authorize page lives at /oauth2/authorize, but the token
 // exchange endpoint is under /api/oauth2/token (different base path).
@@ -10,7 +14,7 @@ const PATREON_TOKEN_URL = "https://www.patreon.com/api/oauth2/token";
 const PATREON_API_BASE = "https://www.patreon.com/api/oauth2/v2";
 
 export function isMockMode(): boolean {
-  return !process.env.PATREON_CLIENT_ID;
+  return resolveMockMode("patreon", process.env.PATREON_CLIENT_ID);
 }
 
 export function getAuthorizeUrl(state: string, redirectUri: string): string {

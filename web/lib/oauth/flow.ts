@@ -7,6 +7,44 @@ import { getSession } from "@/lib/session";
 import { getCallbackUrl, getSiteUrl } from "@/lib/site-url";
 import type { DiscountKind } from "@/lib/session";
 
+// Warn at most once per process, per provider — same pattern as the
+// SESSION_SECRET check in lib/session.ts.
+const warnedMissingCredentials = new Set<string>();
+
+/**
+ * Decide whether a provider runs its mock flow, which auto-verifies without
+ * contacting the provider at all.
+ *
+ * Gated on NODE_ENV, deliberately, and NOT on the credential alone. Missing
+ * credentials mean "still building this" in dev but "misconfigured deploy" in
+ * production, and those must not resolve the same way: treating an absent
+ * credential as permission to skip verification would hand every visitor the
+ * discount, silently, with nothing in the logs and no visible symptom. In
+ * production a missing credential instead produces a real authorize request
+ * that the provider rejects, so the visitor returns unverified at full price.
+ * Fail closed.
+ */
+export function resolveMockMode(
+  provider: "twitch" | "patreon",
+  clientId: string | undefined,
+): boolean {
+  if (clientId) return false;
+
+  if (process.env.NODE_ENV === "production") {
+    if (!warnedMissingCredentials.has(provider)) {
+      warnedMissingCredentials.add(provider);
+      console.error(
+        `[oauth/${provider}] ${provider.toUpperCase()}_CLIENT_ID is not set in ` +
+          `production. Discount verification for this provider cannot succeed — ` +
+          `visitors will be sent back unverified at full price. Set the credential.`,
+      );
+    }
+    return false;
+  }
+
+  return true;
+}
+
 /**
  * Validate a `returnTo` value is a same-origin path. Prevents open-redirect
  * attacks where someone crafts `/api/auth/twitch?return=https://evil.com` —
