@@ -1,8 +1,8 @@
-# Editor preview assets — large screenshots from the Claude Design export.
-# Kept in the working tree as reference, excluded from version control.
-Coach Spilo Site Revamp/uploads/
-Coach Spilo Site Revamp/screenshots/
-Coach Spilo Site Revamp/.image-slots.state.json
+# The original Claude Design export the Next.js port was built from. Kept in the
+# working tree as a design reference; nothing builds from it. The three narrower
+# rules this replaces (uploads/, screenshots/, .image-slots.state.json) are
+# covered by ignoring the folder outright.
+Coach Spilo Site Revamp/
 
 # OS
 .DS_Store
