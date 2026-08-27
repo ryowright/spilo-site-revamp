@@ -111,7 +111,7 @@ export function Pricing() {
             Watch hundreds of Spilo&apos;s coaching calls on{" "}
             <a
               className="lk"
-              href="https://www.youtube.com/@Spilo2"
+              href="https://www.youtube.com/@SpiloCoaching"
               target="_blank"
               rel="noopener noreferrer"
             >

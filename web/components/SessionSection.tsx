@@ -11,7 +11,7 @@ import { YouTubeFacade } from "./YouTubeFacade";
 // part after `v=` or `youtu.be/`). PLAYLISTS_URL is the Spilo Coaching
 // playlists page.
 const VIDEO_ID = "D6dMkreFLyM";
-const PLAYLISTS_URL = "https://www.youtube.com/@Spilo2/playlists";
+const PLAYLISTS_URL = "https://www.youtube.com/@SpiloCoaching/playlists";
 // ─────────────────────────────────────────────────────────────────────
 
 const OUTLINE = [
