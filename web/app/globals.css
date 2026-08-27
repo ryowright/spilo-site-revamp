@@ -681,7 +681,7 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 }
 .footer-bar {
   border-top: 1px solid var(--line-soft); padding: 26px var(--gut);
-  max-width: var(--maxw); margin: 0 auto; display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  max-width: var(--maxw); margin: 0 auto; display: flex; align-items: center; gap: 26px; flex-wrap: wrap;
 }
 .footer-contact { display: flex; gap: 26px; flex-wrap: wrap; margin-left: auto; }
 /* No uppercasing — both entries render their literal value ("coachspilo", the
@@ -691,6 +691,24 @@ html[data-cards="bordered"] .tcard { background: oklch(0.18 0.008 264 / 0.4); bo
 .footer-contact b { color: var(--text-dim); font-weight: 500; transition: color 150ms ease; }
 .footer-contact a:hover { color: var(--text); }
 .footer-contact a:hover b { color: var(--text); }
+
+/* Designer credit. Deliberately not inside .footer-contact — that group is
+   Spilo's contact details, and a credit isn't one. Sitting directly after the
+   copyright in .footer-bar's flex row puts it in the left group, since
+   .footer-contact's margin-left:auto claims the right.
+
+   Unlike .footer-contact it does NOT brighten its value: the name stays at
+   --text-faint alongside its label, so the credit reads a step quieter than
+   the visitor-facing contact details it sits beside. Present, not competing. */
+.footer-credit {
+  font-family: var(--font-body); font-size: 13px; letter-spacing: 0.02em;
+  color: var(--text-faint); transition: color 150ms ease;
+}
+.footer-credit b { color: inherit; font-weight: 500; transition: color 150ms ease; }
+/* Hover is scoped to the anchor: the credit renders as a plain span until it
+   has a URL, and a span that lights up under the cursor reads as clickable when
+   it isn't. */
+a.footer-credit:hover, a.footer-credit:hover b { color: var(--text-dim); }
 
 /* Below desktop the footer bar stacks — center it so the copyright and contact
    sit tidily on top of one another instead of split left/right. Scoped to ≤940

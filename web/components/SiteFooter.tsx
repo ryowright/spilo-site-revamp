@@ -10,6 +10,12 @@ import {
   YouTubeIcon,
 } from "./icons/SocialIcons";
 
+// Designer credit, per the terms agreed with Spilo. Renders as plain text while
+// CREDIT_URL is null; set it to a portfolio or business site and the credit
+// becomes a link with no other change needed.
+const CREDIT_NAME = "Ryo Wright";
+const CREDIT_URL: string | null = null;
+
 export function SiteFooter() {
   return (
     <footer className="site-footer">
@@ -83,6 +89,20 @@ export function SiteFooter() {
         <span className="footer-copyright">
           © 2026 Coach Spilo. All rights reserved.
         </span>
+        {CREDIT_URL ? (
+          <a
+            className="footer-credit"
+            href={CREDIT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Site by <b>{CREDIT_NAME}</b>
+          </a>
+        ) : (
+          <span className="footer-credit">
+            Site by <b>{CREDIT_NAME}</b>
+          </span>
+        )}
         <div className="footer-contact">
           <a
             href="https://discord.gg/tv2SR9yPMJ"
